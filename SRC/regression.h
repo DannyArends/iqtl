@@ -9,7 +9,7 @@
  #ifndef REGRESSION_H_
   #define REGRESSION_H_
   
-  #include "datatypes.h"
+  #include "datastructures.h"
 
   double Lnormal(double residual, double variance);
   void testregression();

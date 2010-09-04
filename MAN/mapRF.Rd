@@ -22,7 +22,7 @@
 
 }
 \references{
-	\item Breiman, L. (2001) Random Forests \emph{Machine Learning 45} (\bold{1}) 5-32
+	Breiman, L. (2001) Random Forests \emph{Machine Learning 45} (\bold{1}) 5-32
 }
 \author{ 
 	Danny Arends \email{Danny.Arends@gmail.com}
