@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" 
+  [
+    <!ATTLIST svg	xmlns:a3 CDATA #IMPLIED	a3:scriptImplementation CDATA #IMPLIED>
+    <!ATTLIST script a3:scriptImplementation CDATA #IMPLIED>
+  ]
+>
+<!--  
+#
+# qtlviewer.svg
+#
+# copyright (c) 2010, Danny Arends
+# last modified mrt, 2010
+# first written mrt, 2010
+# 
+# SVG wrapper to enable visualization of datafiles created by R
+#
+-->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 1024 768" onload="init()">
+  <title>Interactive QTL viewer v0.1.1</title>
+  
+	<script type="text/javascript" xlink:href="data.js" />
+  <script type="text/javascript" xlink:href="functions.js" />
+  <script type="text/javascript">
+  <![CDATA[
+    var svgNS = "http://www.w3.org/2000/svg";
+    var xlinkNS = "http://www.w3.org/1999/xlink";
+
+  //VIEW SECTION  
+    var varTextBox;
+    var plotInfoBox;
+    var viewer;
+    var plottype=1;
+    var plotby=0;
+    var zoomlevel=5;
+    var scaleR= 255/maxQTL;
+    var scaleG= 255/(maxQTL/2);
+    var scaleB= 255/(maxQTL/4);    
+    var xtrans=0;
+    var ytrans=0;
+    var absmaxitems=500;
+    var maxitemsy=40;
+    
+    function init() {
+      varTextBox = document.getElementById("varTextBox");
+      plotInfoBox = document.getElementById("plotInfoBox");
+      viewer = document.getElementById("viewer");
+      updateplot();
+    }
+    
+    function moveEvt(evt,x,y){
+      xtrans += Math.round(((50-4*zoomlevel)/50)*x);
+      if(plottype==4 || plottype==3) y=Math.round(y/2)
+      ytrans += y;
+      if(xtrans < 0){
+        xtrans=0;
+        return;
+      }
+      if(ytrans < 0){
+        ytrans=0;
+        return;
+      }
+      varTextBox.firstChild.nodeValue = "MapX: " + xtrans;
+      varTextBox.firstChild.nodeValue += " MapY: " + ytrans;
+      updateplot();
+      evt.stopPropagation();
+    }
+   
+    function zoomEvt(evt,dir) {
+      zoomlevel += dir;
+      if(zoomlevel < 1){
+        zoomlevel=1;
+      }
+      if(zoomlevel > 50){
+        zoomlevel=50;
+      }
+      varTextBox.firstChild.nodeValue = "Zoomlevel: " + zoomlevel;
+      updateplot();
+      evt.stopPropagation();
+    }
+    
+    function changePlotEvt(evt,type,by) {
+      if(type!=0){
+        plottype=type;
+      }
+      plotby=by;
+      updateplot();
+      evt.stopPropagation();
+    }    
+    
+  ]]>
+  </script>
+  <g font-family="Arial"> 
+    <text x="0" y="15" font-size="20px">Interactive QTL viewer v0.1.1</text>
+    <text x="0" y="30" font-size="14px" id="plotInfoBox"> </text>
+    <g id="myZoomin" onclick="zoomEvt(evt,0.5)">
+      <rect x="10" y="40" rx="10" ry="10" width="40" height="30" fill="green" stroke="black" />  
+      <text x="25" y="62" font-weight="bold">+</text>   
+    </g>
+    <g id="myZoomout" onclick="zoomEvt(evt,-0.5)">  
+      <rect x="10" y="80"  rx="10" ry="10" width="40" height="30" fill="red" stroke="black" />
+      <text x="26" y="100" font-weight="bold">-</text>
+    </g>
+    <g id="myUp" onclick="moveEvt(evt,0,-2)">
+      <rect x="120" y="40" rx="10" ry="10" width="30" height="30" fill="gray" stroke="black" />
+      <text x="129" y="62" font-weight="bold">U</text>
+    </g>
+    <g id="myDown" onclick="moveEvt(evt,0,2)">
+      <rect x="120" y="80" rx="10" ry="10" width="30" height="30" fill="gray" stroke="black" />  
+      <text x="129" y="102" font-weight="bold">D</text>
+    </g>    
+    <g id="myLeft" onclick="moveEvt(evt,-15,0)">
+      <rect x="100" y="60" rx="10" ry="10" width="30" height="30" fill="gray" stroke="black" />
+      <text x="110" y="80" font-weight="bold">L</text>
+    </g>
+    <g id="myRight" onclick="moveEvt(evt,15,0)">
+      <rect x="140" y="60" rx="10" ry="10" width="30" height="30" fill="gray" stroke="black" />
+      <text x="150" y="80" font-weight="bold">R</text>
+    </g>
+    <g>
+      <text x="200" y="50" font-size="12px" font-weight="bold">Plot type:</text>
+      <text x="280" y="50" font-size="12px" onclick="changePlotEvt(evt,1,0)">Heatmap</text>
+      <text x="280" y="64" font-size="12px" onclick="changePlotEvt(evt,2,0)">CisTrans</text>
+      <text x="280" y="78" font-size="12px" onclick="changePlotEvt(evt,3,0)">Circle</text>      
+      <text x="280" y="92" font-size="12px" onclick="changePlotEvt(evt,4,0)">Profile</text>
+    </g>
+    <g>
+      <text x="400" y="50" font-size="12px" font-weight="bold">Scale by:</text>
+      <text x="480" y="50" font-size="12px" onclick="changePlotEvt(evt,0,0)">Centimorgan</text>
+      <text x="480" y="64" font-size="12px" onclick="changePlotEvt(evt,0,1)">Markers</text>
+    </g>    
+    <g id="viewer" x="0" y="125">
+      
+    </g> 
+    <text x="0" y="750" font-size="14px" id="varTextBox"> </text>
+  </g>
+  
+</svg>

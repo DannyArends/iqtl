@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!--  
+#
+# index.html
+#
+# copyright (c) 2010, Danny Arends
+# last modified mrt, 2010
+# first written mrt, 2010
+# 
+# HTML wrapper for the SVG, you could just as well put the stuff 
+# on your own site, don't forget to reference me then ;)
+#
+--> 
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
+  <head>
+  <title>Interactive QTL viewer v0.1.1</title>
+  </head>
+  <body>
+  <script type="text/javascript">
+    var browser=navigator.appName;
+    if(browser=="Microsoft Internet Explorer"){
+      document.write("<font color=\"red\"><h1>Internet Explorer NOT SUPPORTED</h1></font>");
+      document.write("Please use an SVG 1.1 capable webbrowser<br/>");
+      document.write("We recommend using: <a href=\"http://www.mozilla.com/firefox/\">Mozilla Firefox</a><br/>");
+    }else{
+      document.write("<object data=\"qtlviewer.svg\" width=\"1024\" height=\"768\" type=\"image/svg+xml\" name=\"maincanvas\"><br/>");
+    }
+  </script>
+  <font size="1">copyright (c) 2010, Danny Arends GBIC - RUG</font>
+  </body>
+</html>
