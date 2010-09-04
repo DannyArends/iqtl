@@ -10,11 +10,11 @@
  * Contains: R_add_in_C
  *
  **********************************************************************/
+#include "datastructures.h"
+
 extern "C"
 {
-#include <R.h>
-#include <Rinternals.h>
-#include "datastructures.h"
+
 #include "parser.h"
 
 void R_load_XGAPheader(char **filename,int* num_rows,int* num_cols,int* isNumeric,int* pos);

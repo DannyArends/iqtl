@@ -8,11 +8,7 @@
 #ifndef _DATASTRUCTS_H
   #define _DATASTRUCTS_H
   #include "typedefs.h"
-extern "C"
-{  
-
-  #include <R.h>
-  
+ 
   bvector newbvector(uint dim);
   dvector newdvector(uint dim);
   cvector newcvector(uint dim);
@@ -33,5 +29,5 @@ extern "C"
   void freematrix(void **m, uint rows);
   void freevector(void *v);
   void *mycalloc(uint num, uint size);
-}
+
 #endif

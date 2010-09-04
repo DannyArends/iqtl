@@ -9,13 +9,12 @@
 #ifndef TYPEDEFS_H_
   #define TYPEDEFS_H_
   
+extern "C"
+{  
   #include <ctype.h>
   #include <cstdio>
-  #include <cmath>
   #include <cstdlib>
-  #include <unistd.h>
-  #include <iostream>
-  #include <fstream>
+  #include <R.h>
   #include <getopt.h>
   
   using namespace std;
@@ -29,6 +28,5 @@
   typedef char*     cvector;
   typedef int**     imatrix;
   typedef int*      ivector;
-
-
+}
 #endif
