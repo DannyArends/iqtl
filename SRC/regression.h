@@ -8,7 +8,8 @@
 
  #ifndef REGRESSION_H_
   #define REGRESSION_H_
-  
+extern "C"
+{  
   #include "datastructures.h"
 
   double Lnormal(double residual, double variance);
@@ -19,5 +20,5 @@
   bool LUdecomposition(dmatrix m, int dim, ivector ndx, int *d);
   void LUsolve(dmatrix lu, int dim, ivector ndx, dvector b);
   void LUinvert(dmatrix lu, dmatrix inv, int dim, int *ndx);
-
+}
 #endif

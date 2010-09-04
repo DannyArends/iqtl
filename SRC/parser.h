@@ -7,7 +7,6 @@
  **********************************************************************/
 #ifndef _PARSER_H
   #define _PARSER_H
-  #include "datastructures.h"
   extern "C"
   {
   #include <R.h>

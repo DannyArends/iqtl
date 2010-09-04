@@ -7,7 +7,12 @@
  **/
  
 #include "regression.h"
-
+#include <cstdio>
+#include <cstdlib>
+#include <iostream>
+#include <fstream>
+#include <climits> 
+#include <cfloat>
 
 double Lnormal(double residual, double variance){
   return exp(-pow(residual/sqrt(variance),2.0)/2.0 - log(sqrt(2.0*PI*variance)));
@@ -110,7 +115,7 @@ double betacf(double a, double b, double x){
       bz=1.0;
       if ( fabs((az-aold)/az)  < 3.0e-7) return az;
   }
-  Rprintf("a or b too big or max number of iterations too small\n");
+  cout << "a or b too big or max number of iterations too small";
   exit(1); return 0.0;
 }
 
@@ -131,10 +136,7 @@ double gammln(double xx){
 
 double betai(double a, double b, double x){
   double bt;
-  if (x<0.0 || x>1.0) {
-    Rprintf("x not between 0 and 1\n"); 
-    exit(1); 
-  }
+  if (x<0.0 || x>1.0) { cout << "x not between 0 and 1"; exit(1); }
   if (x==0.0 || x==1.0) bt=0.0;
   else bt=exp(gammln(a+b)-gammln(a)-gammln(b)+a*log(x)+b*log(1.0-x));
   if (x<(a+1.0)/(a+b+2.0)) return bt*betacf(a,b,x)/a;
@@ -152,7 +154,7 @@ double inverseF(int df1, int df2, double alfa){
     else minF= halfway;
     absdiff= fabs(prob-alfa);
   }
-  Rprintf("prob=%f; alfa=%f\n",prob,alfa);
+  cout << "prob=" << prob << "; alfa=" << alfa << endl;
   return halfway;
 }
 
@@ -162,10 +164,10 @@ void backwardelimination(uint nvariables,uint nsamples, dmatrix x, dvector w, dv
   double  logLfull   = likelihoodbyem(nvariables,nsamples,x,w,y);
   bvector model      = newbvector(nvariables);
   double  dropneeded = 2*inverseF(2,nsamples-nvariables,0.005);
-  Rprintf("Likelihood of the full model: %f\n",logLfull);
+  cout << "Likelihood of the full model: " << logLfull << endl;
   while((!finished) && modelsize(nvariables,model) > 1){
 
-    Rprintf("modelsize(model) = %i, Drop = %f\n",modelsize(nvariables,model),dropneeded);
+    cout << "modelsize(model) = " << modelsize(nvariables,model) << "Drop " << dropneeded <<endl;
     dvector logL = newdvector(modelsize(nvariables,model));
     for(uint todrop=0;todrop<modelsize(nvariables,model);todrop++){
       bvector tempmodel = newbvector(nvariables);
@@ -178,15 +180,15 @@ void backwardelimination(uint nvariables,uint nsamples, dmatrix x, dvector w, dv
     }
 
     leastinterestingmodel = lowestindex(modelsize(nvariables,model),logL);
-    Rprintf("Least interesting model: %i, Difference to fullmodel:%f\n",leastinterestingmodel,(logLfull - logL[leastinterestingmodel]));
+    cout << "Least interesting model:" << leastinterestingmodel << " Difference to fullmodel:" << (logLfull - logL[leastinterestingmodel]) << endl;
     if(dropneeded > fabs(logLfull - logL[leastinterestingmodel])){
       dropterm(nvariables,model,leastinterestingmodel);
       logLfull = logL[leastinterestingmodel];
-      Rprintf("Drop variable %i\n",leastinterestingmodel);
-      Rprintf("Likelihood of the new full model:%f\n",logLfull);
+      cout << "Drop variable" << leastinterestingmodel << endl;
+      cout << "Likelihood of the new full model: " << logLfull<< endl;
     }else{
       for(uint x=0;x<nvariables;x++){
-        if(model[x]) Rprintf("Variable %i in model\n",x);
+        if(model[x]) cout << "Variable" << x << "In Model" << endl;
       }
       finished=true;
     }
@@ -217,7 +219,7 @@ double likelihoodbyem(uint nvariables,uint nsamples, dmatrix x, dvector w, dvect
 
   freevector((void*)Fy);
 
-  Rprintf("[EM algorithm]\tFinished with %f, after %i/%i cycles\n",logL,emcycle,maxemcycles);
+  cout << "[EM algorithm]\tFinished with "<< logL <<" after " << emcycle << "/" << maxemcycles << " cycles" << endl;
   return logL;
 }
 
@@ -309,7 +311,7 @@ bool LUdecomposition(dmatrix m, int dim, ivector ndx, int *d) {
       }
     }
     if (max==0.0){
-      Rprintf("Singular matrix\n");
+      cout << "Singular matrix" << endl;
       return false;
     }
     scale[r]=1.0/max;
@@ -328,7 +330,7 @@ bool LUdecomposition(dmatrix m, int dim, ivector ndx, int *d) {
       }
     }
     if (max==0.0){
-      Rprintf("Singular matrix\n");
+      cout << "Singular matrix" << endl;
       return false;
     }
     if (rowmax!=c) {

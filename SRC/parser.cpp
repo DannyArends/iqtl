@@ -146,7 +146,7 @@ uint getnames(char*** names, rawfilestruct rawfile, uint pos,uint num, uint* siz
 
 uint getname(rawfilestruct rawfile,char** name, uint pos){
   uint length = (uint)rawfile.memblock[pos];
-  //cout << "Name size: " << length << endl;
+  cout << "Name size: " << length << endl;
   pos++;
   *name = (char*)mycalloc(length+1,sizeof(char));
   for(uint i=0; i<length; i++){
