@@ -1,7 +1,7 @@
 Package: iqtl
 Version: 0.1
-Date: 15 Mar 2010
-Title: Interactive viewer for R/qtl
+Date: 04 September 2010
+Title: Interactive for R/qtl
 Author: Danny Arends <Danny.Arends@gmail.com>
 Maintainer: Danny Arends <Danny.Arends@gmail.com>
 Depends: R (>= 1.8.0), qtl, bitops, RCurl, snow, randomForest
