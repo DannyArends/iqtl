@@ -22,15 +22,9 @@
 \value{
 	plotting routine, no return value
 }
-\references{ 
-	
-}
 \author{ 
 	Danny Arends \email{Danny.Arends@gmail.com}
 	Maintainer: Danny Arends \email{Danny.Arends@gmail.com} 
-}
-\note{
-
 }
 \seealso{
 	\itemize{

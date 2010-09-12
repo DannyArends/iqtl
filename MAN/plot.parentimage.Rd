@@ -16,15 +16,8 @@
   \item{cutoffpar}{ Parental cutoff (DEFAULT: value > 5*std-dev) }
   \item{\dots}{ Additional arguments to plotting function }
 }
-
-\details{
-
-}
 \value{
 	plotting routine, no return value
-}
-\references{ 
-
 }
 \author{ 
 	Danny Arends \email{Danny.Arends@gmail.com}

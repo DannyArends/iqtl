@@ -17,18 +17,9 @@ kinshipNetwork(result, name="network")
 \details{
 	Build a .sif network file containing possible parent <-> child interacytions
 }
-\value{
-
-}
-\references{
-
-}
 \author{ 
 	Danny Arends \email{Danny.Arends@gmail.com}
 	Maintainer: Danny Arends \email{Danny.Arends@gmail.com} 
-}
-\note{
-
 }
 \seealso{
 	\itemize{

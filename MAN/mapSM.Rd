@@ -12,21 +12,9 @@
 	\item{data}{ main datastructure for QTLframework}
 	\item{model}{ main modelstructure for QTLframework}
 }
-\details{
-
-}
-\value{
-
-}
-\references{
-
-}
 \author{ 
 	Danny Arends \email{Danny.Arends@gmail.com}
 	Maintainer: Danny Arends \email{Danny.Arends@gmail.com} 
-}
-\note{
-
 }
 \seealso{
 	\itemize{

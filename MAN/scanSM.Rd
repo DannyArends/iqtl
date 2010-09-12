@@ -14,27 +14,20 @@
   \item{file}{ Save result to a file (file=<filename>) }
   \item{sep}{ Separator used in the file }
 }
-\details{
-
-}
-\value{
-
-}
-\references{
-
-}
 \author{ 
 	Danny Arends \email{Danny.Arends@gmail.com}
 	Maintainer: Danny Arends \email{Danny.Arends@gmail.com} 
 }
 \note{
-
+  TODO
 }
 \seealso{
-
+  TODO
 }
 \examples{
-
+	require(qtl)
+	data(hyper)
+	result <- scanSM(cross=hyper,pheno.col=1)
 }
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

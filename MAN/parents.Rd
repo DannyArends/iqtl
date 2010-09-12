@@ -14,21 +14,12 @@ parents(res, file = "test", cutoff = 3)
   \item{file}{ Save result to a file (file=<filename>) }
   \item{cutoff}{ cutoff value above which parents are established (DEFAULT: 3*stddev) }
 }
-\details{
-
-}
 \value{
 	\code{matrix} - "Individual" "Parent1" "Parent1"
-}
-\references{
-
 }
 \author{ 
 	Danny Arends \email{Danny.Arends@gmail.com}
 	Maintainer: Danny Arends \email{Danny.Arends@gmail.com} 
-}
-\note{
-
 }
 \seealso{
 	\itemize{

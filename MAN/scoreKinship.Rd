@@ -26,14 +26,14 @@ scoreKinship(matrix, number = ncol(matrix), plot = T, file = NULL)
 	\code{Matrix} - Genetic distance
 }
 \references{ 
-
+  TODO
 }
 \author{ 
 	Danny Arends \email{Danny.Arends@gmail.com}
 	Maintainer: Danny Arends \email{Danny.Arends@gmail.com} 
 }
 \note{
-
+  TODO
 }
 \seealso{
 	\itemize{

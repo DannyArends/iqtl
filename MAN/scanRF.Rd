@@ -22,7 +22,7 @@ scanRF(cross = NULL, pheno.col = 1, filename = NULL, ...)
 	}
 }
 \value{
-
+  TODO
 }
 \references{
 	\itemize{
@@ -35,10 +35,10 @@ scanRF(cross = NULL, pheno.col = 1, filename = NULL, ...)
 	Maintainer: Danny Arends \email{Danny.Arends@gmail.com} 
 }
 \note{
-
+  TODO
 }
 \seealso{
-
+  TODO
 }
 \examples{
 	require(qtl)

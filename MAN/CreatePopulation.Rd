@@ -12,27 +12,9 @@
 	\item{individuals}{ Simulate a population with this many individuals}
 	\item{markers}{ Simulate this many markers per individuals}
 }
-\details{
-
-}
-\value{
-
-}
-\references{
-
-}
 \author{ 
 	Danny Arends \email{Danny.Arends@gmail.com}
 	Maintainer: Danny Arends \email{Danny.Arends@gmail.com} 
-}
-\note{
-
-}
-\seealso{
-
-}
-\examples{
-
 }
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }

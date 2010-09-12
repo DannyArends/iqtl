@@ -14,25 +14,12 @@
   \item{num}{ Show this many individuals }
   \item{\dots}{ Additional arguments to plotting function }
 }
-
-\details{
-
-}
 \value{
 	plotting routine, no return value
-}
-\references{ 
-
 }
 \author{ 
 	Danny Arends \email{Danny.Arends@gmail.com}
 	Maintainer: Danny Arends \email{Danny.Arends@gmail.com} 
-}
-\note{
-
-}
-\seealso{ 
-
 }
 \examples{
 	#Create a population at H/W equilibrium
