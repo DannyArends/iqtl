@@ -10,31 +10,31 @@
 #
 ######################################################################
 
-biggestholealgorithm <- function(N = 100, list){
+biggestholealgorithm <- function(x, N = 100){
 	if(N < 0) stop("N needs to be larger than 0")
-	n <- length(list)
-	if(n < 0) stop("list needs to contain items")
-	if(n > N) stop("N needs to larger than the number of elements in list")
+	n <- length(x)
+	if(n < 0) stop("x needs to contain items")
+	if(n > N) stop("N needs to larger than the number of elements in x")
 	hetgrootstegat <- 0
-	list <- sort(list)
-	for(x in 0:n){
-		if(x==0){
+	x <- sort(x)
+	for(c in 0:n){
+		if(c==0){
 			g1 <- 0
 		}else{
-			g1 <- list[x]
+			g1 <- x[c]
 		}
-		if(x==n){
+		if(c==n){
 			g2 <- N
 		}else{
-			g2 <- list[x+1]
+			g2 <- x[c+1]
 		}
-		if(g1 < 0 || g1 > N) stop("list element",x,"value",g1,"outside domain")
-		if(g2 < 0 || g2 > N) stop("list element",x,"value",g2,"outside domain")
+		if(g1 < 0 || g1 > N) stop("Element",c,"value",g1,"outside domain")
+		if(g2 < 0 || g2 > N) stop("Element",c,"value",g2,"outside domain")
 		if(hetgrootstegat < (g2-g1)){
 			hetgrootstegat <- (g2-g1)
 		}
 	}
-	cat("Maximum expected hole:",round(N/n),"\n")
+	cat("Macimum ecpected hole:",round(N/n),"\n")
 	cat("Observed largest hole:",hetgrootstegat,"\n")
 	if(hetgrootstegat)
 	return (round(N/n)/(hetgrootstegat))

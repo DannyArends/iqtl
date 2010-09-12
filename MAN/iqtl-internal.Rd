@@ -17,7 +17,6 @@
 \alias{assortedmating}
 \alias{assortedmating.init}
 \alias{avgResults}
-\alias{biggestholealgorithm}
 \alias{checkcutoffndrop}
 \alias{client.start}
 \alias{create.client}
