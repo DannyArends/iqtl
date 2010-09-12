@@ -17,4 +17,3 @@
 	Maintainer: Danny Arends \email{Danny.Arends@gmail.com} 
 }
 \keyword{ datagen }
-\keyword{ ~kwd2 }

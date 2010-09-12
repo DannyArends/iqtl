@@ -45,3 +45,6 @@
   
   datafile.svg(multitraitQTLs)
 }
+
+\keyword{IO}
+\keyword{data}

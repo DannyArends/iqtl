@@ -45,5 +45,4 @@ kinshipNetwork(result, name="network")
 	kinshipNetwork(result[[1]],"test_network")
 }
 
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+\keyword{methods}

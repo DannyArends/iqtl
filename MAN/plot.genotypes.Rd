@@ -48,5 +48,4 @@
 	plot.genotypes(breedingresults)
 }
 
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+\keyword{hplot}

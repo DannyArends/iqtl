@@ -38,3 +38,6 @@ r <- read.xgap("bindataL.bin")
 r <- read.xgap("bintdata.bin")
 r <- read.xgap("bintdataL.bin")
 }
+
+\keyword{IO}
+\keyword{database}

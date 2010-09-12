@@ -45,3 +45,5 @@
   
   deploy.svg(multitraitQTLs,cross=multiloc)
 }
+
+\keyword{iplot}

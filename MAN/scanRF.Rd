@@ -33,5 +33,5 @@
 	aaa <- scanRF(listeria)					#Listeria dataset Phenotype1
 	aaa	<- scanRF(hyper)					#Hypertensia dataset Phenotype1
 }
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+\keyword{methods}

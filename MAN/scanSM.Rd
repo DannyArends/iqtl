@@ -27,5 +27,5 @@
 \examples{
   #TODO
 }
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+\keyword{methods}

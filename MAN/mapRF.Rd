@@ -35,5 +35,5 @@
 	data <- testdata()
 	mapRF(data)
 }
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+
+\keyword{methods}

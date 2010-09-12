@@ -25,5 +25,5 @@ find.parent(res, individual, cutoff)
 		\item \code{\link{kinshipNetwork}} - Created a .SIF network with kinship relations between individuals
 	}
 }
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+
+\keyword{methods}

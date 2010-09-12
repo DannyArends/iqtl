@@ -37,5 +37,4 @@
 	plot.parentplot(result,105,0)
 }
 
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+\keyword{hplot}

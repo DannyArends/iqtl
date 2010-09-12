@@ -59,5 +59,4 @@ scoreKinship(matrix, number = ncol(matrix), plot = T, file = NULL)
 	plot.parentimage(result)
 }
 
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+\keyword{methods}

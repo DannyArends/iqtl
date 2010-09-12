@@ -44,3 +44,5 @@
 
   deploy.java(multitraitQTLs,cross=multiloc)
 }
+
+\keyword{iplot}

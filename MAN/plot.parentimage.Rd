@@ -47,5 +47,4 @@
 	plot.parentimage(result)
 }
 
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+\keyword{hplot}

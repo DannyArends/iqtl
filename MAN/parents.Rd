@@ -42,5 +42,4 @@ parents(res, file = "test", cutoff = 3)
 	pList
 }
 
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+\keyword{methods}

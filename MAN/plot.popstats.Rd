@@ -49,5 +49,4 @@
 	plot.popstats(breedingresults,smooth=TRUE,num=10)
 }
 
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+\keyword{hplot}
