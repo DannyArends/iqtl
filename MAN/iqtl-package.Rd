@@ -24,7 +24,7 @@
   Unknown
 	}
 }
-\keyword{ package }
+\keyword{package}
 
 \seealso{
 	\itemize{

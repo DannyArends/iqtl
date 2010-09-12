@@ -46,3 +46,5 @@
 \examples{
   #TODO
 }
+
+\keyword{methods}

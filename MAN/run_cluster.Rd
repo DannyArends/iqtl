@@ -40,3 +40,5 @@
 	Joeri v/d Velde
 	Maintainer: Danny Arends \email{Danny.Arends@gmail.com} 
 }
+
+\keyword{methods}

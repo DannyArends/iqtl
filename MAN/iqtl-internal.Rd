@@ -1,8 +1,6 @@
 \name{iqtl-internal}
 \alias{XGAPheader}
 \alias{XGAPread}
-\alias{BreedAssorted}
-\alias{BreedRandom}
 \alias{DownloadnSave}
 \alias{Generate_Statement}
 \alias{Names}
@@ -47,7 +45,6 @@
 \alias{mqmsupportint}
 \alias{myNames}
 \alias{ourcat}
-\alias{parentCheck}
 \alias{permQTL}
 \alias{plot.all}
 \alias{plot.combined}
@@ -60,7 +57,6 @@
 \alias{testdata}
 \alias{testgnuplot}
 \alias{traitspeaked}
-\alias{unittest.scanRF}
 
 \title{Internal iqtl functions}
 
