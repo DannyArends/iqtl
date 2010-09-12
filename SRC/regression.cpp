@@ -8,10 +8,9 @@
  
 #include "regression.h"
 #include <cstdio>
-#include <cstdlib>
 #include <iostream>
 #include <fstream>
-#include <climits> 
+#include <limits> 
 #include <cfloat>
 
 double Lnormal(double residual, double variance){
@@ -212,7 +211,7 @@ double likelihoodbyem(uint nvariables,uint nsamples, dmatrix x, dvector w, dvect
       w[s] = (w[s]+Fy[s])/w[s];
     }
 
-    delta= abs(logL-logLprev);
+    delta= fabs(logL-logLprev);
     logLprev=logL;
     emcycle++;
   }

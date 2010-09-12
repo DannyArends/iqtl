@@ -11,7 +11,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
-#include <climits> 
+#include <limits> 
 #include <cfloat>
 #define LITTLE_ENDIAN 0
 #define BIG_ENDIAN    1
