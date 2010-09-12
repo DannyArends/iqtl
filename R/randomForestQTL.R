@@ -16,14 +16,14 @@
  #
 #####################################################################
 
-unittest.scanRF <- function(){
-	require(qtl)
-	require(randomForest)
-	data(listeria)
-	data(hyper)	
-	aaa <- scanRF(listeria)					#Listeria dataset Phenotype1
-	aaa	<- scanRF(hyper)					#Hypertensia dataset Phenotype1
-}
+#unittest.scanRF <- function(){
+#	require(qtl)
+#	require(randomForest)
+#	data(listeria)
+#	data(hyper)	
+#	aaa <- scanRF(listeria)					#Listeria dataset Phenotype1
+#	aaa	<- scanRF(hyper)					#Hypertensia dataset Phenotype1
+#}
 
 mapRF <- function(data,model){
 	require(randomForest)
