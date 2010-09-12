@@ -16,5 +16,5 @@
 	Danny Arends \email{Danny.Arends@gmail.com}
 	Maintainer: Danny Arends \email{Danny.Arends@gmail.com} 
 }
-\keyword{ ~kwd1 }
+\keyword{ datagen }
 \keyword{ ~kwd2 }
