@@ -17,6 +17,9 @@
     char*           memblock;
   }rawfilestruct;
   
+  int endian(void);
+  char* integer2binary(uint a);
+  void printcharasbinary(char ch);
   bool parsefile(const char* filename, rawfilestruct* rawfile);
   char getnullchar(rawfilestruct rawfile);
   bool isbinary(rawfilestruct rawfile, uint pos);
