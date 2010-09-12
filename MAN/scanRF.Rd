@@ -1,6 +1,6 @@
 \name{scanRF}
 \alias{scanRF}
-\title{ scanRF - QTL scanning using a single marker anova model }
+\title{ scanRF - QTL scanning using randomForest algorithm }
 \description{
 	Older version, please see the new mapSM function
 }
