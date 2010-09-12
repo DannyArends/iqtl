@@ -41,7 +41,7 @@ mapQTL <- function(trait, genotypes, markers=seq(1,ncol(genotypes))){
   genotypes <- as.matrix(genotypes)
   LODvalues <- NULL
   for(marker in markers){
-    cat(marker,"\n")
+    #cat(marker,"\n")
     genomodel <- lm(trait ~ as.numeric(genotypes[,marker]))
     Pvalues <- anova(genomodel)[[5]]
     sign <- as.numeric(coefficients(genomodel)[2]/abs(coefficients(genomodel)[2]))
