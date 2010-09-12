@@ -187,3 +187,8 @@ report <- function(dbpath,task,job,status,text){
 		q("no")
 	}
 }
+
+Names <- function(pre="n",n){
+  a <- paste(pre,1:n,sep="")
+  a
+}
