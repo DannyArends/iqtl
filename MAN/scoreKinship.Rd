@@ -16,7 +16,7 @@ scoreKinship(matrix, number = ncol(matrix), plot = T, file = NULL)
   \item{file}{ Save result to a file (file=<filename>) }
 }
 \details{
-
+  TODO
 }
 \value{
 	A list with two items:

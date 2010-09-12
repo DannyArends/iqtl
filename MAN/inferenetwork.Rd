@@ -5,14 +5,15 @@
 	Causal inference of genetic networks using regression
 }
 \usage{
-  inferenetwork(traits,genotypes,QTLresults=NULL,inferenceprofiles=NULL,lodqtl=4,loddrop=8)
+  inferenetwork(traits, genotypes, name = "main", QTLresults = NULL,
+                 lodqtl = 4, loddrop = 8)
 }
 
 \arguments{
   \item{traits}{ Trait matrix }
-  \item{traits}{ Genotypes matrix }
+  \item{genotypes}{ Genotypes matrix }
+  \item{name}{ Name for the results }
   \item{QTLresults}{ Pre-calculated QTL results }
-  \item{inferenceprofiles}{ Pre-calculated infernce profiles }
   \item{lodqtl}{ Above what LOD score do we call a QTL significant }
   \item{loddrop}{ How much LOD schould be lost when regressing out T1 on T2 before calling a causal link }  
 }

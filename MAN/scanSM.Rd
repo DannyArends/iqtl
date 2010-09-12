@@ -25,9 +25,7 @@
   TODO
 }
 \examples{
-	require(qtl)
-	data(hyper)
-	result <- scanSM(cross=hyper,pheno.col=1)
+  #TODO
 }
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }
