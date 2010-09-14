@@ -1,12 +1,17 @@
 /**********************************************************************
+ * 
+ * xgapparser.cpp
  *
- * parser.cpp
+ * copyright (c) 2009 Danny Arends
+ * last modified Sep, 2010
+ * first written Apr, 2009
  *
- * Copyright (c) 2010 Danny Arends
+ * C functions for the iqtl package
+ * Contains:
  *
  **********************************************************************/
  
-#include "parser.h"
+#include "xgapparser.h"
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>

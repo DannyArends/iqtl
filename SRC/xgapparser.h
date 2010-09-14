@@ -1,12 +1,25 @@
 /**********************************************************************
+ * 
+ * xgapparser.h
  *
- * parser.h
+ * copyright (c) 2009 Danny Arends
+ * last modified Sep, 2010
+ * first written Apr, 2009
  *
- * Copyright (c) 2010 Danny Arends
+ * C functions for the iqtl package
+ * Contains:  endian
+ *            integer2binary
+ *            printcharasbinary
+ *            parsefile
+ *            getnullchar
+ *            isbinary
+ *            getncols
+ *            getnrows
  *
  **********************************************************************/
-#ifndef _PARSER_H
-  #define _PARSER_H
+
+#ifndef _XGAPPARSER_H
+  #define _XGAPPARSER_H
   extern "C"
   {
   #include <R.h>

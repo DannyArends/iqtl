@@ -1,19 +1,22 @@
 /**********************************************************************
  * 
- * R_interface.cpp
+ * xgapbin_r.cpp
  *
  * copyright (c) 2009 Danny Arends
- * last modified Apr, 2009
+ * last modified Sep, 2010
  * first written Apr, 2009
  *
- * C functions for the Rexamples package
- * Contains: R_add_in_C
+ * C functions for the iqtl package
+ * Contains: R_load_XGAPheader
+ *           R_load_XGAPnames
+ *           R_load_XGAPdouble
+ *           R_load_XGAPstring
  *
  **********************************************************************/
 
 extern "C"
 {
-#include "R_Interface.h"
+#include "xgapbin_r.h"
 #include "datastructures.h"
 	
   void R_load_XGAPheader(char **filename,int* num_rows,int* num_cols,int* isNumeric,int* pos){
