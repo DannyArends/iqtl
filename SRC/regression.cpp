@@ -1,7 +1,9 @@
 /**
- * \file MYMATH/regression.cpp
- * \brief Code file, Implementation of: \ref LUdecomposition, \ref LUsolve, \ref LUinvert
+ * \file regression.cpp
+ * \brief Code file containing functions
  *
+ * last modified Sep, 2010
+ * first written Apr, 2010
  * Copyright (c) 2010 Danny Arends
  * 
  **/

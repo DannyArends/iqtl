@@ -1,10 +1,10 @@
-/**********************************************************************
- * 
- * xgapparser.h
+/**
+ * \file xgapparser.h
+ * \brief Header file, for xgapparser.cpp
  *
- * copyright (c) 2009 Danny Arends
  * last modified Sep, 2010
  * first written Apr, 2009
+ * copyright (c) 2009-2010 Danny Arends
  *
  * C functions for the iqtl package
  * Contains:  endian
@@ -16,7 +16,7 @@
  *            getncols
  *            getnrows
  *
- **********************************************************************/
+ **/
 
 #ifndef _XGAPPARSER_H
   #define _XGAPPARSER_H

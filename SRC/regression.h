@@ -2,6 +2,8 @@
  * \file regression.h
  * \brief Header file, for regression.cpp
  *
+ * last modified Sep, 2010
+ * first written Apr, 2010 
  * Copyright (c) 2010 Danny Arends
  * 
  **/

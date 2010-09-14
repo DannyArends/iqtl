@@ -1,10 +1,10 @@
-/**********************************************************************
- * 
- * xgapbin_r.h
+/**
+ * \file xgapbin_r.h
+ * \brief Header file, for xgapbin_r.cpp
  *
- * copyright (c) 2009 Danny Arends
- * last modified Apr, 2009
+ * last modified Sep, 2010
  * first written Apr, 2009
+ * copyright (c) 2009-2010 Danny Arends
  *
  * C functions for the iqtl package
  * Contains: R_load_XGAPheader
@@ -12,7 +12,7 @@
  *           R_load_XGAPdouble
  *           R_load_XGAPstring
  *
- **********************************************************************/
+ **/
  
  #ifndef _XGAPBIN_R_H
   #define _XGAPBIN_R_H

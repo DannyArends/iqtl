@@ -1,10 +1,20 @@
-/**********************************************************************
+/**
+ * \file datastructures.cpp
+ * \brief Code file containing functions to manipulate datastructures
  *
- * datastructures.cpp
+ * last modified Sep, 2010
+ * first written Apr, 2010
+ * copyright (c) 2010 Danny Arends
  *
- * Copyright (c) 2010 Danny Arends
+ * C functions for the iqtl package
+ * Contains:  newbvector,newdvector,newcvector,newivector
+ *            printdvector,printcvector,printivector
+ *            newdmatrix,newcmatrix,newimatrix
+ *            printdmatrix,printcmatrix,printimatrix
+ *            freematrix,freevector,mycalloc
  *
- **********************************************************************/
+ **/
+ 
 #include "datastructures.h"
 #include <cstdio>
 #include <cstdlib>

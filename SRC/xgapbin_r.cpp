@@ -1,10 +1,10 @@
-/**********************************************************************
- * 
- * xgapbin_r.cpp
+/**
+ * \file xgapbin_r.cpp
+ * \brief Interface functions used to communicate with R for the functions in xgapparser.h
  *
- * copyright (c) 2009 Danny Arends
  * last modified Sep, 2010
  * first written Apr, 2009
+ * copyright (c) 2009-2010 Danny Arends
  *
  * C functions for the iqtl package
  * Contains: R_load_XGAPheader
@@ -12,7 +12,7 @@
  *           R_load_XGAPdouble
  *           R_load_XGAPstring
  *
- **********************************************************************/
+ **/
 
 extern "C"
 {

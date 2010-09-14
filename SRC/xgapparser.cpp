@@ -1,15 +1,15 @@
-/**********************************************************************
- * 
- * xgapparser.cpp
+/**
+ * \file xgapparser.cpp
+ * \brief Functions to parse a XGAP binary file
  *
- * copyright (c) 2009 Danny Arends
  * last modified Sep, 2010
  * first written Apr, 2009
+ * copyright (c) 2009-2010 Danny Arends
  *
  * C functions for the iqtl package
  * Contains:
  *
- **********************************************************************/
+ **/
  
 #include "xgapparser.h"
 #include <cstdio>
