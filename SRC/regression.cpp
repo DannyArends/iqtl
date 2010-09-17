@@ -14,15 +14,16 @@
 #include <fstream>
 #include <limits> 
 #include <cfloat>
+#include <R.h>
+#include <Rmath.h>
 
 double Lnormal(double residual, double variance){
-  return exp(-pow(residual/sqrt(variance),2.0)/2.0 - log(sqrt(2.0*PI*variance)));
+  return dnorm(residual,0,sqrt(variance),0);
 }
 
 void testregression(){
   uint   nvariables  = 10;
   uint   nsamples    = 300;
-
   dmatrix x = newdmatrix(nsamples,nvariables);
   dvector w = newdvector(nsamples);
   dvector y = newdvector(nsamples);
@@ -34,7 +35,7 @@ void testregression(){
     y[s]= s + float(rand()%10);
   }
 
-  backwardelimination(nvariables,nsamples,x,w,y);
+  backwardelimination(nvariables,nsamples,x,w,y,1);
 }
 
 uint modelsize(uint nvariables, bvector model){
@@ -70,6 +71,18 @@ uint lowestindex(uint dim, dvector values){
   return index;
 }
 
+uint highestindex(uint dim, dvector values){
+  double max = values[0];
+  uint index = 0;
+  for(uint v=0;v<dim;v++){
+    if(values[v] > max){
+      max=values[v];
+      index=v;
+    }
+  }
+  return index;
+}
+
 void copybvector(uint dim,bvector origin,bvector target){
   for(uint v=0;v<dim;v++){
     target[v]=origin[v];
@@ -93,55 +106,8 @@ dmatrix createdesignmatrix(uint nvariables,uint nsamples, dmatrix x, bvector mod
   return Xn;
 }
 
-double betacf(double a, double b, double x){
-  double qap,qam,qab,em,tem,d,bz,bm=1.0,bp,bpp,az=1.0,am=1.0,ap,app,aold;
-  int m;
-  qab=a+b;
-  qap=a+1.0;
-  qam=a-1.0;
-  bz=1.0-qab*x/qap;
-  for (m=1; m<=100; m++)
-  {   em=(double)m;
-      tem=em+em;
-      d=em*(b-em)*x/((qam+tem)*(a+tem));
-      ap=az+d*am;
-      bp=bz+d*bm;
-      d= -(a+em)*(qab+em)*x/((qap+tem)*(a+tem));
-      app=ap+d*az;
-      bpp=bp+d*bz;
-      aold=az;
-      am=ap/bpp;
-      bm=bp/bpp;
-      az=app/bpp;
-      bz=1.0;
-      if ( fabs((az-aold)/az)  < 3.0e-7) return az;
-  }
-  cout << "a or b too big or max number of iterations too small";
-  exit(1); return 0.0;
-}
-
-/* functions gammln, betacf, betai necessary to calculate F(P,df1,df2) */
-double gammln(double xx){
-  double x,tmp,ser;
-  static double cof[6]={76.18009173, -86.50532033, 24.01409822,
-                     -1.231739516, 0.120858003e-2, -0.536382e-5};
-  // if (xx<1) cout << "warning: full accuracy only for xx>1; xx= " << xx << endl;
-  x=xx-1.0;
-  tmp=x+5.5;
-  tmp-= (x+0.5)*log(tmp);
-  ser=1.0;
-  for (int j=0; j<=5; j++) { x+=1.0; ser += cof[j]/x; }
-  // delete[] cof;
-  return -tmp+log(2.50662827465*ser);
-}
-
-double betai(double a, double b, double x){
-  double bt;
-  if (x<0.0 || x>1.0) { cout << "x not between 0 and 1"; exit(1); }
-  if (x==0.0 || x==1.0) bt=0.0;
-  else bt=exp(gammln(a+b)-gammln(a)-gammln(b)+a*log(x)+b*log(1.0-x));
-  if (x<(a+1.0)/(a+b+2.0)) return bt*betacf(a,b,x)/a;
-  else return 1.0-bt*betacf(b,a,1.0-x)/b;
+void inverseF_R(int* df1,int* df2, double* alfa, double* out){
+  (*out) = inverseF((*df1), (*df1), (*alfa));
 }
 
 double inverseF(int df1, int df2, double alfa){
@@ -150,122 +116,218 @@ double inverseF(int df1, int df2, double alfa){
   while ((absdiff>0.001)&&(count<100)){
     count++;
     halfway= (maxF+minF)/2.0;
-    prob= betai(df2/2.0,df1/2.0,df2/(df2+df1*halfway));
+    prob = pbeta(df2/(df2+df1*halfway), df2/2.0, df1/2.0, 1, 0);
     if (prob<alfa) maxF= halfway;
     else minF= halfway;
     absdiff= fabs(prob-alfa);
   }
-  cout << "prob=" << prob << "; alfa=" << alfa << endl;
+  Rprintf("prob = %f, alfa= %f\n",prob,alfa);
   return halfway;
 }
 
-void backwardelimination(uint nvariables,uint nsamples, dmatrix x, dvector w, dvector y){
+void backwardelimination_R(int* nvariables,int* nsamples, double* x, double* w, double* y,int* verbose,double* out){
+  dmatrix transformedx;
+  dvectortodmatrix((*nsamples),(*nvariables),x,&transformedx);
+  backwardelimination((*nvariables), (*nsamples), transformedx, w, y, (*verbose));
+}
+
+void backwardelimination(uint nvariables,uint nsamples, dmatrix x, dvector w, dvector y,int verbose){
   bool    finished   = false;
   uint    leastinterestingmodel;
-  double  logLfull   = likelihoodbyem(nvariables,nsamples,x,w,y);
+  double  logLfull   = likelihoodbyem(nvariables,nsamples,x,w,y,0);
   bvector model      = newbvector(nvariables);
   double  dropneeded = 2*inverseF(2,nsamples-nvariables,0.005);
-  cout << "Likelihood of the full model: " << logLfull << endl;
+  if(verbose) Rprintf("Likelihood of the full model: %f\n",logLfull);
   while((!finished) && modelsize(nvariables,model) > 1){
 
-    cout << "modelsize(model) = " << modelsize(nvariables,model) << "Drop " << dropneeded <<endl;
+    if(verbose) Rprintf("modelsize(model) = %d, Drop %f\n", modelsize(nvariables,model),dropneeded);
     dvector logL = newdvector(modelsize(nvariables,model));
     for(uint todrop=0;todrop<modelsize(nvariables,model);todrop++){
       bvector tempmodel = newbvector(nvariables);
       copybvector(nvariables,model,tempmodel);
       dropterm(nvariables,tempmodel,todrop);
       dmatrix designmatrix = createdesignmatrix(nvariables,nsamples,x,tempmodel);
-      logL[todrop] = likelihoodbyem(modelsize(nvariables,tempmodel),nsamples,designmatrix,w,y);
+      logL[todrop] = likelihoodbyem(modelsize(nvariables,tempmodel),nsamples,designmatrix,w,y,0);
       freematrix((void**)designmatrix,nsamples);
       freevector((void*)tempmodel);
     }
 
-    leastinterestingmodel = lowestindex(modelsize(nvariables,model),logL);
-    cout << "Least interesting model:" << leastinterestingmodel << " Difference to fullmodel:" << (logLfull - logL[leastinterestingmodel]) << endl;
+    leastinterestingmodel = highestindex(modelsize(nvariables,model),logL);
+    if(verbose) Rprintf("Least interesting model: %d\n", leastinterestingmodel);
+    if(verbose) Rprintf("Difference to fullmodel: %f\n", (logLfull - logL[leastinterestingmodel]));
     if(dropneeded > fabs(logLfull - logL[leastinterestingmodel])){
       dropterm(nvariables,model,leastinterestingmodel);
       logLfull = logL[leastinterestingmodel];
-      cout << "Drop variable" << leastinterestingmodel << endl;
-      cout << "Likelihood of the new full model: " << logLfull<< endl;
+      if(verbose) Rprintf("Drop variable %d\n", leastinterestingmodel);
+      if(verbose) Rprintf("Likelihood of the new full model: %f",logLfull);
     }else{
       for(uint x=0;x<nvariables;x++){
-        if(model[x]) cout << "Variable" << x << "In Model" << endl;
+        if(model[x]) Rprintf("Variable %d in Model",x);
       }
       finished=true;
     }
   }
-
 }
 
-double likelihoodbyem(uint nvariables,uint nsamples, dmatrix x, dvector w, dvector y){
+void modellikelihoodbyem_R(int* nvariables,int* nsamples, double* x, double* w, double* y,int* verbose,double* out){
+  dmatrix transformedx;
+  dvectortodmatrix((*nsamples),(*nvariables),x,&transformedx);
+ (*out) = likelihoodbyem((*nvariables), (*nsamples), transformedx, w, y, (*verbose));
+}
+
+void nulllikelihoodbyem_R(int* nvariables,int* nsamples, double* x, double* w, double* y,int* verbose,double* out){
+  dmatrix transformedx;
+  dvectortodmatrix((*nsamples),(*nvariables),x,&transformedx);
+ (*out) = nullmodel((*nvariables), (*nsamples), transformedx, w, y, (*verbose));
+}
+
+void likelihoodbyem_R(int* nvariables,int* nsamples, double* x, double* w, double* y,int* verbose,double* out){
+  dmatrix transformedx;
+  dvectortodmatrix((*nsamples),(*nvariables),x,&transformedx);
+ (*out) = likelihoodbyem((*nvariables), (*nsamples), transformedx, w, y, (*verbose));
+ (*out) -= nullmodel((*nvariables), (*nsamples), transformedx, w, y, (*verbose));
+}
+
+double likelihoodbyem(uint nvariables,uint nsamples, dmatrix x, dvector w, dvector y,int verbose){
   uint   maxemcycles = 1000;
   uint   emcycle     = 0;
   double delta       = 1.0f;
   double logL        = 0.0f;
   double logLprev    = 0.0f;
-
+  
+  if(verbose){
+    Rprintf("DesignMatrix:\n");
+    printdmatrix(x,nsamples,nvariables);
+  }
   dvector Fy = newdvector(nsamples);
-  //printdmatrix(x,nsamples,nvariables);
-  while((emcycle<maxemcycles) && (delta>1.0e-5)){
-    logL = multivariateregression(nvariables,nsamples,x,w,y,Fy);
-
+  
+  if(verbose) Rprintf("Starting EM\n");
+  while((emcycle<maxemcycles) && (delta > 1.0e-9)){
+    logL = multivariateregression(nvariables,nsamples,x,w,y,Fy,verbose);
     for(uint s=0;s<nsamples;s++){
-      w[s] = (w[s]+Fy[s])/w[s];
+      if(w[s] != 0) w[s] = (w[s] + Fy[s])/w[s];
     }
-
-    delta= fabs(logL-logLprev);
+    delta = fabs(logL-logLprev);
     logLprev=logL;
     emcycle++;
   }
-
   freevector((void*)Fy);
-
-  cout << "[EM algorithm]\tFinished with "<< logL <<" after " << emcycle << "/" << maxemcycles << " cycles" << endl;
-  return logL;
+  
+  Rprintf("Finished with %f after %d/%d cycles\n",logL,emcycle,maxemcycles);
+  return (logL);
 }
 
-double multivariateregression(uint nvariables, uint nsamples, dmatrix x, dvector w, dvector y, dvector Fy){
-  
+dvector calculateparameters(uint nvariables, uint nsamples, dmatrix xt, dvector w, dvector y, int verbose){
   int d=0;
   double xtwj;
-  dmatrix Xt   = newdmatrix(nvariables,nsamples);
   dmatrix XtWX = newdmatrix(nvariables, nvariables);
   dvector XtWY = newdvector(nvariables);
 
   ivector indx = newivector(nvariables);
 
-  //cout << "calculating Xt" << endl;
+  if(verbose) Rprintf("calculating XtWX and XtWY\n");
+  for(uint i=0; i<nsamples; i++){
+    for(uint j=0; j<nvariables; j++){
+      xtwj     = xt[j][i] * w[i];
+      XtWY[j] += xtwj    * y[i];
+      for(uint jj=0; jj<=j; jj++){
+        XtWX[j][jj] += xtwj * xt[jj][i];
+      }
+    }
+  }
+ 
+  LUdecomposition(XtWX, nvariables, indx, &d);
+  LUsolve(XtWX, nvariables, indx, XtWY);
+  
+  freematrix((void**)XtWX, nvariables);
+  
+  return XtWY;
+}
+
+dmatrix translatematrix(uint nvariables, uint nsamples, dmatrix x, int verbose){
+  dmatrix Xt   = newdmatrix(nvariables,nsamples);
+  if(verbose) Rprintf("calculating Xt\n");
   for(uint i=0; i<nsamples; i++){
     for(uint j=0; j<nvariables; j++){
       Xt[j][i] = x[i][j];
     }
   }
+  return Xt;
+}
 
-  //cout << "calculating XtWX and XtWY" << endl;
-  for(uint i=0; i<nsamples; i++){
-    for(uint j=0; j<nvariables; j++){
-      xtwj     = Xt[j][i] * w[i];
-      XtWY[j] += xtwj    * y[i];
-      for(uint jj=0; jj<=j; jj++){
-        XtWX[j][jj] += xtwj * Xt[jj][i];
-      }
+double multivariateregression(uint nvariables, uint nsamples, dmatrix x, dvector w, dvector y, dvector Fy,int verbose){
+  dmatrix Xt   = translatematrix(nvariables,nsamples,x,verbose);
+  if(verbose){
+    Rprintf("T(DesignMatrix):\n");
+    printdmatrix(Xt,nvariables,nsamples);
+  }
+  dvector XtWY = calculateparameters(nvariables,nsamples,Xt,w,y,verbose);
+
+  if(verbose){
+    Rprintf("Estimated parameters:\n");
+    printdvector(XtWY,nvariables);
+  }
+
+  double variance= 0.0;
+  double logLQTL=0.0;
+  dvector fit       = newdvector(nsamples);
+  dvector residual  = newdvector(nsamples);
+  ldvector indL     = newldvector(nsamples);
+  
+  for (uint i=0; i<nsamples; i++){
+    fit[i]= 0.0;
+    for (uint j=0; j<nvariables; j++){
+      fit[i]       += Xt[j][i] * XtWY[j];
+      residual[i]   = y[i]-fit[i];
+      variance     += w[i]*pow(residual[i],2.0);
     }
+    Fy[i]     = Lnormal(residual[i],variance);
+    indL[i]  += w[i]*Fy[i];
+    logLQTL  += log10(indL[i]);
   }
   
-  LUdecomposition(XtWX, nvariables, indx, &d);
-  LUsolve(XtWX, nvariables, indx, XtWY);
+  if(verbose){
+    Rprintf("Estimated response:\n");
+    printdvector(fit,nsamples);
 
-  //cout << "Estimated parameters:" << endl;
-  //for (uint i=0; i < nvariables; i++){
-  //  cout << "Parameter " << i << " = " << XtWY[i] << endl;
-  //}
+    Rprintf("Residuals:\n");
+    printdvector(residual,nsamples);
 
+    Rprintf("Estimated Fy:\n");
+    printdvector(Fy,nsamples);
+
+    Rprintf("Variance: %f\n",variance);
+    Rprintf("Loglikelihood QTL: %f\n",logLQTL);
+  }
+  
+  freematrix((void**)Xt,nvariables);
+  freevector((void*)XtWY);
+  freevector((void*)fit);
+  freevector((void*)residual);
+  freevector((void*)indL);
+
+  return logLQTL;
+}
+
+double nullmodel(uint nvariables, uint nsamples, dmatrix x, dvector w, dvector y,int verbose){
+  dmatrix Xt   = translatematrix(nvariables,nsamples,x,verbose);
+  dvector XtWY = calculateparameters(nvariables,nsamples,Xt,w,y,verbose);
+  dvector Fy   = newdvector(nsamples);
+  
+  if(verbose){
+    Rprintf("Estimated parameters:\n");
+    printdvector(XtWY,nvariables);
+  }
+
+  double variance= 0.0;
+  double logLNULL=0.0;
   dvector fit = newdvector(nsamples);
   dvector residual = newdvector(nsamples);
-  dvector indL = newdvector(nsamples);
-  
-  double variance= 0.0;
-  double logL=0.0;
+  ldvector indL = newldvector(nsamples);
+
+  for (uint i=1; i < nvariables; i++){
+    XtWY[i] = 0.0;
+  }
 
   for (uint i=0; i<nsamples; i++){
     fit[i]= 0.0;
@@ -276,27 +338,31 @@ double multivariateregression(uint nvariables, uint nsamples, dmatrix x, dvector
     }
     Fy[i]     = Lnormal(residual[i],variance);
     indL[i]  += w[i]*Fy[i];
-    logL     += log(indL[i]);
+    logLNULL += log10(indL[i]);
   }
   
-  //cout << "Estimated response:" << endl;
-  //printdvector(fit,nsamples);
+  if(verbose){
+    Rprintf("Estimated response:\n");
+    printdvector(fit,nsamples);
 
-  //cout << "Residuals:" << endl;
-  //printdvector(residual,nsamples);
+    Rprintf("Residuals:\n");
+    printdvector(residual,nsamples);
 
-  //cout << "Estimated Fy:" << endl;
-  //printdvector(Fy,nsamples);
+    Rprintf("Estimated Fy:\n");
+    printdvector(Fy,nsamples);
 
-  //cout << "Variance: " << variance << endl;
-  //cout << "Loglikelihood: " << logL << endl;
+    Rprintf("Variance: %f\n",variance);
+    Rprintf("Loglikelihood NULL model: %f\n",logLNULL);
+  }
+  
   freematrix((void**)Xt,nvariables);
-  freematrix((void**)XtWX, nvariables);
   freevector((void*)XtWY);
   freevector((void*)fit);
+  freevector((void*)Fy);
   freevector((void*)residual);
   freevector((void*)indL);
-  return logL;
+  
+  return logLNULL;
 }
 
 bool LUdecomposition(dmatrix m, int dim, ivector ndx, int *d) {
@@ -312,7 +378,7 @@ bool LUdecomposition(dmatrix m, int dim, ivector ndx, int *d) {
       }
     }
     if (max==0.0){
-      cout << "Singular matrix" << endl;
+      Rprintf("Singular matrix\n");
       return false;
     }
     scale[r]=1.0/max;
@@ -331,7 +397,7 @@ bool LUdecomposition(dmatrix m, int dim, ivector ndx, int *d) {
       }
     }
     if (max==0.0){
-      cout << "Singular matrix" << endl;
+      Rprintf("Singular matrix\n");
       return false;
     }
     if (rowmax!=c) {
@@ -348,7 +414,6 @@ bool LUdecomposition(dmatrix m, int dim, ivector ndx, int *d) {
     }
   }
   freevector((void*)scale);
-  freevector((void*)swap);
   return true;
 }
 
