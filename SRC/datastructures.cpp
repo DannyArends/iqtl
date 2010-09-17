@@ -16,6 +16,7 @@
  **/
  
 #include "datastructures.h"
+#include <assert.h>
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
@@ -25,13 +26,13 @@
 
 void *mycalloc(uint num, uint size) {
   void *buf;
-  buf = calloc(num,size);
+  buf = R_chk_calloc(num,size);
   if (buf) memset(buf,0,num*size);
   return buf;
 }
 
 bvector newbvector(uint dim) {
-  bvector v = (bvector)calloc(dim,sizeof(bool));
+  bvector v = (bvector)mycalloc(dim,sizeof(bool));
   if (v==NULL) {
     cout << "Not enough memory for new vector of dimension" << (dim+1) << endl;
   }
@@ -41,8 +42,16 @@ bvector newbvector(uint dim) {
   return v;
 }
 
+ldvector newldvector(uint dim) {
+  ldvector v = (ldvector)mycalloc(dim,sizeof(long double));
+  if (v==NULL) {
+    cout << "Not enough memory for new vector of dimension" << (dim+1) << endl;
+  }
+  return v;
+}
+
 dvector newdvector(uint dim) {
-  dvector v = (dvector)calloc(dim,sizeof(double));
+  dvector v = (dvector)mycalloc(dim,sizeof(double));
   if (v==NULL) {
     cout << "Not enough memory for new vector of dimension" << (dim+1) << endl;
   }
@@ -50,14 +59,14 @@ dvector newdvector(uint dim) {
 }
 
 ivector newivector(uint dim) {
-  ivector v = (ivector)calloc(dim,sizeof(int));
+  ivector v = (ivector)mycalloc(dim,sizeof(int));
   if (v==NULL) {
     cout << "Not enough memory for new vector of dimension" << (dim+1) << endl;
   }
   return v;
 }
 cvector newcvector(uint dim) {
-  cvector v = (cvector)calloc(dim,sizeof(char));
+  cvector v = (cvector)mycalloc(dim,sizeof(char));
   if (v==NULL) {
     cout << "Not enough memory for new vector of dimension" << (dim+1) << endl;
   }
@@ -66,25 +75,33 @@ cvector newcvector(uint dim) {
 
 void printdvector(dvector v, uint dim){
   for(uint i=0; i<dim; i++) {
-    cout << v[i] << "\t";
+    Rprintf("%f\t",v[i]);
   }
-  cout << endl;
+  Rprintf("\n");
 }
+
+void printldvector(dvector v, uint dim){
+  for(uint i=0; i<dim; i++) {
+    Rprintf("%f\t",v[i]);
+  }
+  Rprintf("\n");
+}
+
 void printcvector(cvector v, uint dim){
   for(uint i=0; i<dim; i++) {
-    cout << v[i] << "\t";
+   Rprintf("%c\t",v[i]);
   }
-  cout << endl;
+  Rprintf("\n");
 }
 void printivector(ivector v, uint dim){
   for(uint i=0; i<dim; i++) {
-    cout << v[i] << "\t";
+    Rprintf("%d\t",v[i]);
   }
-  cout << endl;
+  Rprintf("\n");
 }
 
 dmatrix newdmatrix(uint rows, uint cols){
-  dmatrix m = (dmatrix)calloc(rows,sizeof(dvector));
+  dmatrix m = (dmatrix)mycalloc(rows,sizeof(dvector));
   if(m==NULL){
     cout << "Not enough memory for newmatrix" << endl;
   }
@@ -94,7 +111,7 @@ dmatrix newdmatrix(uint rows, uint cols){
   return m;
 }
 cmatrix newcmatrix(uint rows, uint cols){
-  cmatrix m = (cmatrix)calloc(rows,sizeof(cvector));
+  cmatrix m = (cmatrix)mycalloc(rows,sizeof(cvector));
   if(m==NULL){
     cout << "Not enough memory for newmatrix" << endl;
   }
@@ -104,7 +121,7 @@ cmatrix newcmatrix(uint rows, uint cols){
   return m;
 }
 imatrix newimatrix(uint rows, uint cols){
-  imatrix m = (imatrix)calloc(rows,sizeof(ivector));
+  imatrix m = (imatrix)mycalloc(rows,sizeof(ivector));
   if(m==NULL){
     cout << "Not enough memory for newmatrix" << endl;
   }
@@ -117,17 +134,17 @@ imatrix newimatrix(uint rows, uint cols){
 void printdmatrix(dmatrix m, uint rows, uint cols){
   for(uint r=0; r<rows; r++) {
     for(uint c=0; c<cols; c++) {
-      cout << m[r][c] << "\t";
+      Rprintf("%f\t",m[r][c]);
     }
-    cout << endl;
+    Rprintf("\n");
   }
 }
 void printcmatrix(cmatrix m, uint rows, uint cols){
   for(uint r=0; r<rows; r++) {
     for(uint c=0; c<cols; c++) {
-      cout << m[r][c] << "\t";
+      Rprintf("%c\t",m[r][c]);
     }
-    cout << endl;
+    Rprintf("\n");
   }
 }
 void printimatrix(imatrix m, uint rows, uint cols){
@@ -139,12 +156,40 @@ void printimatrix(imatrix m, uint rows, uint cols){
   }
 }
 
+void dvectortodmatrix(int nrow, int ncol, dvector in, dmatrix* out){
+  int c,r;
+
+  *out = (double**)R_alloc(nrow, sizeof(double*));
+
+  for(r=0; r<nrow; r++){
+    (*out)[r] = (double*)R_alloc(ncol, sizeof(double));
+    for(c=0; c<ncol; c++){
+     // Rprintf("%d,%d -> %f at %d\n",r,c,in[(c*nrow)+r],(c*nrow)+r);  
+      (*out)[r][c] = in[(c*nrow)+r];
+    }
+  }
+}
+
+void ivectortoimatrix(int nrow, int ncol, ivector in, imatrix* out){
+  int c,r;
+
+  *out = (int**)R_alloc(nrow, sizeof(int*));
+
+  for(r=0; r<nrow; r++){
+    (*out)[r] = (int*)R_alloc(ncol, sizeof(int));
+    for(c=0; c<ncol; c++){
+     // Rprintf("%d,%d -> %f at %d\n",r,c,in[(c*nrow)+r],(c*nrow)+r);  
+      (*out)[r][c] = in[(c*nrow)+r];
+    }
+  }
+}
+
 void freevector(void *v) {
-  free(v);
+  if(v!=0) Free(v);
 }
 void freematrix(void **m,uint rows) {
   for (uint i=0; i < rows; i++) {
-    free(m[i]);
+    if(m[i]!=0) Free(m[i]);
   }
-  free(m);
+  if(m !=0) Free(m);
 }

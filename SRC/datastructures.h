@@ -22,9 +22,11 @@
   {
   bvector newbvector(uint dim);
   dvector newdvector(uint dim);
+  ldvector newldvector(uint dim);
   cvector newcvector(uint dim);
   ivector newivector(uint dim);
 
+  void printldvector(dvector v, uint dim);
   void printdvector(dvector v, uint dim);
   void printcvector(cvector v, uint dim);
   void printivector(ivector v, uint dim);
@@ -37,6 +39,9 @@
   void printcmatrix(cmatrix m, uint rows, uint cols);
   void printimatrix(imatrix m, uint rows, uint cols);
 
+  void dvectortodmatrix(int nrow, int ncol, dvector in, dmatrix* out);
+  void ivectortoimatrix(int nrow, int ncol, ivector in, imatrix* out);
+  
   void freematrix(void **m, uint rows);
   void freevector(void *v);
   void *mycalloc(uint num, uint size);
