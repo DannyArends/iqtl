@@ -27,7 +27,7 @@
   
   typedef struct{
     uint            size;
-    char*           memblock;
+    cvector         memblock;
   }rawfilestruct;
   
   int endian(void);

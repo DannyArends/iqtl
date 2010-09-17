@@ -70,7 +70,7 @@ bool parsefile(const char* filename, rawfilestruct* rawfile){
   myfile.open(filename, std::ios::in | std::ios::binary |std::ios::ate );
   if (myfile.is_open()){
     rawfile->size = myfile.tellg();
-    rawfile->memblock = (char*)mycalloc(rawfile->size,sizeof(char));
+    rawfile->memblock = newcvector(rawfile->size);
     myfile.seekg(0, std::ios::beg);
     myfile.read (rawfile->memblock, rawfile->size);
     myfile.close();
@@ -98,22 +98,22 @@ bool isbinary(rawfilestruct rawfile, uint pos){
 }
 
 uint getncols(rawfilestruct rawfile, uint pos){
-  char* trans = (char*)mycalloc(3,sizeof(char));
+  cvector trans = newcvector(3);
   for(uint x=pos;x < pos+4;x++){
     trans[3-(x-pos)]= rawfile.memblock[x];
   }
   int t = *reinterpret_cast<int*>(trans);
-  free(trans);
+  freevector((void*)trans);
   return t;
 }
 
 uint getnrows(rawfilestruct rawfile, uint pos){
-  char* trans = (char*)mycalloc(3,sizeof(char));
+  cvector trans = newcvector(3);
   for(uint x=pos;x < pos+4;x++){
     trans[3-(x-pos)]= rawfile.memblock[x];
   }
   int t = *reinterpret_cast<int*>(trans);
-  free(trans);
+  freevector((void*)trans);
   return t;
 }
 
@@ -151,7 +151,6 @@ uint getnames(char*** names, rawfilestruct rawfile, uint pos,uint num, uint* siz
 
 uint getname(rawfilestruct rawfile,char** name, uint pos){
   uint length = (uint)rawfile.memblock[pos];
-  cout << "Name size: " << length << endl;
   pos++;
   *name = (char*)mycalloc(length+1,sizeof(char));
   for(uint i=0; i<length; i++){
@@ -187,7 +186,7 @@ void getDecimaldata(rawfilestruct rawfile,uint pos,uint cols,uint rows, double *
       }else{
     //    Rprintf("%.3f\t",(*data)[r][c]);
       }
-      free(trans);
+      Free(trans);
       pos = pos+8;
     }
   //  Rprintf("\n");
@@ -204,7 +203,7 @@ void getFixedStringdata(rawfilestruct rawfile,uint pos,uint cols,uint rows,uint 
   for(uint r=0;r<rows;r++){    
     for(uint c=0;c<cols;c++){
      // Rprintf("%d %d\n",r,c);    
-      char *n = (char*)mycalloc(l+1,sizeof(char));
+      cvector n = newcvector(l+1);
       for(uint i=0; i<l; i++){
         n[i] = rawfile.memblock[pos+i];
       }
@@ -212,7 +211,7 @@ void getFixedStringdata(rawfilestruct rawfile,uint pos,uint cols,uint rows,uint 
     //  Rprintf("%d %d %s\n",r,c,n);
       (*data)[r][c] = n;
       pos=pos+l;
-      free(n);
+      freevector((void*)n);
     }
   }
   //Rprintf("Done\n");
@@ -228,7 +227,7 @@ void getVariableStringdata(rawfilestruct rawfile,uint pos,uint cols,uint rows,ui
   for(uint r=0;r<rows;r++){    
     for(uint c=0;c<cols;c++){
       //Rprintf("%d %d-> %d\n",r,c,l[cnt]+1);
-      char *n = (char*)mycalloc(l[cnt]+1,sizeof(char));
+      cvector n = newcvector(l[cnt]+1);
       for(uint i=0; i<l[cnt]; i++){
         //Rprintf("%d\n",i); 
         n[i] = rawfile.memblock[pos+i];
@@ -236,8 +235,8 @@ void getVariableStringdata(rawfilestruct rawfile,uint pos,uint cols,uint rows,ui
       n[l[cnt]] = '\0';
       //Rprintf("%d %d %s\n",r,c,n);
       (*data)[r][c] = n;
+      freevector((void*) n);
       cnt++;
-      free(n);
       pos=pos+l[cnt];
     }
   }
@@ -247,6 +246,6 @@ void getVariableStringdata(rawfilestruct rawfile,uint pos,uint cols,uint rows,ui
 
 void freememory(rawfilestruct rawfile){
   rawfile.size= 0;
-  free(rawfile.memblock);
+  Free(rawfile.memblock);
 }
 

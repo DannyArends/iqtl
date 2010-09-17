@@ -46,10 +46,12 @@ extern "C"
 
       (*pos) = newpos;      
       freememory(binfile);
+    }else{
+      Rprintf("Error opening file: %s",filename[0]);
     }
-  }
+  } //R_load_XGAPheader
   
-void R_load_XGAPnames(char **filename,int* num_rows,int* num_cols,int* pos, char** rownames, char** colnames){
+  void R_load_XGAPnames(char **filename,int* num_rows,int* num_cols,int* pos, char** rownames, char** colnames){
     rawfilestruct binfile;
     if(parsefile(filename[0],&binfile)){    
       uint newpos = (*pos);
@@ -60,8 +62,8 @@ void R_load_XGAPnames(char **filename,int* num_rows,int* num_cols,int* pos, char
       newpos = newpos+ (*num_cols);
       rowlengths = getlengths(binfile,newpos,*num_rows);
       newpos = newpos+ (*num_rows);
-      char** cname;
-      char** rname;
+      cmatrix cname;
+      cmatrix rname;
       newpos = newpos + getnames(&cname,binfile,newpos,*num_cols,collengths);
       newpos = newpos + getnames(&rname,binfile,newpos,*num_rows,rowlengths);
       //Rprintf("Parsed Flenames\n");
@@ -74,34 +76,13 @@ void R_load_XGAPnames(char **filename,int* num_rows,int* num_cols,int* pos, char
       }
       //Rprintf("In R mem\n");
       (*pos) = newpos;
-      free(rname);
-      free(cname);
+      freematrix((void**)rname,nrows);
+      freematrix((void**)cname,ncols);
       freememory(binfile);
+    }else{
+      Rprintf("Error opening file: %s",filename[0]);
     }
-   
-  }
-  /*
-      if(!deciortext){
-        char*** data;      
-        uint l = fixedstringlength(binfile,newpos);
-        newpos++;
-        if(l==0){
-          //cout << "Variable lengths" << endl;
-          uint *datalengths;
-          datalengths = getlengths(binfile,newpos,nrows*ncols);
-          getVariableStringdata(binfile,newpos,ncols,nrows,datalengths,data);
-        }else{
-         // cout << "Fixed length: " << l << endl;
-
-          getFixedStringdata(binfile,newpos,ncols,nrows,l,data);
-        }
-      }else{
-        double **data;
-        getDecimaldata(binfile,newpos,ncols,nrows,data);
-      }
-      freememory(binfile);
-    }
-    */
+  } //R_load_XGAPnames
     
   void R_load_XGAPdouble(char **filename,int* num_rows,int* num_cols,int* pos,double* data){
     rawfilestruct binfile;
@@ -110,7 +91,7 @@ void R_load_XGAPnames(char **filename,int* num_rows,int* num_cols,int* pos, char
       uint newpos = (*pos);
       uint ncols = (*num_cols);
       uint nrows = (*num_rows);
-      double **rdata;
+      dmatrix rdata;
       getDecimaldata(binfile,newpos,ncols,nrows,&rdata);
       for(uint r=0;r<nrows;r++){
         for(uint c=0;c<ncols;c++){
@@ -119,16 +100,15 @@ void R_load_XGAPnames(char **filename,int* num_rows,int* num_cols,int* pos, char
           //Rprintf("Done: %d\n",(r*ncols)+c);
         }
       }
-      for (uint i=0; i<nrows; i++) {
-        free(rdata[i]);
-      }
-      free(rdata);
+      freematrix((void**)rdata,nrows);
       freememory(binfile);      
       //Rprintf("Done ? \n");
+    }else{
+      Rprintf("Error opening file: %s",filename[0]);
     }
-  }
+  } //R_load_XGAPdouble
   
-void R_load_XGAPstring(char **filename,int* num_rows,int* num_cols,int* pos, char** data){
+  void R_load_XGAPstring(char **filename,int* num_rows,int* num_cols,int* pos, char** data){
     rawfilestruct binfile;
   //  Rprintf("Text File to load: %s\n",filename[0]);
     if(parsefile(filename[0],&binfile)){
@@ -143,7 +123,7 @@ void R_load_XGAPstring(char **filename,int* num_rows,int* num_cols,int* pos, cha
       uint c=0;
      // Rprintf("row:%d\n",nrows);  
 
-      char ***rdata;
+      cmatrix* rdata;
       if(l > 0){
         //fixed string
         //Rprintf("Fixed\n");
@@ -162,15 +142,11 @@ void R_load_XGAPstring(char **filename,int* num_rows,int* num_cols,int* pos, cha
           data[(r*ncols)+c] = rdata[r][c];
         }
       }
-      for( r=0;r<nrows;r++){
-        free(rdata[r]);
-      }
-      Rprintf("Deallocated all rows \n");
-      free(rdata);
-      Rprintf("Deallocated matrix \n");
+      freematrix((void**)rdata,nrows);
       freememory(binfile);      
-      Rprintf("Free file struct \n");
-      //Rprintf("Done ? \n");
+    }else{
+      Rprintf("Error opening file: %s",filename[0]);
     }
-  }
-}
+  } //R_load_XGAPstring
+
+} //Extern "C"
