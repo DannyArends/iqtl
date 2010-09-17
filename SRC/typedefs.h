@@ -23,12 +23,13 @@
 
   typedef unsigned int uint;
 
-  typedef double**  dmatrix;
-  typedef double*   dvector;
-  typedef bool*     bvector;
-  typedef char**    cmatrix;
-  typedef char*     cvector;
-  typedef int**     imatrix;
-  typedef int*      ivector;
+  typedef double**      dmatrix;
+  typedef double*       dvector;
+  typedef long double*  ldvector;
+  typedef bool*         bvector;
+  typedef char**        cmatrix;
+  typedef char*         cvector;
+  typedef int**         imatrix;
+  typedef int*          ivector;
   }
 #endif
