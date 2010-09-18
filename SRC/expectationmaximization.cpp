@@ -21,19 +21,24 @@ void nullmodellikelihood_R(int* nvariables,int* nsamples, double* x, double* w, 
   dmatrix transformedx;
   dvectortodmatrix((*nsamples),(*nvariables),x,&transformedx);
  (*out) = 2 * nullmodel((*nvariables), (*nsamples), transformedx, w, y, (*verbose));
+ if((*verbose)) Rprintf("null likelihood: %f\n",(*out));
+
 }
 
 void modellikelihoodbyem_R(int* nvariables,int* nsamples, double* x, double* w, double* y,int* verbose,double* out){
   dmatrix transformedx;
   dvectortodmatrix((*nsamples),(*nvariables),x,&transformedx);
  (*out) = 2 * likelihoodbyem((*nvariables), (*nsamples), transformedx, w, y, (*verbose));
+ if((*verbose)) Rprintf("model likelihood: %f\n",(*out));
+
 }
 
 void lodscorebyem_R(int* nvariables,int* nsamples, double* x, double* w, double* y,int* verbose,double* out){
   dmatrix transformedx;
   dvectortodmatrix((*nsamples),(*nvariables),x,&transformedx);
   (*out) = 2*likelihoodbyem((*nvariables), (*nsamples), transformedx, w, y, (*verbose)) - 2 * nullmodel((*nvariables), (*nsamples), transformedx, w, y, (*verbose));
-  Rprintf("Likelihood %f\n",(*out));
+  if((*verbose)) Rprintf("lodscore: %f\n",(*out));
+
 }
 
 double likelihoodbyem(uint nvariables,uint nsamples, dmatrix x, dvector w, dvector y,int verbose){
