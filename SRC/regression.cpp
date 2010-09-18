@@ -161,8 +161,9 @@ void backwardelimination(uint nvariables,uint nsamples, dmatrix x, dvector w, dv
       if(verbose) Rprintf("Drop variable %d\n", leastinterestingmodel);
       if(verbose) Rprintf("Likelihood of the new full model: %f",logLfull);
     }else{
+      Rprintf("\n\nWe have a model\n",x);
       for(uint x=0;x<nvariables;x++){
-        if(model[x]) Rprintf("Variable %d in Model",x);
+        if(model[x]) Rprintf("Variable %d in Model\n",x);
       }
       finished=true;
     }
@@ -184,8 +185,8 @@ void nulllikelihoodbyem_R(int* nvariables,int* nsamples, double* x, double* w, d
 void likelihoodbyem_R(int* nvariables,int* nsamples, double* x, double* w, double* y,int* verbose,double* out){
   dmatrix transformedx;
   dvectortodmatrix((*nsamples),(*nvariables),x,&transformedx);
- (*out) = likelihoodbyem((*nvariables), (*nsamples), transformedx, w, y, (*verbose));
- (*out) -= nullmodel((*nvariables), (*nsamples), transformedx, w, y, (*verbose));
+ (*out) = 2*likelihoodbyem((*nvariables), (*nsamples), transformedx, w, y, (*verbose)) - 2 * nullmodel((*nvariables), (*nsamples), transformedx, w, y, (*verbose));
+ Rprintf("Likelihood %f\n",(*out));
 }
 
 double likelihoodbyem(uint nvariables,uint nsamples, dmatrix x, dvector w, dvector y,int verbose){
@@ -213,7 +214,7 @@ double likelihoodbyem(uint nvariables,uint nsamples, dmatrix x, dvector w, dvect
   }
   freevector((void*)Fy);
   
-  Rprintf("Finished with %f after %d/%d cycles\n",logL,emcycle,maxemcycles);
+  //Rprintf("EM %d/%d cycles\n",emcycle,maxemcycles);
   return (logL);
 }
 
@@ -222,7 +223,6 @@ dvector calculateparameters(uint nvariables, uint nsamples, dmatrix xt, dvector 
   double xtwj;
   dmatrix XtWX = newdmatrix(nvariables, nvariables);
   dvector XtWY = newdvector(nvariables);
-
   ivector indx = newivector(nvariables);
 
   if(verbose) Rprintf("calculating XtWX and XtWY\n");
@@ -269,7 +269,7 @@ double multivariateregression(uint nvariables, uint nsamples, dmatrix x, dvector
   }
 
   double variance= 0.0;
-  double logLQTL=0.0;
+  double logLQTL = 0.0;
   dvector fit       = newdvector(nsamples);
   dvector residual  = newdvector(nsamples);
   ldvector indL     = newldvector(nsamples);
@@ -281,6 +281,9 @@ double multivariateregression(uint nvariables, uint nsamples, dmatrix x, dvector
       residual[i]   = y[i]-fit[i];
       variance     += w[i]*pow(residual[i],2.0);
     }
+  }
+  variance /= nvariables;
+  for (uint i=0; i<nsamples; i++){
     Fy[i]     = Lnormal(residual[i],variance);
     indL[i]  += w[i]*Fy[i];
     logLQTL  += log10(indL[i]);
@@ -336,6 +339,9 @@ double nullmodel(uint nvariables, uint nsamples, dmatrix x, dvector w, dvector y
       residual[i]   = y[i]-fit[i];
       variance     += w[i]*pow(residual[i],2.0);
     }
+  }
+  variance /= nvariables;
+  for (uint i=0; i<nsamples; i++){
     Fy[i]     = Lnormal(residual[i],variance);
     indL[i]  += w[i]*Fy[i];
     logLNULL += log10(indL[i]);
