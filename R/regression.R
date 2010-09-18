@@ -19,7 +19,7 @@ multipleregression <- function(designmatrix,weight,y,verbose=FALSE){
     warning("Adding estimate of constant in model")
     designmatrix <- cbind(rep(1,length(y)),designmatrix)
   }
-  result <- .C("likelihoodbyem_R",nvariables=as.integer(ncol(as.matrix(designmatrix))),
+  result <- .C("lodscorebyem_R",nvariables=as.integer(ncol(as.matrix(designmatrix))),
                                   nsamples=as.integer(nrow(as.matrix(designmatrix))),
                                   x=as.matrix(designmatrix),
                                   w=weight,
