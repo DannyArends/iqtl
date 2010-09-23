@@ -156,7 +156,7 @@ void backwardelimination(uint nvariables,uint nsamples, dmatrix x, dvector w, dv
       dropterm(nvariables,model,leastinterestingmodel);
       logLfull = logL[leastinterestingmodel];
       if(verbose) Rprintf("Drop variable %d\n", leastinterestingmodel);
-      if(verbose) Rprintf("Likelihood of the new full model: %f",logLfull);
+      if(verbose) Rprintf("Likelihood of the new full model: %f\n",logLfull);
     }else{
       Rprintf("\n\nWe have a model\n",x);
       for(uint x=0;x<nvariables;x++){
