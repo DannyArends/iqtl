@@ -65,12 +65,12 @@ double calculatestatistics(uint nvariables, uint nsamples, dmatrix xt, dvector x
     (*fit)[i]      = 0.0;
     (*residual)[i] = 0.0;
     for (uint j=0; j<nvariables; j++){
-      (*fit)[i]       += xt[j][i] * xtwy[j];
-      (*residual)[i]   = y[i]-(*fit)[i];
-      variance     += w[i]*pow((*residual)[i],2.0);
+      (*fit)[i]     += xt[j][i] * xtwy[j];
     }
+    (*residual)[i]   = y[i]-(*fit)[i];
+    variance        += w[i]*pow((*residual)[i],2.0);
   }
-  variance /= nvariables;
+  variance /= nsamples;
   return variance;
 }
 
@@ -81,7 +81,7 @@ double calculateloglikelihood(uint nsamples, dvector residual,dvector w, double 
   for (uint i=0; i<nsamples; i++){
     (*Fy)[i]  = Lnormal(residual[i],variance);
     indL[i]  += w[i] * (*Fy)[i];
-    logL     += log10(indL[i]);
+    logL     += log(indL[i]);
   }
   freevector((void*)indL);
   

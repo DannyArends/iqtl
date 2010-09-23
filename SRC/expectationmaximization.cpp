@@ -36,7 +36,7 @@ void modellikelihoodbyem_R(int* nvariables,int* nsamples, double* x, double* w, 
 void lodscorebyem_R(int* nvariables,int* nsamples, double* x, double* w, double* y,int* verbose,double* out){
   dmatrix transformedx;
   dvectortodmatrix((*nsamples),(*nvariables),x,&transformedx);
-  (*out) = 2*likelihoodbyem((*nvariables), (*nsamples), transformedx, w, y, (*verbose)) - 2 * nullmodel((*nvariables), (*nsamples), transformedx, w, y, (*verbose));
+  (*out) = (2*likelihoodbyem((*nvariables), (*nsamples), transformedx, w, y, (*verbose)) - 2 * nullmodel((*nvariables), (*nsamples), transformedx, w, y, (*verbose))) / 4.60517;
   if((*verbose)) Rprintf("lodscore: %f\n",(*out));
 
 }
