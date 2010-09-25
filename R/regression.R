@@ -85,16 +85,15 @@ scaledowncontrast <- function(contrastlistitem){
 }
 
 contrastlisttodesignmatrix <- function(contrastlist,m,cofactors = NULL,verbose=FALSE){
-  newcontrasts <- lapply(FUN=scaledowncontrast,contrastlist)
-  designmatrix <- newcontrasts[[m]]
+  designmatrix <- contrastlist[[m]]
   if(verbose) cat("Contrast matrix for marker",m,"\n")
-  nullmatrixlayout <- rep(1,ncol(newcontrasts[[m]]))
+  nullmatrixlayout <- rep(1,ncol(contrastlist[[m]]))
   if(!is.null(cofactors)){
     for(x in cofactors){
       #COM: Should be inrange function (or correlated)
-      if(abs(cor(newcontrasts[[x]],newcontrasts[[m]])) < 0.6 ){
-        designmatrix <- cbind(newcontrasts[[x]],designmatrix)
-        nullmatrixlayout <- c(rep(0,ncol(newcontrasts[[x]])),nullmatrixlayout)
+      if(abs(cor(contrastlist[[x]],contrastlist[[m]])) < 0.6 ){
+        designmatrix <- cbind(contrastlist[[x]],designmatrix)
+        nullmatrixlayout <- c(rep(0,ncol(contrastlist[[x]])),nullmatrixlayout)
       }
     }
   }
@@ -102,22 +101,35 @@ contrastlisttodesignmatrix <- function(contrastlist,m,cofactors = NULL,verbose=F
 }
 
 
-singlemarkercontrastmapping <- function(cross,pheno.col=1,type=0,cofactors=NULL){
+singlemarkercontrastmapping <- function(cross,pheno.col=1,type=0,cofactors=NULL,verbose=TRUE){
+  s <- proc.time()
   contrastlist <- crosstocontrastlist(cross,type)
+  contrastlist <- lapply(FUN=scaledowncontrast,contrastlist)
   pheno <- pull.pheno(cross)[,pheno.col]
   tokeep <- !is.na(pheno)
   pheno <- pheno[tokeep]
   lodscores <- NULL
+  e <- proc.time()
+  startup <- as.numeric(e[3]-s[3])
+  prepare <- 0
+  mapping <- 0
   for(x in 1:length(contrastlist)){
+    s <- proc.time()
     thismarkerclist <- contrastlisttodesignmatrix(contrastlist,x,cofactors)
     contrastmarker <- as.matrix(thismarkerclist[[1]][tokeep,])
     nullmarkerlayout <- thismarkerclist[[2]]
+    e <- proc.time()
+    prepare <- prepare + as.numeric(e[3]-s[3])
+    s <- proc.time()
     if(ncol(contrastmarker)>0){
       lodscores <- c(lodscores,multipleregression(contrastmarker,pheno,nullmodellayout=nullmarkerlayout)$likelihood)
     }else{
       lodscores <- c(lodscores,0)
     }
+    e <- proc.time()
+    mapping <- mapping + as.numeric(e[3]-s[3])
   }
+  s <- proc.time()
   n <- unlist(lapply(FUN=colnames,pull.map(cross)))
   chr <- NULL
   if(!is.null(ncol(pull.map(cross)[[1]]))){
@@ -134,6 +146,14 @@ singlemarkercontrastmapping <- function(cross,pheno.col=1,type=0,cofactors=NULL)
   qtlprofile[,3] <- as.numeric(lodscores)
   rownames(qtlprofile) <- n
   class(qtlprofile) <- c("scanone", "data.frame")
+  e <- proc.time()
+  cleanup <- as.numeric(e[3]-s[3])
+  if(verbose){
+    cat("startup:",startup,"sec\n")
+    cat("prepare:",prepare,"sec\n")
+    cat("mapping:",mapping,"sec\n")
+    cat("cleanup:",cleanup,"sec\n")
+  }
   qtlprofile
 }
 
