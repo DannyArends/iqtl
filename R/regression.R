@@ -1,12 +1,12 @@
 
-testregression <-function(){
-  library(iqtl)
-  x <- matrix(runif(100),10,1)
-  w <- rep(1,10)
-  y <- x[,1] + runif(2)
-  o <- multipleregression(x,w,y)
-  o
-}
+#testregression <-function(){
+#  library(iqtl)
+#  x <- matrix(runif(100),10,1)
+#  w <- rep(1,10)
+#  y <- x[,1] + runif(2)
+#  o <- multipleregression(x,w,y)
+#  o
+#}
 
 multipleregression <- function(designmatrix,weight,y,verbose=FALSE){
   if(length(weight) != length(y)){
