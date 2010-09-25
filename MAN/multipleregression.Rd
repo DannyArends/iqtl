@@ -5,13 +5,14 @@
 	multiple lineair regression on a designmatrix using expectation maximization and LU decomposition
 }
 \usage{
-  multipleregression(designmatrix,weight,y,verbose=FALSE)
+  multipleregression(designmatrix,y,weight=rep(1,nrow(designmatrix)),nullmodellayout=rep(1,ncol(designmatrix)),verbose=FALSE)
 }
 
 \arguments{
   \item{designmatrix}{ Designmatrix with samples in rows, and variables in columns }
-  \item{weight}{ Weight of the samples (length: nrow) }
   \item{y}{ Response vector (length: nrow) }
+  \item{weight}{ Weight of the samples (length: nrow) }
+  \item{nullmodellayout}{ which variables should be set to 0.0 to create the nullmodel (length: ncol) }
   \item{verbose}{ Be verbose, reports back model likelihood , em itterations }
 }
 \details{
@@ -35,9 +36,8 @@
 
 \examples{
   x <- matrix(runif(100),10,1)
-  w <- rep(1,10)
   y <- x[,1] + runif(2)
-  o <- multipleregression(x,w,y)
+  o <- multipleregression(x,y)
   o
 }
 
