@@ -17,10 +17,10 @@
 #include <R.h>
 #include <Rmath.h>
 
-void nullmodellikelihood_R(int* nvariables,int* nsamples, double* x, double* w, double* y,int* verbose,double* out){
+void nullmodellikelihood_R(int* nvariables,int* nsamples, double* x, double* w, double* y,int* nullmodellayout,int* verbose,double* out){
   dmatrix transformedx;
   dvectortodmatrix((*nsamples),(*nvariables),x,&transformedx);
- (*out) = 2 * nullmodel((*nvariables), (*nsamples), transformedx, w, y, (*verbose));
+ (*out) = 2 * nullmodel((*nvariables), (*nsamples), transformedx, w, y, nullmodellayout, (*verbose));
  if((*verbose)) Rprintf("null likelihood: %f\n",(*out));
 
 }
@@ -33,10 +33,10 @@ void modellikelihoodbyem_R(int* nvariables,int* nsamples, double* x, double* w, 
 
 }
 
-void lodscorebyem_R(int* nvariables,int* nsamples, double* x, double* w, double* y,int* verbose,double* out){
+void lodscorebyem_R(int* nvariables,int* nsamples, double* x, double* w, double* y,int* nullmodellayout,int* verbose,double* out){
   dmatrix transformedx;
   dvectortodmatrix((*nsamples),(*nvariables),x,&transformedx);
-  (*out) = (2*likelihoodbyem((*nvariables), (*nsamples), transformedx, w, y, (*verbose)) - 2 * nullmodel((*nvariables), (*nsamples), transformedx, w, y, (*verbose))) / 4.60517;
+  (*out) = (2*likelihoodbyem((*nvariables), (*nsamples), transformedx, w, y, (*verbose)) - 2 * nullmodel((*nvariables), (*nsamples), transformedx, w, y, nullmodellayout, (*verbose))) / 4.60517;
   if((*verbose)) Rprintf("lodscore: %f\n",(*out));
 
 }
@@ -53,10 +53,10 @@ double likelihoodbyem(uint nvariables,uint nsamples, dmatrix x, dvector w, dvect
     printdmatrix(x,nsamples,nvariables);
   }
   dvector Fy = newdvector(nsamples);
-  
+  ivector nullmodellayout = newivector(nvariables);
   if(verbose) Rprintf("Starting EM\n");
   while((emcycle<maxemcycles) && (delta > 1.0e-9)){
-    logL = multivariateregression(nvariables,nsamples,x,w,y,Fy,false,verbose);
+    logL = multivariateregression(nvariables,nsamples,x,w,y,Fy,false,nullmodellayout,verbose);
     for(uint s=0;s<nsamples;s++){
       if(w[s] != 0) w[s] = (w[s] + Fy[s])/w[s];
     }

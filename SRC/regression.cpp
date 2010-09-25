@@ -18,13 +18,15 @@
 #include <R.h>
 #include <Rmath.h>
 
-double multivariateregression(uint nvariables, uint nsamples, dmatrix x, dvector w, dvector y, dvector Fy, bool nullmodel,int verbose){
+double multivariateregression(uint nvariables, uint nsamples, dmatrix x, dvector w, dvector y, dvector Fy, bool nullmodel, ivector nullmodellayout,int verbose){
   dmatrix Xt   = translatematrix(nvariables,nsamples,x,verbose);
   dvector XtWY = calculateparameters(nvariables,nsamples,Xt,w,y,verbose);
 
   if(nullmodel){
     for (uint i=1; i < nvariables; i++){
-      XtWY[i] = 0.0;
+      if(nullmodellayout[(i-1)] == 1){
+        XtWY[i] = 0.0;
+      }
     }
   }
   
@@ -60,9 +62,9 @@ double multivariateregression(uint nvariables, uint nsamples, dmatrix x, dvector
   return logLQTL;
 }
 
-double nullmodel(uint nvariables, uint nsamples, dmatrix x, dvector w, dvector y,int verbose){
+double nullmodel(uint nvariables, uint nsamples, dmatrix x, dvector w, dvector y,ivector nullmodellayout,int verbose){
   dvector Fy = newdvector(nsamples);
-  double logL = multivariateregression(nvariables,nsamples,x,w,y,Fy,true,verbose);;
+  double logL = multivariateregression(nvariables,nsamples,x,w,y,Fy,true,nullmodellayout,verbose);;
   freevector((void*)Fy);
   return logL;
 }

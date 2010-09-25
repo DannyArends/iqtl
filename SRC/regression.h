@@ -14,7 +14,7 @@ extern "C"
 {  
   #include "datastructures.h"
 
-  double multivariateregression(uint nvariables, uint nsamples, dmatrix x, dvector w, dvector y, dvector Fy,bool nullmodel,int verbose);
-  double nullmodel(uint nvariables, uint nsamples, dmatrix x, dvector w, dvector y,int verbose);
+  double multivariateregression(uint nvariables, uint nsamples, dmatrix x, dvector w, dvector y, dvector Fy,bool nullmodel,ivector nullmodellayout,int verbose);
+  double nullmodel(uint nvariables, uint nsamples, dmatrix x, dvector w, dvector y,ivector nullmodellayout,int verbose);
 }
 #endif
