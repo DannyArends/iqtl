@@ -72,3 +72,8 @@ smoothV <- function(data,smoothF,num){
 	}
 	result
 }
+
+Names <- function(string="I",number=1){
+  res <- paste(string,1:number,sep="")
+  res
+}
