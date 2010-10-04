@@ -10,7 +10,11 @@
 #
 
 inverseF <- function(df1,df2,alpha=0.05){
-  
+    result <- .C("lodscorebyem_R",df1=as.integer(ncol(as.matrix(designmatrix))),
+                                df2=as.integer(nrow(as.matrix(designmatrix))),
+                                alpha=alpha,
+                                out=0)
+  result
 }
 
 backwardeliminate <- function(cross,cofactors,alpha=0.05){
