@@ -1,9 +1,9 @@
 #####################################################################
 #
-# plotting.R
+# plotroutines.R
 #
 # copyright parent_check (c) 2009, Danny Arends
-# last modified Mrt, 2009
+# last modified Sep, 2010
 # first written Mrt, 2009
 # 
 # Contains: several plot functions
