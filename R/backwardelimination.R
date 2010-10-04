@@ -10,8 +10,8 @@
 #
 
 inverseF <- function(df1,df2,alpha=0.05){
-    result <- .C("lodscorebyem_R",df1=as.integer(ncol(as.matrix(designmatrix))),
-                                df2=as.integer(nrow(as.matrix(designmatrix))),
+    result <- .C("lodscorebyem_R",df1=as.integer(df1),
+                                df2=as.integer(df2),
                                 alpha=alpha,
                                 out=0)
   result
