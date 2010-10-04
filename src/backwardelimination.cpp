@@ -118,7 +118,6 @@ double inverseF(int df1, int df2, double alfa){
     else minF= halfway;
     absdiff= fabs(prob-alfa);
   }
-  Rprintf("prob = %f, alfa= %f\n",prob,alfa);
   return halfway;
 }
 
