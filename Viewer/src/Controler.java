@@ -1,4 +1,14 @@
-import java.awt.event.ActionEvent;
+/**
+ * \file Controler.java
+ * \brief Code file containing the controler class
+ *
+ * last modified Sep, 2010
+ * first written Apr, 2010
+ * Copyright (c) 2010 Danny Arends
+ * 
+ **/
+
+ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;

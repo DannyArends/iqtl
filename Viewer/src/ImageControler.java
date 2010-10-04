@@ -1,3 +1,13 @@
+/**
+ * \file ImageControler.java
+ * \brief Code file containing the image controler class
+ *
+ * last modified Sep, 2010
+ * first written Apr, 2010
+ * Copyright (c) 2010 Danny Arends
+ * 
+ **/
+ 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;

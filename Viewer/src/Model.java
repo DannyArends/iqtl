@@ -1,3 +1,13 @@
+/**
+ * \file Controler.java
+ * \brief Code file containing the model class
+ *
+ * last modified Sep, 2010
+ * first written Apr, 2010
+ * Copyright (c) 2010 Danny Arends
+ * 
+ **/
+ 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
