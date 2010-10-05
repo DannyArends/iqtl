@@ -5,14 +5,52 @@
 # last modified mrt, 2010
 # first written mrt, 2010
 # 
-# R functions: contrastqtlmapping, lodscorevectortoscanone
+# R functions: contrastqtlmapping, contrastqtlsignificance, getlodthreshold, lodscorevectortoscanone,
 # Basic scripts for contrast QTL mapping using multiple regression
 #
 
-contrastqtlmapping <- function(cross,pheno.col=1,type=0,cofactors=NULL,verbose=TRUE){
+#Function used for estimating significance
+contrastqtlsignificance <- function(cross, pheno.col = 1, cycles = 1000,type = 0, verbose=TRUE){
   s <- proc.time()
+  samples <- nrow(cross$pheno)
+  originalphenotype <- cross$pheno[,pheno.col]
+  lodscorematrix <- NULL
+  #Pre-compute the contrast list to use the contrastqtlmapping.internal
   contrastlist <- crosstocontrastlist(cross,type)
   contrastlist <- lapply(FUN=scaledowncontrast,contrastlist)
+  for(x in 1:cycles){
+    cross$pheno[,pheno.col] <- cross$pheno[sample(samples),pheno.col]
+    qtlresults <- contrastqtlmapping.internal(cross,contrastlist,pheno.col=pheno.col,verbose=FALSE)
+    lodscorematrix <- rbind(lodscorematrix, qtlresults$lod)
+  }
+  cross$pheno[,pheno.col] <- originalphenotype
+  e <- proc.time()
+  if(verbose){
+    cat("Total time:", as.numeric(e[3]-s[3]),"sec\n")
+  }
+  lodscorematrix
+}
+
+#Main function used for testing the new multiple regression interface to R/qtl
+contrastqtlmapping <- function(cross,pheno.col=1,type=0,cofactors=NULL,verbose=TRUE){
+  contrastlist <- crosstocontrastlist(cross,type)
+  contrastlist <- lapply(FUN=scaledowncontrast,contrastlist)
+  contrastqtlmapping.internal(cross,contrastlist,pheno.col,type,cofactors,verbose)
+}
+
+#Pre-compute the contrast list to use the contrastqtlmapping.internal, 
+#Speeds up computation when doing repeated mappings on the same cross object
+#
+#Example:
+# library(iqtl)
+# data(hyper)
+# contrastlist <- crosstocontrastlist(hyper,0)
+# contrastlist <- lapply(FUN=scaledowncontrast,contrastlist)
+# #Repeated internal call
+# contrastqtlmapping.internal(hyper,contrastlist,pheno.col=1:1000)
+  
+contrastqtlmapping.internal <- function(cross,contrastlist=crosstocontrastlist(cross,type),pheno.col=1,type=0,cofactors=NULL,verbose=TRUE){
+  s <- proc.time()
   pheno <- pull.pheno(cross)[,pheno.col]
   tokeep <- !is.na(pheno)
   pheno <- pheno[tokeep]
@@ -50,6 +88,31 @@ contrastqtlmapping <- function(cross,pheno.col=1,type=0,cofactors=NULL,verbose=T
   qtlprofile
 }
 
+#Gets the lod threshold from a matrix where each row is a permutation scan
+plotlodscorematrix <- function(cross, result, lodscorematrix){
+  plot(result,lodscorevectortoscanone(cross,rep(getlodthreshold(lodscorematrix,10),sum(nmar(cross)))),lodscorevectortoscanone(cross,rep(getlodthreshold(lodscorematrix),sum(nmar(cross)))),col=c("black","yellow","green"))
+  legend("topright",c("Trait","5%","10%"),col=c("black","green","yellow"),lwd=c(1,1,1))
+}
+
+#Gets the lod threshold from a matrix where each row is a permutation scan
+#unprecise when there are few lodscores ( < 500 )
+getlodthreshold <- function(lodscorematrix,percentage = 5){
+  if(!percentage > 0 && !percentage < 100){
+    stop("Unknown percentage, must be 0 < percentage < 100")
+  }
+  sort(apply(lodscorematrix,1,max))[floor(nrow(lodscorematrix)*((100-percentage)/100))]
+}
+
+#To use karl's pretty histogram plot function
+lodscorevectortoscanoneperm <- function(lodscores){
+  lodscores <- as.matrix(lodscores)
+  colnames(lodscores) <- "lod"
+  rownames(lodscores) <- 1:ncol(lodscores)
+  class(lodscores) <- c("scanoneperm",class(lodscores))
+  lodscores
+}
+
+#Change any list of lodscores into a scanone object (only pre-req: length(lodscores)==sum(nmar(cross))
 lodscorevectortoscanone <- function(cross,lodscores){
   n <- unlist(lapply(FUN=colnames,pull.map(cross)))
   chr <- NULL
