@@ -1,3 +1,13 @@
+/**
+ * \file View.java
+ * \brief Code file containing the view class
+ *
+ * last modified Sep, 2010
+ * first written Apr, 2010
+ * Copyright (c) 2010 Danny Arends
+ * 
+ **/
+ 
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;

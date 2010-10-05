@@ -1,3 +1,13 @@
+/**
+ * \file Controler.java
+ * \brief Code file containing the plotfunctions
+ *
+ * last modified Sep, 2010
+ * first written Apr, 2010
+ * Copyright (c) 2010 Danny Arends
+ * 
+ **/
+ 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
