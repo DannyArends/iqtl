@@ -135,7 +135,6 @@ lodscorevectortoscanone <- function(cross,lodscores,traitnames = NULL){
   qtlprofile[,1] <- as.factor(chr)
   qtlprofile[,2] <- as.numeric(d)
   if(!is.null(ncol(lodscores))){
-  cat("HUH")
     for(x in 1:ncol(lodscores)){
       qtlprofile[,2+x] <- as.numeric(lodscores[,x])
     }
