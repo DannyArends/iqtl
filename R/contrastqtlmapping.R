@@ -51,10 +51,8 @@ contrastqtlmapping <- function(cross,pheno.col=1,type=0,cofactors=NULL,verbose=T
   
 contrastqtlmapping.internal <- function(cross,contrastlist=crosstocontrastlist(cross,type),pheno.col=1,type=0,cofactors=NULL,verbose=TRUE){
   s <- proc.time()
-  pheno <- pull.pheno(cross)[,pheno.col]
-  tokeep <- !is.na(pheno)
-  pheno <- pheno[tokeep]
-  lodscores <- NULL
+  phenotypes <- pull.pheno(cross)[,pheno.col]
+  lodmatrix <- NULL
   e <- proc.time()
   startup <- as.numeric(e[3]-s[3])
   prepare <- 0
@@ -62,21 +60,30 @@ contrastqtlmapping.internal <- function(cross,contrastlist=crosstocontrastlist(c
   for(x in 1:length(contrastlist)){
     s <- proc.time()
     thismarkerclist <- contrastlisttodesignmatrix(contrastlist,x,cofactors)
-    contrastmarker <- as.matrix(thismarkerclist[[1]][tokeep,])
     nullmarkerlayout <- thismarkerclist[[2]]
+    lodscores <- NULL
     e <- proc.time()
     prepare <- prepare + as.numeric(e[3]-s[3])
-    s <- proc.time()
-    if(ncol(contrastmarker)>0){
-      lodscores <- c(lodscores,multipleregression(contrastmarker,pheno,nullmodellayout=nullmarkerlayout)$likelihood)
-    }else{
-      lodscores <- c(lodscores,0)
+    for(p in 1:ncol(phenotypes)){
+      s <- proc.time()
+      tokeep <- !is.na(phenotypes[,p])
+      pheno <- phenotypes[tokeep,p]
+      contrastmarker <- as.matrix(thismarkerclist[[1]][tokeep,])
+      e <- proc.time()
+      prepare <- prepare + as.numeric(e[3]-s[3])
+      s <- proc.time()
+      if(ncol(contrastmarker)>0){
+        lodscores <- c(lodscores,multipleregression(contrastmarker,pheno,nullmodellayout=nullmarkerlayout)$likelihood)
+      }else{
+        lodscores <- c(lodscores,0)
+      }
+      e <- proc.time()
+      mapping <- mapping + as.numeric(e[3]-s[3])
     }
-    e <- proc.time()
-    mapping <- mapping + as.numeric(e[3]-s[3])
+    lodmatrix <- rbind(lodmatrix,lodscores)
   }
   s <- proc.time()
-  qtlprofile <- lodscorevectortoscanone(cross,lodscores)
+  qtlprofile <- lodscorevectortoscanone(cross,lodmatrix)
   e <- proc.time()
   cleanup <- as.numeric(e[3]-s[3])
   if(verbose){
@@ -113,7 +120,7 @@ lodscorevectortoscanoneperm <- function(lodscores){
 }
 
 #Change any list of lodscores into a scanone object (only pre-req: length(lodscores)==sum(nmar(cross))
-lodscorevectortoscanone <- function(cross,lodscores){
+lodscorevectortoscanone <- function(cross,lodscores,traitnames = NULL){
   n <- unlist(lapply(FUN=colnames,pull.map(cross)))
   chr <- NULL
   if(!is.null(ncol(pull.map(cross)[[1]]))){
@@ -127,8 +134,18 @@ lodscorevectortoscanone <- function(cross,lodscores){
   qtlprofile <- as.data.frame(qtlprofile)
   qtlprofile[,1] <- as.factor(chr)
   qtlprofile[,2] <- as.numeric(d)
-  qtlprofile[,3] <- as.numeric(lodscores)
+  if(!is.null(ncol(lodscores))){
+  cat("HUH")
+    for(x in 1:ncol(lodscores)){
+      qtlprofile[,2+x] <- as.numeric(lodscores[,x])
+    }
+    traitnames = Names("lod",ncol(lodscores))
+  }else{
+     qtlprofile[,3] <- as.numeric(lodscores)
+     traitnames = "lod"
+  }
   rownames(qtlprofile) <- n
+  colnames(qtlprofile) <- c("chr","cM",traitnames)
   class(qtlprofile) <- c("scanone", "data.frame")
   qtlprofile
 }
