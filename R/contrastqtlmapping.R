@@ -59,7 +59,7 @@ contrastqtlmapping.internal <- function(cross,contrastlist=crosstocontrastlist(c
   mapping <- 0
   for(x in 1:length(contrastlist)){
     s <- proc.time()
-    thismarkerclist <- contrastlisttodesignmatrix(contrastlist,x,cofactors)
+    thismarkerclist <- contrastlisttomatrices(contrastlist,x,cofactors)
     nullmarkerlayout <- thismarkerclist[[2]]
     lodscores <- NULL
     e <- proc.time()

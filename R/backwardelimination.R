@@ -28,5 +28,35 @@ inverseF <- function(df1,df2,alpha=0.05){
 }
 
 backwardeliminate <- function(cross,cofactors,alpha=0.05){
-  
+  contrastlist  <- crosstocontrastlist(cross,0)
+  cat("1\n")
+  contrastlist  <- lapply(FUN=scaledowncontrast,contrastlist)
+  cat("2\n")
+  model         <- cofactors
+  cat("3\n")
+  thismarkerclist <- contrastlisttodesignmatrix(contrastlist,cofactors)
+  cat("4\n")
+  logLfull      <- modellikelyhood(thismarkerclist, model);
+  cat("5\n")
+  dropneeded    <- 2*inverseF(2,nsamples-nvariables,alpha);
+  while(!finished && sum(model) > 1){
+    loglikelyhood <- vector("list", sum(model))
+    for(todrop in 1:sum(model)){
+      tempmodel <- model[-todrop]
+      thismarkerclist <- contrastlisttodesignmatrix(contrastlist,cofactors)
+      loglikelyhood[todrop] = modellikelyhood(thismarkerclist, model);
+    }
+    leastinterestingmodel = which.max(loglikelyhood);
+    likelihoodleastinterestingmodel = max(loglikelyhood);
+    if(dropneeded > abs(logLfull - likelihoodleastinterestingmodel)){
+      logLfull = likelihoodleastinterestingmodel;
+      if(verbose) cat("Likelihood of the new full model: ",logLfull,"\n");
+    }else{
+      cat("\n\nWe have a model\n");
+      for(x in 1:sum(cofactors)){
+        if(model[x]) cat("Variable ",x," in Model\n");
+      }
+      finished=true;
+    }
+  }
 }
