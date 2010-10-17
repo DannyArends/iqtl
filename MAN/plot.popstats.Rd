@@ -1,6 +1,6 @@
 \name{plot.popstats}
 \alias{plot.popstats}
-\title{ plot.popstats - Graphical representation of basic population statistics }
+\title{plot.popstats - Graphical representation of basic population statistics }
 \description{
 	Graphical representation of basic population statistics
 }

@@ -1,12 +1,11 @@
 \name{backwardeliminate}
 \alias{backwardeliminate}
-
-\title{ backwardeliminate - Create a QTL model by backward elimination of cofactors }
+\title{backwardeliminate - Create a QTL model by backward elimination of cofactors }
 \description{
 	Create a QTL model by backward elimination of cofactors, this model can be used with the contrastqtlmapping method or mqmscan
 }
 \usage{
-backwardeliminate(cross,pheno.col=1,cofactors,alpha=0.01)
+backwardeliminate(cross,pheno.col=1,type=0,cofactors,alpha=0.01,verbose=FALSE)
 }
 
 \arguments{
@@ -39,6 +38,7 @@ backwardeliminate(cross,pheno.col=1,cofactors,alpha=0.01)
     \item \code{\link{batcheffectcheck}} - Checks for batch effects in the data
 		\item \code{\link{batcheffectcorrect}} - Correct batcheffects in data by normalizing group means
     \item \code{\link{contrastqtlmapping}} - QTL mapping routine using multiple linear regression on contrasts
+    \item \code{\link{contrastqtlsignificance}} - QTL permutation routine using multiple linear regression on contrasts
 	}
 }
 \examples{

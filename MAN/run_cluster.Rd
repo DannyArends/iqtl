@@ -1,8 +1,8 @@
 \name{run_cluster}
 \alias{run_cluster}
-\title{ run_cluster - Main routine }
+\title{run_cluster - Preliminairy main routine for R/qtl cluster computation }
 \description{
-	run_cluster
+	run_cluster - Main routine used in deploying R/qtl across a cluster of worker nodes
 }
 \usage{
 	run_cluster(name = "qtlTEST", investigation="",genotypes = "", phenotypes = "",totalitems=1, 

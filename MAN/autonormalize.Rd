@@ -1,6 +1,6 @@
 \name{autonormalize}
 \alias{autonormalize}
-\title{ autonormalize - Automated per phenotype normalization }
+\title{autonormalize - Automated per phenotype normalization }
 \description{
 	Automated per phenotype normalization strategy trying probit, logit, sqrt, reciproce
 }

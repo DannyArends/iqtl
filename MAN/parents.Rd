@@ -1,7 +1,6 @@
 \name{parents}
 \alias{parents}
-
-\title{ parents - Finds tripplets of individuals with parents from genetic distance measurements }
+\title{parents - Finds tripplets of individuals with parents from genetic distance measurements }
 \description{
 	Finds tripplets of individuals with parents in the output of the \link{scoreKinship} function
 }

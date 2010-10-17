@@ -1,6 +1,6 @@
 \name{find.parent}
 \alias{find.parent}
-\title{ find.parent - Finds parents for a single individual using genetic distance measurements }
+\title{find.parent - Finds parents for a single individual using genetic distance measurements }
 \description{
 	Finds parents for a single individual in the output of the \link{scoreKinship} function
 }

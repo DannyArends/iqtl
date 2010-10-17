@@ -1,7 +1,6 @@
 \name{batcheffectcheck}
 \alias{batcheffectcheck}
-
-\title{ batcheffectcheck - Checks for batch effects in the data }
+\title{batcheffectcheck - Checks for batch effects in the data }
 \description{
 	Checks for batch effects in the data
 }
@@ -10,7 +9,8 @@ batcheffectcheck(cross, cutoff=2, minimumvariance = 0.75)
 }
 
 \arguments{
-  \item{cross}{ TODO }
+  \item{cross}{ An object of class \code{cross}. See
+                \code{\link[qtl]{read.cross}} for details. }
   \item{cutoff}{ TODO }
   \item{minimumvariance}{ minimumvariance threshold, phenotypes with lower variance are excluded }
 }
@@ -34,6 +34,7 @@ batcheffectcheck(cross, cutoff=2, minimumvariance = 0.75)
 	\itemize{
     \item \code{\link{highvariancephenotypes}} - Select only phenotypes that have a high variance  
 		\item \code{\link{batcheffectcorrect}} - Correct batcheffects in data by normalizing group means
+    \item \code{\link{contrastqtlmapping}} - QTL mapping routine using multiple linear regression on contrasts
 	}
 }
 \examples{

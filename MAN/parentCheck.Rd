@@ -1,6 +1,6 @@
 \name{parentCheck}
 \alias{parentCheck}
-\title{ parentCheck - Check for parent, child relationship in SNP data }
+\title{parentCheck - Check for parent, child relationship in SNP data }
 \description{
 	Check for parent, child relationship in SNP data 
 }

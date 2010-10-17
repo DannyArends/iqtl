@@ -1,4 +1,10 @@
 \name{iqtl-internal}
+\alias{contrastqtlmapping.internal}
+\alias{donothing}
+\alias{reciproce}
+\alias{inverseF}
+\alias{scaledowncontrast}
+\alias{scaledowncontrasts}
 \alias{XGAPheader}
 \alias{XGAPread}
 \alias{DownloadnSave}
@@ -64,12 +70,6 @@
   Internal iqtl functions. These are generally not to be called by the
   user.
 }
-
-\usage{
-XGAPheader(file)
-XGAPread(file,header)
-}
-
 
 \author{Danny Arends, \email{Danny.Arends@Gmail.com} }
 

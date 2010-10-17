@@ -1,7 +1,6 @@
 \name{highvariancephenotypes}
 \alias{highvariancephenotypes}
-
-\title{ highvariancephenotypes - Select only phenotypes that have a high variance}
+\title{highvariancephenotypes - Select only phenotypes that have a high variance}
 \description{
 	Select only phenotypes that have a high variance
 }

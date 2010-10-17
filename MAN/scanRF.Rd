@@ -1,8 +1,8 @@
 \name{scanRF}
 \alias{scanRF}
-\title{ scanRF - QTL scanning using randomForest algorithm }
+\title{scanRF - QTL scanning using randomForest algorithm }
 \description{
-	Older version, please see the new mapSM function
+	QTL scanning using randomForest algorithm older version, please see the new mapRF function
 }
 \usage{
 	scanRF(cross=NULL, pheno.col=1,plot=FALSE , compare=FALSE, ...)

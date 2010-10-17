@@ -1,7 +1,6 @@
 \name{scoreKinship}
 \alias{scoreKinship}
-
-\title{ scoreKinship - Calculates kinshipscores based on SNPmarker data }
+\title{scoreKinship - Calculates kinshipscores based on SNPmarker data }
 \description{
 	Calculates kinshipscores based on SNPmarker data
 }

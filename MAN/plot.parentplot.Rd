@@ -1,6 +1,6 @@
 \name{plot.parentplot}
 \alias{plot.parentplot}
-\title{ plot.parentplot - Graphical representation highlighting possible parents of individuals }
+\title{plot.parentplot - Graphical representation highlighting possible parents of individuals }
 \description{
 	Graphical representation highlighting possible parents of individuals 
 }

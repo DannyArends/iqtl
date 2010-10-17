@@ -1,6 +1,6 @@
 \name{scanSM}
 \alias{scanSM}
-\title{ scanSM - QTL scanning using a single marker anova model }
+\title{scanSM - QTL scanning using a single marker anova model }
 \description{
 	Older version, please see the new mapSM function
 }
