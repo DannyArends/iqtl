@@ -17,8 +17,9 @@ inverseF <- function(df1,df2,alpha=0.05){
   result$out
 }
 
-backwardeliminate <- function(cross,pheno.col=1,cofactors,alpha=0.10){
-  contrastlist  <- crosstocontrastlist(cross,0)
+backwardeliminate <- function(cross,pheno.col=1,type=0,cofactors,alpha=0.01,verbose=FALSE){
+  s <- proc.time()
+  contrastlist  <- crosstocontrastlist(cross,type)
   contrastlist  <- lapply(FUN=scaledowncontrast,contrastlist)
   model         <- cofactors
   finished      <- FALSE
@@ -26,28 +27,41 @@ backwardeliminate <- function(cross,pheno.col=1,cofactors,alpha=0.10){
   thismarkerclist <- contrastlisttodesignmatrix(contrastlist,model)
   logLfull      <- modellikelyhood(thismarkerclist,pheno)$likelihood
   dropneeded    <- 2*inverseF(2,nrow(thismarkerclist)-length(model),alpha);
-  cat("Likelihood FULL model: ",logLfull,"\n");
-  cat("Drop Needed: ",dropneeded,"\n");
+  e <- proc.time()
+  startup <- as.numeric(e[3]-s[3])
+  if(verbose){
+    cat("Likelihood FULL model:",logLfull,"LR-cutoff:",dropneeded,"\n");
+    cat("Full model in:",startup,"sec\n");
+  }
+  s <- proc.time()
   while(!finished && length(model) > 1){
     loglikelyhood <- NULL
     for(todrop in 1:length(model)){
       tempmodel <- model[-todrop]
-      cat("Size temp model:",length(tempmodel),"/",length(model),"\n")
       thismarkerclist <- contrastlisttodesignmatrix(contrastlist,tempmodel)
       loglikelyhood = c(loglikelyhood,modellikelyhood(thismarkerclist,pheno)$likelihood)
     }
     leastinterestingmodel = which.max(loglikelyhood);
     likelihoodleastinterestingmodel = max(loglikelyhood);
+    e <- proc.time()
+    reduction <- as.numeric(e[3]-s[3])
     if(dropneeded > abs(logLfull - likelihoodleastinterestingmodel)){
       logLfull = likelihoodleastinterestingmodel;
+      if(verbose) cat("Dropped variable",model[leastinterestingmodel],":",logLfull,"after",reduction,"sec\n");
       model <- model[-leastinterestingmodel]
-      cat("Likelihood of the new full model: ",logLfull,"\n");
     }else{
-      cat("\n\nWe have a model\n");
-      for(x in 1:length(model)){
-        cat("Variable ",model[x]," in Model\n");
+      if(verbose){
+        cat("We have a model\n");
+        for(x in 1:length(model)){
+          cat("Variable",model[x],"in Model\n");
+        }
       }
       finished=TRUE;
     }
   }
+  if(verbose){
+    cat("startup:",startup,"sec\n")
+    cat("modeling:",reduction,"sec\n")
+  }
+  model
 }
