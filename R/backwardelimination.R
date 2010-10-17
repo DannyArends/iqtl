@@ -10,53 +10,44 @@
 #
 
 inverseF <- function(df1,df2,alpha=0.05){
-  m <- NULL
-  for(x in 1:length(df1)){
-    r <- NULL
-    for(y in 1:length(df2)){
-    result <- .C("inverseF_R",df1=as.integer(df1[x]),
-                              df2=as.integer(df2[y]),
-                              alpha=alpha,
-                              out=0)
-    r <- c(r,result$out)
-    }
-    m <- rbind(m,r)
-  }
-  rownames(m) <- df1
-  colnames(m) <- df2
-  m
+  result <- .C("inverseF_R",df1=as.integer(df1),
+                            df2=as.integer(df2),
+                            alpha=alpha,
+                            out=0)
+  result$out
 }
 
-backwardeliminate <- function(cross,cofactors,alpha=0.05){
+backwardeliminate <- function(cross,pheno.col=1,cofactors,alpha=0.10){
   contrastlist  <- crosstocontrastlist(cross,0)
-  cat("1\n")
   contrastlist  <- lapply(FUN=scaledowncontrast,contrastlist)
-  cat("2\n")
   model         <- cofactors
-  cat("3\n")
-  thismarkerclist <- contrastlisttodesignmatrix(contrastlist,cofactors)
-  cat("4\n")
-  logLfull      <- modellikelyhood(thismarkerclist, model);
-  cat("5\n")
-  dropneeded    <- 2*inverseF(2,nsamples-nvariables,alpha);
-  while(!finished && sum(model) > 1){
-    loglikelyhood <- vector("list", sum(model))
-    for(todrop in 1:sum(model)){
+  finished      <- FALSE
+  pheno         <- cross$pheno[,pheno.col] 
+  thismarkerclist <- contrastlisttodesignmatrix(contrastlist,model)
+  logLfull      <- modellikelyhood(thismarkerclist,pheno)$likelihood
+  dropneeded    <- 2*inverseF(2,nrow(thismarkerclist)-length(model),alpha);
+  cat("Likelihood FULL model: ",logLfull,"\n");
+  cat("Drop Needed: ",dropneeded,"\n");
+  while(!finished && length(model) > 1){
+    loglikelyhood <- NULL
+    for(todrop in 1:length(model)){
       tempmodel <- model[-todrop]
-      thismarkerclist <- contrastlisttodesignmatrix(contrastlist,cofactors)
-      loglikelyhood[todrop] = modellikelyhood(thismarkerclist, model);
+      cat("Size temp model:",length(tempmodel),"/",length(model),"\n")
+      thismarkerclist <- contrastlisttodesignmatrix(contrastlist,tempmodel)
+      loglikelyhood = c(loglikelyhood,modellikelyhood(thismarkerclist,pheno)$likelihood)
     }
     leastinterestingmodel = which.max(loglikelyhood);
     likelihoodleastinterestingmodel = max(loglikelyhood);
     if(dropneeded > abs(logLfull - likelihoodleastinterestingmodel)){
       logLfull = likelihoodleastinterestingmodel;
-      if(verbose) cat("Likelihood of the new full model: ",logLfull,"\n");
+      model <- model[-leastinterestingmodel]
+      cat("Likelihood of the new full model: ",logLfull,"\n");
     }else{
       cat("\n\nWe have a model\n");
-      for(x in 1:sum(cofactors)){
-        if(model[x]) cat("Variable ",x," in Model\n");
+      for(x in 1:length(model)){
+        cat("Variable ",model[x]," in Model\n");
       }
-      finished=true;
+      finished=TRUE;
     }
   }
 }

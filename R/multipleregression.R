@@ -40,6 +40,29 @@ multipleregression <- function(designmatrix,y,weight=rep(1,nrow(designmatrix)),n
   result
 }
 
+modellikelyhood <- function(designmatrix,y,weight=rep(1,nrow(designmatrix)),verbose=FALSE){
+  if(nrow(designmatrix) != length(weight)){
+    stop("Not all samples have a weight, nrow(designmatrix) != length(weight) (Values:",length(weight)," != ",length(y),")")
+  }
+  if(nrow(designmatrix) != length(y)){
+    stop("Not all samples have a output, nrow(designmatrix) != length(y) (Values:",nrow(designmatrix)," != ",length(y),")")
+  }
+  if(!sum(designmatrix[,1])==length(y)){
+    warning("Adding estimate of constant in model")
+    designmatrix <- cbind(rep(1,length(y)),designmatrix)
+  }
+  result <- .C("modellikelihoodbyem_R",nvariables=as.integer(ncol(as.matrix(designmatrix))),
+                                nsamples=as.integer(nrow(as.matrix(designmatrix))),
+                                x=as.matrix(designmatrix),
+                                w=weight,
+                                y=y,
+                                verbose=as.integer(verbose),
+                                likelihood=0)
+  result
+}
+
+
+#OLD DONT USE
 backwardelimination <- function(designmatrix,weight,y,verbose=FALSE){
   if(length(weight) != length(y)){
     stop("Not all samples have a weight, length(weight) != length(y)")

@@ -104,7 +104,7 @@ dmatrix createdesignmatrix(uint nvariables,uint nsamples, dmatrix x, bvector mod
 }
 
 void inverseF_R(int* df1,int* df2, double* alfa, double* out){
-  (*out) = inverseF((*df1), (*df1), (*alfa));
+  (*out) = inverseF((*df1), (*df2), (*alfa));
 }
 
 double inverseF(int df1, int df2, double alfa){

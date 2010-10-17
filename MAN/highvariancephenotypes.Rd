@@ -10,7 +10,8 @@ highvariancephenotypes(cross, minimumvariance = 0.75)
 }
 
 \arguments{
-  \item{cross}{ TODO }
+  \item{cross}{ An object of class \code{cross}. See
+                \code{\link[qtl]{read.cross}} for details. }
   \item{minimumvariance}{ minimumvariance threshold, phenotypes with lower variance are excluded }
 }
 \details{
