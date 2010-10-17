@@ -33,6 +33,7 @@ multipleregression <- function(designmatrix,y,weight=rep(1,nrow(designmatrix)),n
                                 x=as.matrix(designmatrix),
                                 w=weight,
                                 y=y,
+                                estparams=rep(1.0,as.integer(ncol(as.matrix(designmatrix)))),
                                 nullmodellayout=as.integer(nullmodellayout),
                                 verbose=as.integer(verbose),
                                 likelihood=0)
