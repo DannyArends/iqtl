@@ -16,5 +16,7 @@ extern "C"
 
   double multivariateregression(uint nvariables, uint nsamples, dmatrix x, dvector w, dvector y, dvector Fy,bool nullmodel,ivector nullmodellayout,int verbose);
   double nullmodel(uint nvariables, uint nsamples, dmatrix x, dvector w, dvector y,ivector nullmodellayout,int verbose);
+  void inverseF_R(int* df1,int* df2, double* alfa, double* out);
+  double inverseF(int df1, int df2, double alfa);
 }
 #endif

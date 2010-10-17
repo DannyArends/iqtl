@@ -62,6 +62,24 @@ double multivariateregression(uint nvariables, uint nsamples, dmatrix x, dvector
   return logLQTL;
 }
 
+void inverseF_R(int* df1,int* df2, double* alfa, double* out){
+  (*out) = inverseF((*df1), (*df2), (*alfa));
+}
+
+double inverseF(int df1, int df2, double alfa){
+  double prob=0.0, minF=0.0, maxF=100.0, halfway=50.0, absdiff=1.0;
+  int count=0;
+  while ((absdiff>0.001)&&(count<100)){
+    count++;
+    halfway= (maxF+minF)/2.0;
+    prob = pbeta(df2/(df2+df1*halfway), df2/2.0, df1/2.0, 1, 0);
+    if (prob<alfa) maxF= halfway;
+    else minF= halfway;
+    absdiff= fabs(prob-alfa);
+  }
+  return halfway;
+}
+
 double nullmodel(uint nvariables, uint nsamples, dmatrix x, dvector w, dvector y,ivector nullmodellayout,int verbose){
   dvector Fy = newdvector(nsamples);
   double logL = multivariateregression(nvariables,nsamples,x,w,y,Fy,true,nullmodellayout,verbose);;
