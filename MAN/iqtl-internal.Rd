@@ -3,6 +3,7 @@
 \alias{donothing}
 \alias{reciproce}
 \alias{inverseF}
+\alias{findperiod}
 \alias{scaledowncontrast}
 \alias{scaledowncontrasts}
 \alias{XGAPheader}
