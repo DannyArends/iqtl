@@ -44,6 +44,7 @@ void lodscorebyem_R(int* nvariables,int* nsamples, double* x, double* w, double*
     estparams[i] = XtWY[i];    
   }
   freematrix((void**)Xt,(*nvariables));
+  freevector((void*)XtWY);
   if((*verbose)) Rprintf("lodscore: %f\n",(*out));
 
 }
