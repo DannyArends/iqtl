@@ -18,7 +18,22 @@
 	Danny Arends \email{Danny.Arends@gmail.com}
 	Maintainer: Danny Arends \email{Danny.Arends@gmail.com} 
 }
+\seealso{
+	\itemize{
+    \item \code{\link{batcheffectcheck}} - Checks for batch effects in the data
+		\item \code{\link{batcheffectcorrect}} - Correct batcheffects in data by normalizing group means
+    \item \code{\link{backwardeliminate}} - Create a QTL model by backward elimination of cofactors
+    \item \code{\link{contrastqtlmapping}} - QTL mapping routine using multiple linear regression on contrasts
+	}
+}
 \examples{
-  #TODO
+  data(multitrait)
+  multitrait$pheno <- data.frame(matrix(
+  c(rnorm(810),
+    runif(810),
+    exp(rnorm(810)),
+    sqrt(1+runif(810))
+    ),162,20))
+  results <- autonormalize(multitrait)
 }
 \keyword{datagen}
