@@ -5,7 +5,7 @@
 # last modified mrt, 2010
 # first written mrt, 2010
 # 
-# R functions: mqmmultitoscanone, mqmmodelsasnetwork
+# R functions: inverseF, backwardeliminate
 #  Basic scripts for Causal inference
 #
 
@@ -25,7 +25,7 @@ backwardeliminate <- function(cross,pheno.col=1,type=0,cofactors,alpha=0.01,verb
   finished      <- FALSE
   pheno         <- cross$pheno[,pheno.col] 
   thismarkerclist <- contrastlisttodesignmatrix(contrastlist,model)
-  logLfull      <- modellikelyhood(thismarkerclist,pheno)$likelihood
+  logLfull      <- modellikelihood(thismarkerclist,pheno)$likelihood
   dropneeded    <- 2*inverseF(2,nrow(thismarkerclist)-length(model),alpha);
   e <- proc.time()
   startup <- as.numeric(e[3]-s[3])
@@ -39,7 +39,7 @@ backwardeliminate <- function(cross,pheno.col=1,type=0,cofactors,alpha=0.01,verb
     for(todrop in 1:length(model)){
       tempmodel <- model[-todrop]
       thismarkerclist <- contrastlisttodesignmatrix(contrastlist,tempmodel)
-      loglikelyhood = c(loglikelyhood,modellikelyhood(thismarkerclist,pheno)$likelihood)
+      loglikelyhood = c(loglikelyhood,modellikelihood(thismarkerclist,pheno)$likelihood)
     }
     leastinterestingmodel = which.max(loglikelyhood);
     likelihoodleastinterestingmodel = max(loglikelyhood);

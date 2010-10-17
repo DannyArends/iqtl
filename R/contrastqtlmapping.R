@@ -5,12 +5,12 @@
 # last modified mrt, 2010
 # first written mrt, 2010
 # 
-# R functions: contrastqtlmapping, contrastqtlsignificance, getlodthreshold, lodscorevectortoscanone,
+# R functions: contrastqtlmapping, contrastqtlsignificance, getlodthreshold, lodscorestoscanone,
 # Basic scripts for contrast QTL mapping using multiple regression
 #
 
 #Function used for estimating significance
-contrastqtlsignificance <- function(cross, pheno.col = 1, cycles = 1000,type = 0, verbose=TRUE){
+contrastqtlsignificance <- function(cross, pheno.col = 1, type = 0, cofactors=NULL, cycles = 1000, verbose=TRUE){
   s <- proc.time()
   samples <- nrow(cross$pheno)
   originalphenotype <- cross$pheno[,pheno.col]
@@ -20,7 +20,7 @@ contrastqtlsignificance <- function(cross, pheno.col = 1, cycles = 1000,type = 0
   contrastlist <- lapply(FUN=scaledowncontrast,contrastlist)
   for(x in 1:cycles){
     cross$pheno[,pheno.col] <- cross$pheno[sample(samples),pheno.col]
-    qtlresults <- contrastqtlmapping.internal(cross,contrastlist,pheno.col=pheno.col,verbose=FALSE)
+    qtlresults <- contrastqtlmapping.internal(cross,contrastlist,pheno.col=pheno.col,type=type,cofactors=cofactors,verbose=FALSE)
     lodscorematrix <- rbind(lodscorematrix, qtlresults$lod)
   }
   cross$pheno[,pheno.col] <- originalphenotype
@@ -84,7 +84,7 @@ contrastqtlmapping.internal <- function(cross,contrastlist=crosstocontrastlist(c
     lodmatrix <- rbind(lodmatrix,lodscores)
   }
   s <- proc.time()
-  qtlprofile <- lodscorevectortoscanone(cross,lodmatrix)
+  qtlprofile <- lodscorestoscanone(cross,lodmatrix)
   e <- proc.time()
   cleanup <- as.numeric(e[3]-s[3])
   if(verbose){
@@ -98,7 +98,7 @@ contrastqtlmapping.internal <- function(cross,contrastlist=crosstocontrastlist(c
 
 #Gets the lod threshold from a matrix where each row is a permutation scan
 plotlodscorematrix <- function(cross, result, lodscorematrix){
-  plot(result,lodscorevectortoscanone(cross,rep(getlodthreshold(lodscorematrix,10),sum(nmar(cross)))),lodscorevectortoscanone(cross,rep(getlodthreshold(lodscorematrix),sum(nmar(cross)))),col=c("black","yellow","green"))
+  plot(result,lodscorestoscanone(cross,rep(getlodthreshold(lodscorematrix,10),sum(nmar(cross)))),lodscorestoscanone(cross,rep(getlodthreshold(lodscorematrix),sum(nmar(cross)))),col=c("black","yellow","green"))
   legend("topright",c("Trait","5%","10%"),col=c("black","green","yellow"),lwd=c(1,1,1))
 }
 
@@ -112,16 +112,16 @@ getlodthreshold <- function(lodscorematrix,percentage = 5){
 }
 
 #To use karl's pretty histogram plot function
-lodscorevectortoscanoneperm <- function(lodscores){
-  lodscores <- as.matrix(lodscores)
-  colnames(lodscores) <- "lod"
-  rownames(lodscores) <- 1:ncol(lodscores)
-  class(lodscores) <- c("scanoneperm",class(lodscores))
-  lodscores
+lodscorematrixtoscanoneperm <- function(lodscorematrix){
+  lodscorematrix <- as.matrix(lodscorematrix)
+  colnames(lodscorematrix) <- "lod"
+  rownames(lodscorematrix) <- 1:ncol(lodscorematrix)
+  class(lodscorematrix) <- c("scanoneperm",class(lodscorematrix))
+  lodscorematrix
 }
 
 #Change any list of lodscores into a scanone object (only pre-req: length(lodscores)==sum(nmar(cross))
-lodscorevectortoscanone <- function(cross,lodscores,traitnames = NULL){
+lodscorestoscanone <- function(cross,lodscores,traitnames = NULL){
   n <- unlist(lapply(FUN=colnames,pull.map(cross)))
   chr <- NULL
   if(!is.null(ncol(pull.map(cross)[[1]]))){

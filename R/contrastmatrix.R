@@ -18,8 +18,8 @@ crosstocontrastlist <- function(cross,type=0,verbose=FALSE){
   res <- vector("list", ncol(geno))
   for(x in 1:ncol(geno)){
     res[[x]] <- 0
-    if(type==0) res[[x]] <- as.matrix(genomecontrasts(geno,x,unique(sort(as.numeric(geno))),verbose))
-    if(type==1) res[[x]] <- as.matrix(permarkercontrasts(geno,x,verbose))
+    if(type==0) res[[x]] <- as.matrix(genomecontrasts(geno,x,verbose))
+    if(type==1) res[[x]] <- as.matrix(markercontrasts(geno,x,verbose))
   }
   res
 }
@@ -55,7 +55,7 @@ contrastlisttodesignmatrix <- function(contrastlist,cofactors = NULL,verbose=FAL
   designmatrix
 }
 
-permarkercontrasts <- function(genotypes,m=1,verbose=FALSE){
+markercontrasts <- function(genotypes,m=1,verbose=FALSE){
   marker <- genotypes[,m]
   ncontrasts <- length(unique(marker))-1
   if(any(marker==666)){
@@ -83,9 +83,10 @@ permarkercontrasts <- function(genotypes,m=1,verbose=FALSE){
   contrastmatrix
 }
 
-genomecontrasts <- function(genotypes,m=1,genomecontrasts,verbose=FALSE){
-  marker <- genotypes[,m]
+genomecontrasts <- function(genotypes,m=1,verbose=FALSE){
+  genomecontrasts <- unique(sort(as.numeric(genotypes)))
   ncontrasts <- length(unique(genomecontrasts))-1
+  marker <- genotypes[,m]
   if(any(genomecontrasts==666)){
     ncontrasts <- ncontrasts-1
   }
