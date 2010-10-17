@@ -9,6 +9,7 @@
  **/
  
 #include "expectationmaximization.h"
+#include "regressionsupport.h"
 #include <cstdio>
 #include <iostream>
 #include <fstream>
@@ -33,10 +34,16 @@ void modellikelihoodbyem_R(int* nvariables,int* nsamples, double* x, double* w, 
 
 }
 
-void lodscorebyem_R(int* nvariables,int* nsamples, double* x, double* w, double* y,int* nullmodellayout,int* verbose,double* out){
+void lodscorebyem_R(int* nvariables,int* nsamples, double* x, double* w, double* y,double* estparams, int* nullmodellayout,int* verbose,double* out){
   dmatrix transformedx;
   dvectortodmatrix((*nsamples),(*nvariables),x,&transformedx);
   (*out) = (2*likelihoodbyem((*nvariables), (*nsamples), transformedx, w, y, (*verbose)) - 2 * nullmodel((*nvariables), (*nsamples), transformedx, w, y, nullmodellayout, (*verbose))) / 4.60517;
+  dmatrix Xt   = translatematrix((*nvariables),(*nsamples),transformedx,(*verbose));
+  dvector XtWY = calculateparameters((*nvariables),(*nsamples),Xt,w,y,(*verbose));
+  for (uint i=0; i < (uint)(*nvariables); i++){
+    estparams[i] = XtWY[i];    
+  }
+  freematrix((void**)Xt,(*nvariables));
   if((*verbose)) Rprintf("lodscore: %f\n",(*out));
 
 }

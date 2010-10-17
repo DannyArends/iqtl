@@ -24,7 +24,7 @@ double multivariateregression(uint nvariables, uint nsamples, dmatrix x, dvector
 
   if(nullmodel){
     for (uint i=1; i < nvariables; i++){
-      if(nullmodellayout[(i-1)] == 1){
+      if(nullmodellayout[(i-1)] == 1){ //SHIFTED Because the nullmodel has always 1 parameter less (The first parameter estimated mean)
         XtWY[i] = 0.0;
       }
     }

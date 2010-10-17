@@ -17,7 +17,7 @@ extern "C"
 
   void nullmodellikelihood_R(int* nvariables,int* nsamples, double* x, double* w, double* y,int* nullmodellayout,int* verbose,double* out);
   void modellikelihoodbyem_R(int* nvariables,int* nsamples, double* x, double* w, double* y,int* verbose,double* out);
-  void lodscorebyem_R(int* nvariables,int* nsamples, double* x, double* w, double* y,int* nullmodellayout,int* verbose,double* out);
+  void lodscorebyem_R(int* nvariables,int* nsamples, double* x, double* w, double* y,double* estparams,int* nullmodellayout,int* verbose,double* out);
   double likelihoodbyem(uint nvariables,uint nsamples, dmatrix x, dvector w, dvector y,int verbose);
 }
 #endif
