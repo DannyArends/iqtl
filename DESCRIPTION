@@ -4,7 +4,7 @@ Date: 04 September 2010
 Title: Interactive for R/qtl
 Author: Danny Arends <Danny.Arends@gmail.com>
 Maintainer: Danny Arends <Danny.Arends@gmail.com>
-Depends: R (>= 1.8.0), qtl, bitops, RCurl, snow, randomForest
+Depends: R (>= 1.8.0), qtl, bitops, RCurl, snow, randomForest, VGAM
 Description: Testing
 License: GPL 3
 LazyLoad: yes
