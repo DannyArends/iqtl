@@ -29,7 +29,7 @@ scaledowncontrast <- function(contrastlistitem){
   res
 }
 
-contrastlisttodesignmatrix <- function(contrastlist,m,cofactors = NULL,verbose=FALSE){
+contrastlisttomatrices <- function(contrastlist,m,cofactors = NULL,verbose=FALSE){
   designmatrix <- contrastlist[[m]]
   if(verbose) cat("Contrast matrix for marker",m,"\n")
   nullmatrixlayout <- rep(1,ncol(contrastlist[[m]]))
@@ -43,6 +43,16 @@ contrastlisttodesignmatrix <- function(contrastlist,m,cofactors = NULL,verbose=F
     }
   }
   list(designmatrix,nullmatrixlayout)
+}
+
+contrastlisttodesignmatrix <- function(contrastlist,cofactors = NULL,verbose=FALSE){
+  designmatrix <- NULL
+  if(!is.null(cofactors)){
+    for(x in cofactors){
+      designmatrix <- cbind(contrastlist[[x]],designmatrix)
+    }
+  }
+  designmatrix
 }
 
 permarkercontrasts <- function(genotypes,m=1,verbose=FALSE){
