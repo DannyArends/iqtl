@@ -51,7 +51,7 @@ contrastqtlmapping <- function(cross,pheno.col=1,type=0,cofactors=NULL,verbose=T
   
 contrastqtlmapping.internal <- function(cross,contrastlist=crosstocontrastlist(cross,type),pheno.col=1,type=0,cofactors=NULL,verbose=TRUE){
   s <- proc.time()
-  phenotypes <- matrix(pull.pheno(cross)[,pheno.col],nind(cross),length(pheno.col))
+  phenotypes <- as.matrix(pull.pheno(cross)[,pheno.col],nind(cross),length(pheno.col))
   lodmatrix <- NULL
   e <- proc.time()
   startup <- as.numeric(e[3]-s[3])
@@ -68,6 +68,7 @@ contrastqtlmapping.internal <- function(cross,contrastlist=crosstocontrastlist(c
     for(p in 1:ncol(phenotypes)){
       s <- proc.time()
       tokeep <- !is.na(phenotypes[,p])
+      
       pheno <- phenotypes[tokeep,p]
       contrastmarker <- as.matrix(thismarkerclist[[1]][tokeep,])
       e <- proc.time()

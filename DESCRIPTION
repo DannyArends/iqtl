@@ -7,5 +7,3 @@ Maintainer: Danny Arends <Danny.Arends@gmail.com>
 Depends: R (>= 1.8.0), qtl, bitops, RCurl, snow, randomForest, VGAM
 Description: Testing
 License: GPL 3
-LazyLoad: yes
-LazyData: yes
