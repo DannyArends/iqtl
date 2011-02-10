@@ -1,6 +1,6 @@
 #####################################################################
 #
-# SingleMarkerQTL.R
+# smQTL.R
 #
 # copyright (c) 2009, Danny Arends
 # last modified March, 2008

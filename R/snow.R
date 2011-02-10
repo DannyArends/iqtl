@@ -5,7 +5,7 @@
 # last modified mrt, 2010
 # first written mrt, 2010
 # 
-# R functions: mqmmultitoscanone, mqmmodelsasnetwork
+# R functions: mqmmultitoscanone
 #
 #
 ######################################################################

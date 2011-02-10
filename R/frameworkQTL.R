@@ -1,6 +1,6 @@
 #####################################################################
 #
-# QYLframework.R
+# frameworkQTL.R
 #
 # copyright parent_check (c) 2009, Danny Arends
 # last modified Mrt, 2009

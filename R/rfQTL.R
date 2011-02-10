@@ -1,6 +1,6 @@
 #####################################################################
  # 
- # scanRF.R
+ # rfQTL.R
  #
  # Copyright (c) 2009 Danny Arends
  # Last modified Dec, 2009

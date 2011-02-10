@@ -24,26 +24,6 @@ mqmmultitoscanone <- function(result){
   obj
 }
 
-mqmmodelsasnetwork <- function(cross,result){
-  if(is.null(cross)){
-		stop("No cross object. Please supply a valid cross object.") 
-	}
-  if(!any(class(result)=="mqmmulti")){
-    stop("No mqmmulti object. Please supply a valid mqmmulti object.") 
-  }
-  models <- lapply(FUN=mqmgetmodel,result)
-  namez <- colnames(pull.pheno(cross))
-  cat(file="QTLnetwork.sif","",append=F)
-  cat(file="QTLnodes.sif","",append=F)
-  for(x in 1:length(models)){
-    cat(file="QTLnodes.sif",namez[x],"Trait\t0\n",sep="\t",append=TRUE)
-    for(y in 1:length(models[[x]][[2]])){
-      cat(file="QTLnodes.sif",models[[x]][[2]][y],"Marker",models[[x]][[4]][y],"\n",sep="\t",append=TRUE)
-      cat(file="QTLnetwork.sif",namez[x],"QTLeffect",models[[x]][[2]][y],result[[x]][models[[x]][[2]][y],3],"\n",sep="\t",append=TRUE)
-    }
-  }
-}
-
 mqmsupportint <- function(result,marker){
   if(!any(class(result)=="scanone")){
     stop("No scanone object. Please supply a valid scanone object.") 

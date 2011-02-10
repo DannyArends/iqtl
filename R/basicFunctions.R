@@ -1,6 +1,6 @@
 #####################################################################
 #
-# Realbasic.R
+# basicFunctions.R
 #
 # copyright parent_check (c) 2009, Danny Arends
 # last modified Apr, 2009

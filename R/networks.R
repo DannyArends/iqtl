@@ -1,14 +1,36 @@
+######################################################################
 #
-# qtlnetwork.R
+# networks.R
 #
 # copyright (c) 2010, Danny Arends
-# last modified jan, 2011
-# first written jan, 2011
+# last modified mrt, 2011
+# first written mrt, 2011
 # 
-# R functions: scanonetosif
+# R functions: mqmmodelsasnetwork, scanonetosif
 #
-# Basic scripts creating networks from scanone results
 #
+######################################################################
+
+mqmmodelsasnetwork <- function(cross,result){
+  if(is.null(cross)){
+		stop("No cross object. Please supply a valid cross object.") 
+	}
+  if(!any(class(result)=="mqmmulti")){
+    stop("No mqmmulti object. Please supply a valid mqmmulti object.") 
+  }
+  models <- lapply(FUN=mqmgetmodel,result)
+  namez <- colnames(pull.pheno(cross))
+  cat(file="QTLnetwork.sif","",append=F)
+  cat(file="QTLnodes.sif","",append=F)
+  for(x in 1:length(models)){
+    cat(file="QTLnodes.sif",namez[x],"Trait\t0\n",sep="\t",append=TRUE)
+    for(y in 1:length(models[[x]][[2]])){
+      cat(file="QTLnodes.sif",models[[x]][[2]][y],"Marker",models[[x]][[4]][y],"\n",sep="\t",append=TRUE)
+      cat(file="QTLnetwork.sif",namez[x],"QTLeffect",models[[x]][[2]][y],result[[x]][models[[x]][[2]][y],3],"\n",sep="\t",append=TRUE)
+    }
+  }
+}
+
 
 scanonetosif <- function(results, lodcutoff=3.0, verbose=TRUE){
   date <- paste(format(Sys.Date(), "%d%b%Y"),"-",format(Sys.time(), "%H-%M"),sep="")
@@ -33,4 +55,3 @@ scanonetosif <- function(results, lodcutoff=3.0, verbose=TRUE){
   }
   if(verbose) cat(date,"Done open the qtlnetwork.sif file in Cytoscape (r)\n")
 }
-
