@@ -1,11 +1,11 @@
-\name{BreedRandom}
-\alias{BreedRandom}
-\title{ BreedRandom - Generate a next generation based on random mating }
+\name{breed.random}
+\alias{breed.random}
+\title{ breed.random - Generate a next generation based on random mating }
 \description{
   Generate a next generation based on random mating
 }
 \usage{
-  BreedRandom(population,n.child)
+  breed.random(population,n.child)
 }
 
 \arguments{

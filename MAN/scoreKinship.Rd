@@ -1,27 +1,25 @@
-\name{scoreKinship}
-\alias{scoreKinship}
-\title{scoreKinship - Calculates kinshipscores based on SNPmarker data }
+\name{score.kinship}
+\alias{score.kinship}
+\title{score.kinship - Calculates kinshipscores based on SNP marker data }
 \description{
-	Calculates kinshipscores based on SNPmarker data
+	Calculates kinshipscores based on SNP marker data
 }
 \usage{
-scoreKinship(matrix, number = ncol(matrix), plot = T, file = NULL)
+score.kinship(matrix, plot = T, filename = NULL,verbose=FALSE)
 }
 
 \arguments{
   \item{matrix}{ matrix[SNPmarker,Individual] }
-  \item{number}{ How many individuals of the set should we analyse (DEFAULT: 100, 0 for ALL) }
   \item{plot}{ Should a histogram be plotted (TRUE/FALSE) }
-  \item{file}{ Save result to a file (file=<filename>) }
+  \item{filename}{ Save result to a file (file=<filename>) }
+  \item{verbose}{ Be verbose }
 }
 \details{
   TODO
 }
 \value{
 	A list with two items:
-	
 	\code{Matrix} - Genetic identity
-	
 	\code{Matrix} - Genetic distance
 }
 \references{ 
@@ -36,8 +34,8 @@ scoreKinship(matrix, number = ncol(matrix), plot = T, file = NULL)
 }
 \seealso{
 	\itemize{
-		\item \code{\link{parents}} - Finds tripplets of individuals with parents from SNP markerdata
-		\item \code{\link{kinshipNetwork}} - Created a .SIF network with kinship relations between individuals
+		\item \code{\link{find.parents}} - Finds tripplets of individuals with parents from SNP markerdata
+		\item \code{\link{kinship.network}} - Created a .SIF network with kinship relations between individuals
 		\item Plot functions:
 		\itemize{
 			\item \code{\link{plot.parentplot}} - Graphical representation highlighting possible parents of individuals
@@ -47,13 +45,13 @@ scoreKinship(matrix, number = ncol(matrix), plot = T, file = NULL)
 }
 \examples{
 	#Create a population at H/W equilibrium
-	population <- CreatePopulationHW(100,300)
+	population <- create.population(100,300)
 	
 	#Breed randomly a generation (parents)
-	population <- BreedRandom(population,25)
+	population <- breed.random(population,25)
 	
 	#Score kinship in our breeding example
-	result <- scoreKinship(population$data,plot=FALSE)
+	result <- score.kinship(population$data,plot=FALSE)
 	
 	plot.parentimage(result)
 }

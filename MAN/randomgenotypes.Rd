@@ -1,11 +1,11 @@
-\name{create.population}
-\alias{create.population}
-\title{ create.population - Simulation of a population with genetic markers}
+\name{random.genotypes}
+\alias{random.genotypes}
+\title{ random.genotypes - Simulation of genetic markers}
 \description{
-	Simulation of a population genetic markers (not) at H/W equilibrium
+	Simulation of genetic markers
 }
 \usage{
-	create.population(individuals,markers,n.geno,normal=TRUE)
+	random.genotypes(individuals,markers,n.geno,normal=TRUE)
 }
 
 \arguments{

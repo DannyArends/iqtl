@@ -1,9 +1,9 @@
 #####################################################################
 #
-# AssortedMating.R
+# matinganalysis.R
 #
 # copyright parent_check (c) 2009, Danny Arends
-# last modified Apr, 2009
+# last modified Feb, 2011
 # first written Apr, 2009
 # 
 # Contains: assortedmating
@@ -222,16 +222,4 @@ assortedmating <- function(matrix,info,start=1,number=nrow(matrix)-start,plot=TR
 	ReturnMatrix <- ReturnMatrix[-1,]
 	colnames(ReturnMatrix) <- c("Population_Chi2","Inbreading","Population*Inbreading","Mating_Chi2")
 	list(ReturnMatrix,ParentDirectionS)
-}
-
-SNPMarker <- function(individuals,markers,n=0){
-	if(n==0){
-		aa <- RnMN(2,individuals,markers)
-	}else{
-		aa <- RnMN(2,individuals,markers/2)
-		aa <- rbind(aa,RnM(2,individuals,markers/2))
-	}
-	rownames(aa) <- Names("marker",markers)
-	colnames(aa) <- Names("ind",individuals)
-	aa
 }

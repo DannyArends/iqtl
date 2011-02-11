@@ -31,7 +31,7 @@
 \alias{createheatmapbymarkerscript}
 \alias{createprofilebymarkerscript}
 \alias{datacheck}
-\alias{doDIR}
+\alias{create.child}
 \alias{est_runtime}
 \alias{examples}
 \alias{generateESTfile}

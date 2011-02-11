@@ -1,46 +1,44 @@
 #####################################################################
 #
-# TestSets.R
+# population.R
 #
-# copyright parent_check (c) 2009, Danny Arends
-# last modified Apr, 2009
+# copyright population (c) 2009, Danny Arends
+# last modified Feb, 2011
 # first written Apr, 2009
 #
+# 
+# Contains: random.genotypes, create.population, create.child, breed.random, breed.assorted
 #
 ######################################################################
-CreatePopulationHW <- function(individuals,markers){
+
+random.genotypes <- function(individuals, markers, n.geno=2, normal=TRUE){
+	if(normal){
+		aa <- RnMN(n.geno,individuals,markers)
+	}else{
+		aa <- RnM(n.geno,individuals,markers)
+	}
+	rownames(aa) <- Names("marker",markers)
+	colnames(aa) <- Names("ind",individuals)
+	aa
+}
+
+create.population <- function(individuals, markers, n.geno=2, normal=TRUE){
 	m <- NULL
-	pList <- NULL
-	m$data <- RnMN(2,individuals,markers)
+	parentlist <- NULL
+	m$data <- random.genotypes(individuals,markers,n.geno,normal)
 	m$generation=1
 	m$individuals=individuals	
 	m$markers=markers
 	for(x in 1:individuals){
-		pList <- rbind(pList,c(x,0,0))
+		parentlist <- rbind(parentlist,c(x,0,0))
 	}
-	m$parentlist <- list(pList)
+	m$parentlist <- list(parentlist)
 	colnames(m$data) <- Names("Individual",individuals)
 	rownames(m$data) <- Names("Marker",markers)
 	m
 }
 
-CreatePopulation <- function(individuals,markers){
-	m <- NULL
-	pList <- NULL
-	m$data <- RnM(2,individuals,markers)
-	m$generation=1
-	m$individuals=individuals	
-	m$markers=markers
-	for(x in 1:individuals){
-		pList <- rbind(pList,c(x,0,0))
-	}
-	m$parentlist <- list(pList)	
-	colnames(m$data) <- Names("Individual",individuals)
-	rownames(m$data) <- Names("Marker",markers)
-	m
-}
-
-make.child <- function(parent1,parent2){
+create.child <- function(parent1,parent2){
 	child <- RnV(2,length(parent1))
 	for(x in 1:length(parent1)){
 		if(parent1[x]==0 && parent1[x]==parent2[x]){child[x] = parent1[x]}
@@ -51,7 +49,7 @@ make.child <- function(parent1,parent2){
 	child
 }
 
-BreedRandom <- function(population,n.child){
+breed.random <- function(population,n.child){
 	P1 <- RnV(population$individuals-1,n.child)+1
 	P2 <- RnV(population$individuals-1,n.child)+1
 	result <- NULL
@@ -64,7 +62,7 @@ BreedRandom <- function(population,n.child){
 	for(x in 1:n.child){
 		cat("Creating child between:",P1[x],"and",P2[x],"\n")
 		pList <- rbind(pList,c(x,P1[x],P2[x]))
-		child <- make.child(population$data[,P1[x]],population$data[,P2[x]])
+		child <- create.child(population$data[,P1[x]],population$data[,P2[x]])
 		names <- c(names,paste("Child",population$generation,P1[x],P2[x],sep="."))
 		result <- cbind(result,child)
 	}
@@ -79,8 +77,8 @@ BreedRandom <- function(population,n.child){
 	nextGen
 }
 
-BreedAssorted <- function(population,n.child,start,stop,...){
-	res <- scoreKinship(population$data[start:stop,],population$individuals,...)
+breed.assorted <- function(population, n.child, start, stop, ...){
+	res <- score.kinship(population$data[start:stop,],population$individuals,...)
 	P1 <- RnV(population$individuals-1,n.child)+1
 	result <- NULL
 	nextGen <- NULL
@@ -91,7 +89,7 @@ BreedAssorted <- function(population,n.child,start,stop,...){
 		P2 <- as.integer(which(max(res[[1]][,P1[x]],na.rm=T)==res[[1]][,P1[x]]))
 		cat(x,"Creating child between:",P1[x],"and",P2[1],"\n")
 		pList <- rbind(pList,c(x,P1[x],P2[1]))	
-		child <- make.child(population$data[,P1[x]],population$data[,P2[1]])
+		child <- create.child(population$data[,P1[x]],population$data[,P2[1]])
 		names <- c(names,paste("Child",population$generation,P1[x],P2[1],sep="."))
 		result <- cbind(result,child)		
 	}

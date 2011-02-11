@@ -1,11 +1,11 @@
-\name{BreedAssorted}
-\alias{BreedAssorted}
-\title{ BreedAssorted - Generate a next generation based on assorted mating }
+\name{breed.assorted}
+\alias{breed.assorted}
+\title{ breed.assorted - Generate a next generation based on assorted mating }
 \description{
   Generate a next generation based on assorted mating
 }
 \usage{
-  BreedAssorted(population,n.child,start,stop,...)
+  breed.assorted(population,n.child,start,stop,...)
 }
 
 \arguments{
@@ -13,7 +13,7 @@
   \item{n.child}{ Number of children to breed }
   \item{start}{ Begin of region to apply selection }
   \item{stop}{ End of region to apply selection }
-  \item{\dots}{ Parameters for scoreKinship }
+  \item{\dots}{ Parameters for score.kinship }
   
 }
 \details{

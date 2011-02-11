@@ -9,7 +9,7 @@
 }
 
 \arguments{
-  \item{x}{ Result from the function \link{scoreKinship} }
+  \item{x}{ Result from the function \link{score.kinship} }
   \item{start}{ Start at individual }
   \item{num}{ Show this many individuals }
   \item{\dots}{ Additional arguments to plotting function }
@@ -23,13 +23,13 @@
 }
 \examples{
 	#Create a population at H/W equilibrium
-	population <- CreatePopulationHW(100,500)
+	population <- create.population(100,500)
 	
 	#Breed randomly a generation (parents)
-	population <- BreedRandom(population,50)
+	population <- breed.random(population,50)
 
 	#Score kinship in our breeding example	
-	result <- scoreKinship(population$data,plot=FALSE)
+	result <- score.kinship(population$data,plot=FALSE)
 	
 	plot.parentplot(result,101,4)
 	plot.parentplot(result,101,0)

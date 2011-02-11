@@ -9,7 +9,7 @@
 }
 
 \arguments{
-  \item{x}{ Result from the function \link{scoreKinship} }
+  \item{x}{ Result from the function \link{score.kinship} }
   \item{start}{ Start at individual }
   \item{num}{ Show this many individuals (DEFAULT: End of the resultset) }
   \item{cutoffsib}{ Sibling cutoff (DEFAULT: value > 3*std-dev) }
@@ -28,20 +28,20 @@
 }
 \seealso{
 	\itemize{
-		\item \code{\link{scoreKinship}} - Calculates kinshipscores based on SNP markerdata
-		\item \code{\link{parents}} - Finds tripplets of individuals with parents from SNP markerdata
-		\item \code{\link{kinshipNetwork}} - Created a .SIF network with kinship relations between individuals
+		\item \code{\link{score.kinship}} - Calculates kinshipscores based on SNP markerdata
+		\item \code{\link{find.parents}} - Finds tripplets of individuals with parents from SNP markerdata
+		\item \code{\link{kinship.network}} - Created a .SIF network with kinship relations between individuals
 	}
 }
 \examples{
 	#Create a population at H/W equilibrium
-	population <- CreatePopulationHW(100,300)
+	population <- create.population(100,300)
 	
 	#Breed randomly a generation (parents)
-	population <- BreedRandom(population,25)
+	population <- breed.random(population,25)
 	
 	#Score kinship in our breeding example	
-	result <- scoreKinship(population$data,plot=FALSE)
+	result <- score.kinship(population$data,plot=FALSE)
 	
 	#plot the suspected parents
 	plot.parentimage(result)
