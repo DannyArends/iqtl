@@ -19,11 +19,15 @@
 \alias{RnVN}
 \alias{SNPMarker}
 \alias{analyseQTL}
+\alias{analysis.differentialCorrelation}
 \alias{assortedmating}
 \alias{assortedmating.init}
 \alias{avgResults}
 \alias{checkcutoffndrop}
 \alias{client.start}
+\alias{countVectorThreshold}
+\alias{countDifCorThreshold}
+\alias{correlationmatrix}
 \alias{create.client}
 \alias{create.cluster}
 \alias{createdatafile}
@@ -61,6 +65,7 @@
 \alias{report}
 \alias{smoothV}
 \alias{test.cluster}
+\alias{test.differentialCorrelation}
 \alias{testdata}
 \alias{testgnuplot}
 \alias{traitspeaked}
