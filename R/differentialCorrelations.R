@@ -194,11 +194,15 @@ imageDifCnt <- function(difCnt, cluster=FALSE){
 #Optionally add a scanone object to overlay the QTL profile
 plotDifCntProfile <- function(cross, difCntMatrix, pheno.col=1, addQTL=FALSE){
   difCorCntProfile <- lodscorestoscanone(cross,difCntMatrix[,pheno.col],traitnames = "difCorCnt")
-  if(addQTL) qtlscan <- scanone(cross, pheno.col=pheno.col)
+  if(addQTL){
+    cross <- calc.genoprob(cross)
+    qtlscan <- scanone(cross, pheno.col=pheno.col)
+  }
   dtmax <- max(difCorCntProfile[,3])
   if(addQTL) qtlmax <- max(qtlscan[,3])
   if(addQTL) difCorCntProfile[,3] <- difCorCntProfile[,3]*(qtlmax/dtmax)
   if(addQTL){
+    op <- par(mar=c(5, 4, 4, 5) + 0.1)
     plot(qtlscan,difCorCntProfile,y=c(0,1.7*qtlmax),col=c("red","green"),main=pheno.col)
     legend("topright",c("scanone","difCorCount"),lwd=1,col=c("red","green"))
     axis(4,at=seq(0,1.7*qtlmax,1),round((dtmax/qtlmax) * seq(0,1.7*qtlmax,1),1))
@@ -207,20 +211,26 @@ plotDifCntProfile <- function(cross, difCntMatrix, pheno.col=1, addQTL=FALSE){
     legend("topright",c("difCorCount"),lwd=1,col=c("black"))
   }
   if(addQTL) difCorCntProfile[,3] <- difCorCntProfile[,3]*(dtmax/qtlmax)
-  difCorCntProfile
+  invisible(difCorCntProfile)
 }
 
-plotDifCorAtMarker <- function(cross, difCntMatrix, marker="YBR008C_211", significant=5, lodthreshold=5){
+plotDifCorAtMarker <- function(cross, difCntMatrix, significant=5, lodthreshold=5, marker="YBR008C_211"){
   signdifcor <- names(which(difCntMatrix[marker,] > significant))
   cat("- Starting QTL scan of",length(signdifcor),"\n")
+  cross <- calc.genoprob(cross)
   res <- scanone(cross,pheno.col=signdifcor)
   cat("- Start of",length(which(apply(res[,3:ncol(res)],2,max) > lodthreshold)),"plots\n")
   if(length(which(apply(res[,3:ncol(res)],2,max) > lodthreshold)) > 0){
     for(x in names(which(apply(res[,3:ncol(res)],2,max) > lodthreshold))){
-      plotDifCntProfile(cross,difCntMatrix,x)
+      plotDifCntProfile(cross,difCntMatrix,x,addQTL=TRUE)
     }
   }
   invisible(res)
+}
+
+plotExpressionAtMarker <- function(cross, pheno.col=1, marker="YBR008C_211"){
+  genotype <- pull.geno(cross)[,marker]
+  boxplot(pull.pheno(cross)[genotype==1,pheno.col],pull.pheno(cross)[genotype==2,pheno.col],main=paste("Expression of:",pheno.col),sub=paste("Split by genotype at marker:",marker))
 }
 
 #Plot the change in Correlation profile of a single phenotype

@@ -122,9 +122,8 @@ lodscorematrixtoscanoneperm <- function(lodscorematrix){
 }
 
 #Change any list of lodscores into a scanone object (only pre-req: length(lodscores)==sum(nmar(cross))
-#TODO: Find the bug inside this function, sometimes the cM Locations get warped
 lodscorestoscanone <- function(cross,lodscores,traitnames = NULL){
-  n <- unlist(lapply(FUN=colnames,pull.map(cross)))
+  n <- unlist(lapply(FUN=names,pull.map(cross)))
   chr <- NULL
   if(!is.null(ncol(pull.map(cross)[[1]]))){
     d <- as.numeric(unlist(lapply(pull.map(cross),FUN=function(x) {x[1,]})))
@@ -135,7 +134,7 @@ lodscorestoscanone <- function(cross,lodscores,traitnames = NULL){
   }
   qtlprofile <- cbind(chr,d,lodscores)
   qtlprofile <- as.data.frame(qtlprofile)
-  qtlprofile[,1] <- as.factor(chr)
+  qtlprofile[,1] <- as.factor(as.numeric(chr))
   qtlprofile[,2] <- as.numeric(d)
   if(!is.null(ncol(lodscores))){
     for(x in 1:ncol(lodscores)){
