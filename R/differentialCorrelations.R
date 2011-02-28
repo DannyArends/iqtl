@@ -24,6 +24,14 @@ countDifCorThreshold <- function(difCor,threshold = 0.5){
   apply(difCor[[1]],1,countVectorThreshold,threshold)
 }
 
+summaryDifCnt <- function(difCntMatrix){
+  for(s in c(seq(5,50,5),100,200,500,1000)){
+    not_significant <- apply(difCntMatrix,2,function(x){sum(x>s)==0})
+    significant <- apply(difCntMatrix,2,function(x){sum(x>s)!=0})
+    cat(s," ",sum(not_significant)," ",sum(significant),"\n")
+  }
+}
+
 #Typical analysis routine
 #- Load data and remove the NA values from the matrix
 #- Detected batch effect and add estimated effect to correct (Could be skipped)
@@ -40,11 +48,11 @@ analysis.differentialCorrelation <- function(){
   phenotypevariance <- apply(bremcross$pheno,2,var)
   genes <- which(phenotypevariance >= 0)
   bremcross$pheno <- phenotypes[,genes]
-  #batchcorrection <- read.table("batchmatrix.txt",header=T)
-  #bremcross$pheno <- bremcross$pheno-batchcorrection
-  #qtlcorrection <- read.table("qtlmatrix.txt",header=T)
-  #bremcross$pheno <- bremcross$pheno+qtlcorrection
-  MydifCntMatrix <- diffCorAnalysis(bremcross,0.01,0.4,25,directory="WithQTL")
+  batchcorrection <- read.table("batchmatrix.txt",header=T)
+  bremcross$pheno <- bremcross$pheno-batchcorrection
+  qtlcorrection <- read.table("qtlmatrix.txt",header=T)
+  bremcross$pheno <- bremcross$pheno+qtlcorrection
+  MydifCntMatrix <- diffCorAnalysis(bremcross,0.01,0.4,10,directory="WithOutQTL")
   
   #Reload it form disk
   #setwd("e:/gbic/bruno/differential correlations/yeast2")
@@ -184,12 +192,35 @@ imageDifCnt <- function(difCnt, cluster=FALSE){
 
 #Plot a Differential Correlation Count profile of a single phenotype
 #Optionally add a scanone object to overlay the QTL profile
-plotDifCntProfile <- function(cross, difCntMatrix, pheno.col=1){
+plotDifCntProfile <- function(cross, difCntMatrix, pheno.col=1, addQTL=FALSE){
   difCorCntProfile <- lodscorestoscanone(cross,difCntMatrix[,pheno.col],traitnames = "difCorCnt")
-  qtlscan <- scanone(cross, pheno.col=pheno.col)
-  tmax <- max(qtlscan[,3],difCorCntProfile[,3])
-  plot(qtlscan,difCorCntProfile,y=c(0,max(20,tmax)),col=c("red","green"),main=pheno.col)
-  legend("topright",c("scanone","difCorCount"),lwd=1,col=c("red","green"))
+  if(addQTL) qtlscan <- scanone(cross, pheno.col=pheno.col)
+  dtmax <- max(difCorCntProfile[,3])
+  if(addQTL) qtlmax <- max(qtlscan[,3])
+  if(addQTL) difCorCntProfile[,3] <- difCorCntProfile[,3]*(qtlmax/dtmax)
+  if(addQTL){
+    plot(qtlscan,difCorCntProfile,y=c(0,1.7*qtlmax),col=c("red","green"),main=pheno.col)
+    legend("topright",c("scanone","difCorCount"),lwd=1,col=c("red","green"))
+    axis(4,at=seq(0,1.7*qtlmax,1),round((dtmax/qtlmax) * seq(0,1.7*qtlmax,1),1))
+  }else{
+    plot(difCorCntProfile,y=c(0,1.7*dtmax),col="black",main=pheno.col,ylab="DifCorCnt")
+    legend("topright",c("difCorCount"),lwd=1,col=c("black"))
+  }
+  if(addQTL) difCorCntProfile[,3] <- difCorCntProfile[,3]*(dtmax/qtlmax)
+  difCorCntProfile
+}
+
+plotDifCorAtMarker <- function(cross, difCntMatrix, marker="YBR008C_211", significant=5, lodthreshold=5){
+  signdifcor <- names(which(difCntMatrix[marker,] > significant))
+  cat("- Starting QTL scan of",length(signdifcor),"\n")
+  res <- scanone(cross,pheno.col=signdifcor)
+  cat("- Start of",length(which(apply(res[,3:ncol(res)],2,max) > lodthreshold)),"plots\n")
+  if(length(which(apply(res[,3:ncol(res)],2,max) > lodthreshold)) > 0){
+    for(x in names(which(apply(res[,3:ncol(res)],2,max) > lodthreshold))){
+      plotDifCntProfile(cross,difCntMatrix,x)
+    }
+  }
+  invisible(res)
 }
 
 #Plot the change in Correlation profile of a single phenotype

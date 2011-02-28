@@ -122,6 +122,7 @@ lodscorematrixtoscanoneperm <- function(lodscorematrix){
 }
 
 #Change any list of lodscores into a scanone object (only pre-req: length(lodscores)==sum(nmar(cross))
+#TODO: Find the bug inside this function, sometimes the cM Locations get warped
 lodscorestoscanone <- function(cross,lodscores,traitnames = NULL){
   n <- unlist(lapply(FUN=colnames,pull.map(cross)))
   chr <- NULL
