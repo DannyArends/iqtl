@@ -5,7 +5,7 @@
 	Calculate differential correlation (and counts) across the genome
 }
 \usage{
-diffCorAnalysis(cross, minimumvariance=0.03, difCorThreshold=0.4, significant = 5, method="pearson", directory="output", verbose=TRUE)
+diffCorAnalysis(cross, minimumvariance=0.01, difCorThreshold=0.4, significant = 5, method="pearson", directory="output", doplot=FALSE, writefile=FALSE, verbose=TRUE)
 }
 
 \arguments{
@@ -16,6 +16,8 @@ diffCorAnalysis(cross, minimumvariance=0.03, difCorThreshold=0.4, significant = 
   \item{significant}{ Only plot probes which show differential correlation with more then significant other probes }
   \item{method}{ Method of calculating correlation }
   \item{directory}{ Directory in which to save the output }
+  \item{doplot}{ Create heatmaps per marker showing differentail correlation across the genotypes }
+  \item{writefile}{ Write the differential count matrix file to disk }
   \item{verbose}{ Be verbose }
 }
 \details{
