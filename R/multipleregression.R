@@ -25,7 +25,7 @@ multipleregression <- function(designmatrix,y,weight=rep(1,nrow(designmatrix)),n
     stop("Not all samples have a output, nrow(designmatrix) != length(y) (Values:",nrow(designmatrix)," != ",length(y),")")
   }
   if(!sum(designmatrix[,1])==length(y)){
-    warning("Adding estimate of constant in model")
+    if(verbose) warning("Adding estimate of constant in model")
     designmatrix <- cbind(rep(1,length(y)),designmatrix)
   }
   result <- .C("lodscorebyem_R",nvariables=as.integer(ncol(as.matrix(designmatrix))),
@@ -48,7 +48,7 @@ modellikelihood <- function(designmatrix,y,weight=rep(1,nrow(designmatrix)),verb
     stop("Not all samples have a output, nrow(designmatrix) != length(y) (Values:",nrow(designmatrix)," != ",length(y),")")
   }
   if(!sum(designmatrix[,1])==length(y)){
-    warning("Adding estimate of constant in model")
+    if(verbose) warning("Adding estimate of constant in model")
     designmatrix <- cbind(rep(1,length(y)),designmatrix)
   }
   result <- .C("modellikelihoodbyem_R",nvariables=as.integer(ncol(as.matrix(designmatrix))),

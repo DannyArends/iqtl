@@ -127,14 +127,18 @@ lodscorestoscanone <- function(cross,lodscores,traitnames = NULL){
   chr <- NULL
   if(!is.null(ncol(pull.map(cross)[[1]]))){
     d <- as.numeric(unlist(lapply(pull.map(cross),FUN=function(x) {x[1,]})))
-    for(i in 1:nchr(cross)){chr <- c(chr,rep(names(cross$geno)[i], ncol(pull.map(cross)[[i]])))}
+    for(i in 1:nchr(cross)){
+      chr <- c(chr,rep(names(cross$geno)[i], ncol(pull.map(cross)[[i]])))
+    }
   }else{
     d <- as.numeric(unlist(pull.map(cross)))
-    for(i in 1:nchr(cross)){chr <- c(chr,rep(names(cross$geno)[i], length(pull.map(cross)[[i]])))}
+    for(i in 1:nchr(cross)){
+      chr <- c(chr,rep(names(cross$geno)[i], length(pull.map(cross)[[i]])))
+    }
   }
   qtlprofile <- cbind(chr,d,lodscores)
   qtlprofile <- as.data.frame(qtlprofile)
-  qtlprofile[,1] <- as.factor(as.numeric(chr))
+  qtlprofile[,1] <- chr
   qtlprofile[,2] <- as.numeric(d)
   if(!is.null(ncol(lodscores))){
     for(x in 1:ncol(lodscores)){

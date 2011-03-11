@@ -166,48 +166,29 @@ plotDifCor <- function(difCor, difCorThreshold=0.5, significant = 0, ...){
   }
 }
 
-#Returns the matrix with differential correlations counts.
-#Counts are: differential correlations above a threshold
-# rows: Phenotypes
-# cols: Markers
-#difCntMatrix <- function(difCor, directory="output", difCorThreshold=0.5){
-#  cntMatrix <- NULL
-#  markerNames <- NULL
-#  for(marker in 1:length(dir(directory))){
-#    load(paste(directory,"/difCor",marker,".Rdata",sep=""))
-#    cat(attr(difCor,"marker"),"\n")
-#    cntMatrix <- rbind(cntMatrix,countDifCorThreshold(difCor,difCorThreshold))
-#    markerNames <- c(markerNames,attr(difCor,"marker"))
-#    phenotypeNames <- attr(difCor,"phenotypes")
-#  }
-#  rownames(cntMatrix) <- markerNames
-#  colnames(cntMatrix) <- phenotypeNames
-#  cntMatrix
-#}
-
 #Heatmap the output of a difCnt object
 imageDifCnt <- function(difCnt, cluster=FALSE){
 
 }
 
-#Plot a Differential Correlation Count profile of a single phenotype
-#Optionally add a scanone object to overlay the QTL profile
-plotDifCntProfile <- function(cross, difCntMatrix, pheno.col=1,significanceThresholds=NULL, addQTL=FALSE){
+#plotDifCntProfile Plot a Differential Correlation Count profile of a single phenotype
+# Optionally add a scanone object to overlay the QTL profile
+plotDifCntProfile <- function(cross, difCntMatrix, pheno.col=1,significanceThresholds=NULL, addQTL=FALSE, ...){
   difCorCntProfile <- lodscorestoscanone(cross,difCntMatrix[,pheno.col],traitnames = "difCorCnt")
   if(addQTL){
     cross <- calc.genoprob(cross)
     qtlscan <- scanone(cross, pheno.col=pheno.col)
   }
   dtmax <- max(difCorCntProfile[,3])
-  if(addQTL) qtlmax <- max(qtlscan[,3])
+  if(addQTL) qtlmax <- max(qtlscan[,3],10)
   if(addQTL) difCorCntProfile[,3] <- difCorCntProfile[,3]*(qtlmax/dtmax)
   if(addQTL){
     op <- par(mar=c(5, 4, 4, 5) + 0.1)
-    plot(qtlscan,difCorCntProfile,y=c(0,1.7*qtlmax),col=c("blue","black"),main=pheno.col)
+    plot(qtlscan,difCorCntProfile,y=c(0,1.7*qtlmax),col=c("blue","black"),lty=c(1,2),main=pheno.col,...)
     axis(4,at=seq(0,1.7*qtlmax,1),round((dtmax/qtlmax) * seq(0,1.7*qtlmax,1),1))
-    legend("topright",c("scanone","difCorCount"),lwd=1,col=c("blue","black"))
+    legend("topright",c("scanone","difCorCount"),lty=c(1,2),lwd=1,col=c("blue","black"))
   }else{
-    plot(difCorCntProfile,y=c(0,1.7*dtmax),col="black",main=pheno.col,ylab="DifCorCnt")
+    plot(difCorCntProfile,y=c(0,1.7*dtmax),col="black",main=pheno.col,ylab="DifCorCnt",...)
     if(!is.null(significanceThresholds)){
       colorz <- c("red","orange","green")
       i <- 1
@@ -224,6 +205,7 @@ plotDifCntProfile <- function(cross, difCntMatrix, pheno.col=1,significanceThres
   invisible(difCorCntProfile)
 }
 
+#Plot all the profiles of traits that show differential correlation at a certain marker
 plotDifCorAtMarker <- function(cross, difCntMatrix, significant=5, lodthreshold=5, marker="YBR008C_211"){
   signdifcor <- names(which(difCntMatrix[marker,] > significant))
   cat("- Starting QTL scan of",length(signdifcor),"\n")
@@ -238,9 +220,20 @@ plotDifCorAtMarker <- function(cross, difCntMatrix, significant=5, lodthreshold=
   invisible(res)
 }
 
+#plots the expression specified by pheno.col but it splits it based on the genotype at marker
 plotExpressionAtMarker <- function(cross, pheno.col=1, marker="YBR008C_211"){
   genotype <- pull.geno(cross)[,marker]
   boxplot(pull.pheno(cross)[genotype==1,pheno.col],pull.pheno(cross)[genotype==2,pheno.col],main=paste("Expression of:",pheno.col),sub=paste("Split by genotype at marker:",marker))
+}
+
+#Plot the correlations and difCor score of a given expression
+DifCorScorePlot <- function(difCor){
+  ordering <- names(sort(abs(difCor[[1]][,todo[13]]),decreasing=T))
+  plot(c(1,3701),c(-1,1),xlab="Other traits",ylab="Correlation",main="Correlation probe A_06_P5102 at marker R005C_121",type='n')
+  points(difCor[[2]][ordering,todo[13]],pch=20,col='red')
+  points(difCor[[3]][names(sort(abs(difCor[[1]][,todo[13]]),decreasing=T)),todo[13]],pch=20,col='green')
+  points(abs(difCor[[1]][names(sort(abs(difCor[[1]][,todo[13]]),decreasing=T)),todo[13]]),pch=20,col='blue',type='l',lwd=4)
+  legend("topright",c("Genotype 1","genotype 2","Absolute difference"),pch=20,col=c("red","green","blue"))
 }
 
 #Extract a list of traits which show differential correlation
@@ -286,7 +279,7 @@ diffCorPermutation <- function(cross, n.perm=10, directory="permutations", verbo
     if(verbose) cat("- Starting permutation",x,"/",n.perm,"\n")
     smallcross <- drop.markers(cross,sample(markernames(cross),abs(10-sum(nmar(cross)))))
 		smallcross$pheno <- smallcross$pheno[sample(nind(smallcross)),]
-    write.table(diffCorAnalysis(smallcross, ..., doplot=FALSE, writefile=false, verbose=TRUE),paste(directory,"/Permutation_",x,".txt",sep=""))
+    write.table(diffCorAnalysis(smallcross, ..., doplot=FALSE, writefile=FALSE, verbose=TRUE),paste(directory,"/Permutation_",x,".txt",sep=""))
     el <- proc.time()
     if(verbose) cat("- Permutation",x,"took:",as.numeric(el[3]-sl[3]),"Seconds.\n")
   }
@@ -333,7 +326,7 @@ diffCorAnalysis <- function(cross, minimumvariance=0.01, difCorThreshold=0.4, si
       dev.off()
     }
     
-    difCountMatrix <- rbind(results[[4]],difCountMatrix)
+    difCountMatrix <- rbind(difCountMatrix,results[[4]])
     
     results <- NULL
     gc()
