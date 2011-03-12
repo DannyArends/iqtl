@@ -20,7 +20,7 @@ differentialCorrelation(cross, marker, difCorThreshold=0.5, method="pearson", di
 \details{
 TODO
 \itemize{
-  \item NOTE: Optimized using snow and 2 cores
+  \item NOTE: diffCorAnalysis is optimized for multicore machines its uses snow to use two cores
 }
 }
 \value{

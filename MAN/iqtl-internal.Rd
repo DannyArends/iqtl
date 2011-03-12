@@ -32,6 +32,9 @@
 \alias{create.cluster}
 \alias{createdatafile}
 \alias{creategnuplot}
+\alias{difCorTargets}
+\alias{imageDifCnt}
+\alias{summaryDifCnt}
 \alias{createheatmapbymarkerscript}
 \alias{createprofilebymarkerscript}
 \alias{datacheck}

@@ -26,7 +26,7 @@ First thing the analysis function does is get rid of traits with no/low expressi
 heatmaps in the specified directory. The counted differential expression data is saved to disk into the file 
 specified by the writefile parameter
 \itemize{
-  \item Note: Does all the markers one by one (optimized to use 2 cores)
+  \item Note: diffCorAnalysis is optimized for multicore machines its uses snow to use two cores
   \item Note: The difCor object in memory is very large. 
   \item Note: Based on the amount of traits and markers this could take a LONG time.
 }
