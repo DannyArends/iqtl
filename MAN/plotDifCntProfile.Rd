@@ -5,7 +5,7 @@
   plot differential correlation count profile for a given probe
 }
 \usage{
-plotDifCntProfile(cross, difCntMatrix, pheno.col=1, significanceThresholds=NULL, addQTL=FALSE, \dots}
+plotDifCntProfile(cross, difCntMatrix, pheno.col=1, significanceThresholds=NULL, addQTL=FALSE, \dots)
 }
 
 \arguments{
