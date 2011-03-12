@@ -16,7 +16,6 @@
 
 diffCorPermutation <- function(cross, n.perm=10, directory="permutations", verbose=TRUE, ...){
   if(!file.exists(directory)) dir.create(directory)
-  
   for(x in 1:n.perm){
     sl <- proc.time()
     if(verbose) cat("- Starting permutation",x,"/",n.perm,"\n")
@@ -30,7 +29,7 @@ diffCorPermutation <- function(cross, n.perm=10, directory="permutations", verbo
   for(x in 1:n.perm){
     difCntPerm[[x]]  <- read.table(paste(directory,"/Permutation_",x,".txt",sep=""))
   }
-  difCntPerm
+  invisible(difCntPerm)
 }
 
 significanceThresholds <- function(difCntPerm){

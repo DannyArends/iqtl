@@ -92,7 +92,7 @@ correlationmatrix <- function(x,expressions,method="pearson"){
 # [[1]] difCorMatrix 
 # [[2]] Correlation matrix individuals with genotype 1
 # [[3]] Correlation matrix individuals with genotype 2
-#
+# [[4]] A vector of counted scores for each phenotype above the difCorThreshold
 #Note: Also saves the object to: output/difCor<marker>.Rdata
 differentialCorrelation <- function(cross, marker, difCorThreshold=0.5, method="pearson", directory="output", saveRdata=FALSE){
   require(snow)
@@ -168,9 +168,10 @@ scaledownPhenotypes <- function(cross,minimumvariance = 0.1,verbose=FALSE){
 
 #Main routine to do the entire analysis
 #Get rid of traits with no/low expression variation
-#Note: Does all the markers one by one (could be optimized to use 2 cores, however the difCor object in memory is large
+#Note: Does all the markers one by one (optimized to use 2 cores)
+#Note: The difCor object in memory is very large
 #Note: Based on the amount of traits and markers this could take a LONG time
-diffCorAnalysis <- function(cross, minimumvariance=0.01, difCorThreshold=0.4, significant = 5, method="pearson", directory="output", doplot=FALSE, writefile=FALSE, verbose=TRUE){
+diffCorAnalysis <- function(cross, minimumvariance=0.01, difCorThreshold=0.4, significant = 5, method="pearson", directory="output", doplot=FALSE, writefile=FALSE, saveRdata=FALSE, verbose=TRUE){
   s <- proc.time()
   if(doplot && !file.exists(directory)) dir.create(directory)
   cross <- scaledownPhenotypes(cross, minimumvariance,verbose)
@@ -181,7 +182,7 @@ diffCorAnalysis <- function(cross, minimumvariance=0.01, difCorThreshold=0.4, si
   
   for(marker in 1:totmarkers){
     sl <- proc.time()
-    results <- differentialCorrelation(cross, marker, difCorThreshold, method,directory)
+    results <- differentialCorrelation(cross, marker, difCorThreshold, method,directory,saveRdata)
     if(doplot){
       png(paste(directory,"/",marker,"_",markernames(cross)[marker],".jpg",sep=""))
         plotDifCor(results, difCorThreshold, significant)
