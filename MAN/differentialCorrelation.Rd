@@ -18,14 +18,19 @@ differentialCorrelation(cross, marker, difCorThreshold=0.5, method="pearson", di
   \item{saveRdata}{ Save the correlation matrices as Rdata object to the directory }
 }
 \details{
-  TODO
+TODO
+\itemize{
+  \item NOTE: Optimized using snow and 2 cores
+}
 }
 \value{
-	difCor object, a list holding:
-  [[1]] Differential correlation based on genotype at this marker
-  [[2]] correlation group 1 based on genotype at this marker
-  [[3]] correlation group 2 based on genotype at this marker
-  [[4]] difCountVector based on genotype at this marker
+difCor object, a list holding:
+\itemize{
+  \item [[1]] Differential correlation matrix (trait x trait) based on the differences in correlation^2
+  \item [[2]] Correlation matrix (trait x trait) based only on individuals carrying genotype A at the specified marker
+  \item [[3]] Correlation matrix (trait x trait) based only on individuals carrying genotype B at the specified marker
+  \item [[4]] A vector of counted scores for each phenotype above the difCorThreshold
+}
 }
 \references{ 
   TODO

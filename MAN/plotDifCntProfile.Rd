@@ -12,7 +12,7 @@ plotDifCntProfile(cross, difCntMatrix, pheno.col=1,significanceThresholds=NULL, 
   \item{cross}{ An object of class \code{cross}. See \code{\link[qtl]{read.cross}} for details. }
   \item{difCntMatrix}{ Differential correlation counts matrix. See \code{\link[iqtl]{diffCorAnalysis}} for details.}
   \item{pheno.col}{ Which phenotype do we want to show }
-  \item{significanceThresholds}{ The resulting object from \code{\link[iqtl]{significanceThresholds} to a DifPermObject }
+  \item{significanceThresholds}{ The resulting object from \code{\link[iqtl]{significanceThresholds}} to a DifPermObject }
   \item{addQTL}{ Add a QTL profile to the plot (scanone is used to scan for QTL) }
   \item{\dots}{ Passed to the underlying plot function }
 }
