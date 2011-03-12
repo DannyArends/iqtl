@@ -89,9 +89,10 @@ plotDifCorAtMarker <- function(cross, difCntMatrix, significant=5, lodthreshold=
   cat("- Starting QTL scan of",length(signdifcor),"\n")
   cross <- calc.genoprob(cross)
   res <- scanone(cross,pheno.col=signdifcor)
-  cat("- Start of",length(which(apply(res[,3:ncol(res)],2,max) > lodthreshold)),"plots\n")
-  if(length(which(apply(res[,3:ncol(res)],2,max) > lodthreshold)) > 0){
-    for(x in names(which(apply(res[,3:ncol(res)],2,max) > lodthreshold))){
+  aboveqtl <- names(which(apply(res[,3:ncol(res)],2,max) > lodthreshold))
+  cat("- Start of",length(aboveqtl),"plots\n")
+  if(length(aboveqtl) > 0){
+    for(x in aboveqtl){
       plotDifCntProfile(cross,difCntMatrix,x,addQTL=TRUE)
     }
   }
@@ -101,15 +102,19 @@ plotDifCorAtMarker <- function(cross, difCntMatrix, significant=5, lodthreshold=
 #plots the expression specified by pheno.col but it splits it based on the genotype at marker
 plotExpressionAtMarker <- function(cross, pheno.col=1, marker="YBR008C_211"){
   genotype <- pull.geno(cross)[,marker]
-  boxplot(pull.pheno(cross)[genotype==1,pheno.col],pull.pheno(cross)[genotype==2,pheno.col],main=paste("Expression of:",pheno.col),sub=paste("Split by genotype at marker:",marker))
+  exp1 <- pull.pheno(cross)[genotype==1,pheno.col]
+  exp2 <- pull.pheno(cross)[genotype==2,pheno.col]
+  boxplot(exp1,exp2,main=paste("Expression of:",pheno.col),sub=paste("Split by genotype at marker:",marker))
+  invisible(list(exp1,exp2))
 }
 
-#Plot the correlations and difCor score of a given expression
-DifCorScorePlot <- function(difCor){
-  ordering <- names(sort(abs(difCor[[1]][,todo[13]]),decreasing=T))
-  plot(c(1,3701),c(-1,1),xlab="Other traits",ylab="Correlation",main="Correlation probe A_06_P5102 at marker R005C_121",type='n')
-  points(difCor[[2]][ordering,todo[13]],pch=20,col='red')
-  points(difCor[[3]][names(sort(abs(difCor[[1]][,todo[13]]),decreasing=T)),todo[13]],pch=20,col='green')
-  points(abs(difCor[[1]][names(sort(abs(difCor[[1]][,todo[13]]),decreasing=T)),todo[13]]),pch=20,col='blue',type='l',lwd=4)
-  legend("topright",c("Genotype 1","genotype 2","Absolute difference"),pch=20,col=c("red","green","blue"))
+#Plot the detailed correlations and difCor score of a given phenotype in a difCor object, when threshold is specified only the the elements above the threshold are plotted
+plotDifCorDetail <- function(difCor, pheno.col=1, difCorThreshold=0){
+  ordering <- names(sort(abs(difCor[[1]][,pheno.col]),decreasing=T))
+  plot(c(1,length(ordering)),c(-1,1),xlab="Other phenotypes",ylab="Correlation",main=paste("Correlation probe ",colnames(difCor)[pheno.col]," at marker",attr(difCor,"marker"),sep=" "),type='n')
+  points(difCor[[2]][ordering,pheno.col],pch=20,col='red')
+  points(difCor[[3]][names(sort(abs(difCor[[1]][,pheno.col]),decreasing=T)),pheno.col],pch=20,col='green')
+  points(abs(difCor[[1]][names(sort(abs(difCor[[1]][,pheno.col]),decreasing=T)),pheno.col]),pch=20,col='blue',type='l',lwd=4)
+  legend("topright",c("Genotype 1","Genotype 2","Absolute difference"),pch=20,col=c("red","green","blue"))
+  invisible(ordering)
 }
