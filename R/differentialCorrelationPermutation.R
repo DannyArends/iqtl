@@ -19,9 +19,8 @@ diffCorPermutation <- function(cross, n.perm=10, directory="permutations", verbo
   for(x in 1:n.perm){
     sl <- proc.time()
     if(verbose) cat("- Starting permutation",x,"/",n.perm,"\n")
-    smallcross <- drop.markers(cross,sample(markernames(cross),abs(10-sum(nmar(cross)))))
-		smallcross$pheno <- smallcross$pheno[sample(nind(smallcross)),]
-    write.table(diffCorAnalysis(smallcross, ..., doplot=FALSE, writefile=FALSE, verbose=TRUE),paste(directory,"/Permutation_",x,".txt",sep=""))
+		cross$pheno <- cross$pheno[sample(nind(cross)),]
+    write.table(diffCorAnalysis(cross, ..., doplot=FALSE, writefile=FALSE, verbose=TRUE),paste(directory,"/Permutation_",x,".txt",sep=""))
     el <- proc.time()
     if(verbose) cat("- Permutation",x,"took:",as.numeric(el[3]-sl[3]),"Seconds.\n")
   }

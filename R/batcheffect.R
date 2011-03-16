@@ -32,7 +32,7 @@ batcheffectcheck <- function(cross, cutoff=2, minimumvariance = 0.75){
 }
 
 batcheffectcorrect <- function(cross, batchlist, minimumvariance = 0.75){
-  pheno <- t(pull.pheno(highvariancephenotypes(cross,minimumvariance)))
+  pheno <- pull.pheno(highvariancephenotypes(cross,minimumvariance))
   s <- proc.time()
   cormatrix <- NULL
   for(y in 1:ncol(pheno)){
