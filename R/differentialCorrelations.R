@@ -201,7 +201,7 @@ diffCorAnalysis <- function(cross, minimumvariance=0.01, difCorThreshold=0.4, si
     }
   }
   cat("Analysis took: ",as.numeric(el[3]-s[3]),"Seconds\n")
-  rownames(difCountMatrix) <- markernames(cross)
+  rownames(difCountMatrix) <- markernames(cross)[totmarkers]
   colnames(difCountMatrix) <- phenames(cross)
   if(writefile) write.table(difCountMatrix,file="difCountMatrix.txt",sep="\t")
   difCountMatrix
