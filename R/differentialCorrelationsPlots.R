@@ -14,6 +14,10 @@
 plotDifCor <- function(difCor, difCorThreshold=0.5, significant = 0, ...){
   aboveThreshold <- countDifCorThreshold(difCor, difCorThreshold)
   difCorrelated <- which(aboveThreshold > significant)
+  if(length(difCorrelated) <= 1){
+     warning("No phenotype shows differential correlation with more than: ",significant," other phenotypes at difCorThreshold: ",difCorThreshold,"\n")
+     return()
+  }
   ccorclass1 <- difCor[[2]][difCorrelated,difCorrelated]
   ccorclass2 <- difCor[[3]][difCorrelated,difCorrelated]
   if(nrow(ccorclass1) >= 2){
