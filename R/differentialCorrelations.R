@@ -41,7 +41,7 @@ analysis.differentialCorrelation <- function(){
 	require(qtl)
   require(iqtl)
   memory.limit(4000)
-	setwd("c:/yeast")
+	setwd("E:/GBIC/Bruno/Differential Correlations/Yeast2")
 	bremcross <- read.cross("csvr",file="yeast_brem_cross.csv",geno=c(0,1))
   bremcross <- convert2riself(bremcross)
   #phenotypes <- pull.pheno(bremcross)

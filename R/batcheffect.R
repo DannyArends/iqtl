@@ -15,6 +15,7 @@ highvariancephenotypes <- function(cross,minimumvariance = 0.75){
   phenotypevariance <- apply(cross$pheno,2,var)
   genes <- which(phenotypevariance >= minimumvariance)
   newcross$pheno <- phenotypes[,genes]
+  newcross
 }
 
 batcheffectcheck <- function(cross, cutoff=2, minimumvariance = 0.75){
