@@ -40,24 +40,23 @@ summaryDifCnt <- function(difCntMatrix){
 analysis.differentialCorrelation <- function(){
 	require(qtl)
   require(iqtl)
-  memory.limit(3000)
-	setwd("e:/gbic/bruno/differential correlations/yeast2")
+  memory.limit(4000)
+	setwd("c:/yeast")
 	bremcross <- read.cross("csvr",file="yeast_brem_cross.csv",geno=c(0,1))
   bremcross <- convert2riself(bremcross)
-  phenotypes <- pull.pheno(bremcross)
-  phenotypevariance <- apply(bremcross$pheno,2,var)
-  genes <- which(phenotypevariance >= 0)
+  #phenotypes <- pull.pheno(bremcross)
+  #phenotypevariance <- apply(bremcross$pheno,2,var)
+  #genes <- which(phenotypevariance >= 0)
   #bremcross$pheno <- phenotypes[,genes]
   #batchcorrection <- read.table("batchmatrix.txt",header=T)
   #bremcross$pheno <- bremcross$pheno-batchcorrection
   #qtlcorrection <- read.table("qtlmatrix.txt",header=T)
   #bremcross$pheno <- bremcross$pheno+qtlcorrection
-  #MydifCntMatrix <- diffCorAnalysis(bremcross,0.01,0.4,10,directory="WithOutQTL")
-  MydifPermCnts <- diffCorPermutation(bremcross, minimumvariance=0.01, difCorThreshold=0.4)
+  MydifCntMatrix <- diffCorAnalysis(bremcross,0,0.4,50,pheno.col=43:282,directory="WithQTL",doplot=T,writefile=T)
+  MydifPermCnts <- diffCorPermutation(bremcross, minimumvariance=0, difCorThreshold=0.4)
   #Reload it form disk
   #setwd("e:/gbic/bruno/differential correlations/yeast2")
   #MydifCntMatrix <- difCntMatrix()
-  
 }
 
 #Test (and time) the differentialCorrelation routine
@@ -171,16 +170,19 @@ scaledownPhenotypes <- function(cross,minimumvariance = 0.1,verbose=FALSE){
 #Note: Does all the markers one by one (optimized to use 2 cores)
 #Note: The difCor object in memory is very large
 #Note: Based on the amount of traits and markers this could take a LONG time
-diffCorAnalysis <- function(cross, minimumvariance=0.01, difCorThreshold=0.4, significant = 5, method="pearson", directory="output", doplot=FALSE, writefile=FALSE, saveRdata=FALSE, verbose=TRUE){
+diffCorAnalysis <- function(cross, minimumvariance=0.01, difCorThreshold=0.4, significant = 5, marker.col=NULL, method="pearson", directory="output", doplot=FALSE, writefile=FALSE, saveRdata=FALSE, verbose=TRUE){
   s <- proc.time()
   if(doplot && !file.exists(directory)) dir.create(directory)
   cross <- scaledownPhenotypes(cross, minimumvariance,verbose)
   if(verbose) cat("Analysis of ",ncol(cross$pheno)," traits at ",sum(nmar(cross))," markers\n")
-  
-  totmarkers <- sum(nmar(cross))
+  if(!is.null(marker.col)){
+    totmarkers <- marker.col
+  }else{
+    totmarkers <- 1:sum(nmar(cross))
+  }
   difCountMatrix <- NULL
   
-  for(marker in 1:totmarkers){
+  for(marker in totmarkers){
     sl <- proc.time()
     results <- differentialCorrelation(cross, marker, difCorThreshold, method,directory,saveRdata)
     if(doplot){
@@ -195,7 +197,7 @@ diffCorAnalysis <- function(cross, minimumvariance=0.01, difCorThreshold=0.4, si
     gc()
     el <- proc.time()
     if(verbose){
-      cat("Marker ",marker,"/",totmarkers,"took: ",as.numeric(el[3]-sl[3]),"Seconds.\n")
+      cat("Marker ",marker,"/ [",min(totmarkers),"..",max(totmarkers),"]took: ",as.numeric(el[3]-sl[3]),"Seconds.\n")
     }
   }
   cat("Analysis took: ",as.numeric(el[3]-s[3]),"Seconds\n")
