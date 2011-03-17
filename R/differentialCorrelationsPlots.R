@@ -114,7 +114,7 @@ plotDifCorAtMarker <- function(cross, difCntMatrix, significant=5, lodthreshold=
   invisible(res)
 }
 
-#plots the expression specified by pheno.col but it splits it based on the genotype at marker
+#Plot the expression specified by pheno.col but splits it based on the genotype at marker
 plotExpressionAtMarker <- function(cross, pheno.col=1, marker="YBR008C_211"){
   genotype <- pull.geno(cross)[,marker]
   exp1 <- pull.pheno(cross)[genotype==1,pheno.col]
