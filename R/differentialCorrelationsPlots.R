@@ -49,8 +49,12 @@ plotDifCor <- function(difCor, difCorThreshold=0.5, significant = 0, ...){
 }
 
 #Heatmap the output of a difCnt object
-imageDifCnt <- function(difCnt, cluster=FALSE){
-
+imageDifCnt <- function(difCnt, significant=100, cluster=FALSE){
+  if(cluster){
+    heatmap(t(difCnt[,which(apply(difCnt,2,function(x){max(x) > significant}))]),Colv=NA,breaks=c(0,100,10000),scale="none",col=c("white","black"))
+  }else{
+    heatmap(t(difCnt[,which(apply(difCnt,2,function(x){max(x) > significant}))]),Colv=NA, Rowv=NA,breaks=c(0,100,10000),scale="none",col=c("white","black"))
+  }
 }
 
 #plotDifCntProfile Plot a Differential Correlation Count profile of a single phenotype
@@ -66,9 +70,9 @@ plotDifCntProfile <- function(cross, difCntMatrix, pheno.col=1,significanceThres
   if(addQTL) difCorCntProfile[,3] <- difCorCntProfile[,3]*(qtlmax/dtmax)
   if(addQTL){
     op <- par(mar=c(5, 4, 4, 5) + 0.1)
-    plot(qtlscan,difCorCntProfile,y=c(0,1.7*qtlmax),col=c("blue","black"),lty=c(1,2),main=pheno.col,...)
+    plot(qtlscan,difCorCntProfile,y=c(0,1.7*qtlmax),col=c("red","black"),lty=c(1,1),lwd=c(3,2),main=pheno.col,...)
     axis(4,at=seq(0,1.7*qtlmax,1),round((dtmax/qtlmax) * seq(0,1.7*qtlmax,1),1))
-    legend("topright",c("scanone","difCorCount"),lty=c(1,2),lwd=1,col=c("blue","black"))
+    legend("topright",c("scanone","difCorCount"),lty=c(1,1),lwd=c(3,2),col=c("red","black"))
   }else{
     plot(difCorCntProfile,y=c(0,1.7*dtmax),col="black",main=pheno.col,ylab="DifCorCnt",...)
     if(!is.null(significanceThresholds)){
@@ -85,6 +89,13 @@ plotDifCntProfile <- function(cross, difCntMatrix, pheno.col=1,significanceThres
   }
   if(addQTL) difCorCntProfile[,3] <- difCorCntProfile[,3]*(dtmax/qtlmax)
   invisible(difCorCntProfile)
+}
+
+plotExpressionAtMarker <- function(cross, marker, pheno.col,...){
+  plotdata <- pull.pheno(cross)[,pheno.col]
+  markerdata <- pull.geno(cross)[,marker]
+  boxplot(plotdata[which(markerdata==1)],plotdata[which(markerdata==2)],...)
+  invisible(list(plotdata[which(markerdata==1)],plotdata[which(markerdata==2)]))
 }
 
 #Plot all the profiles of traits that show differential correlation at a certain marker

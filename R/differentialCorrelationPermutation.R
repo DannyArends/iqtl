@@ -24,8 +24,17 @@ diffCorPermutation <- function(cross, n.perm=10, directory="permutations", verbo
     el <- proc.time()
     if(verbose) cat("- Permutation",x,"took:",as.numeric(el[3]-sl[3]),"Seconds.\n")
   }
+  difCntPerm <- read.diffCorPermutation(directory)
+  invisible(difCntPerm)
+}
+
+read.diffCorPermutation <- function(directory="permutations"){
+  files <- dir(directory)
+  n.perm <- length(files)
+  if(n.perm < 1) stop(paste("No permutation files found in:",directory))
   difCntPerm <- vector("list", n.perm)
   for(x in 1:n.perm){
+    cat("Trying to read:",paste(directory,"/Permutation_",x,".txt\n",sep=""))
     difCntPerm[[x]]  <- read.table(paste(directory,"/Permutation_",x,".txt",sep=""))
   }
   invisible(difCntPerm)
@@ -44,3 +53,13 @@ significanceThresholds <- function(difCntPerm){
   names(values) <- valnames
   invisible(values)
 }
+
+significanceThresholds(){
+  scores <- NULL
+  for(x in 1:length(perms)){
+    scores <- rbind(scores,apply(perms[[x]],2,max))
+  }
+  sorted <- apply(scores,2,sort)
+  mean(sorted[9,])
+}
+

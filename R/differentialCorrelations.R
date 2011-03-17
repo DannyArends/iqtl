@@ -42,8 +42,10 @@ analysis.differentialCorrelation <- function(){
   require(iqtl)
   memory.limit(4000)
 	setwd("E:/GBIC/Bruno/Differential Correlations/Yeast2")
-	bremcross <- read.cross("csvr",file="yeast_brem_cross.csv",geno=c(0,1))
+	bremcross <- read.cross("csvr",file="yeast_brem_cross.csv",geno=c(0,1),colClasses="numeric")
   bremcross <- convert2riself(bremcross)
+  newpheno <- as.data.frame(as.matrix(apply(bremcross$pheno,2,as.numeric),nrow(bremcross$pheno),ncol(bremcross$pheno)))
+  bremcross$pheno <- newpheno
   #phenotypes <- pull.pheno(bremcross)
   #phenotypevariance <- apply(bremcross$pheno,2,var)
   #genes <- which(phenotypevariance >= 0)
@@ -164,6 +166,9 @@ scaledownPhenotypes <- function(cross,minimumvariance = 0.1,verbose=FALSE){
   cross
 }
 
+annotate.group <- function(group,annotation){
+  annotation[which(annotation[,1] %in% group),2]
+}
 
 #Main routine to do the entire analysis
 #Get rid of traits with no/low expression variation
