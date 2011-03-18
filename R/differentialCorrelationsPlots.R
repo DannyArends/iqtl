@@ -125,11 +125,13 @@ plotExpressionAtMarker <- function(cross, pheno.col=1, marker="YBR008C_211"){
 
 #Plot the detailed correlations and difCor score of a given phenotype in a difCor object, when threshold is specified only the the elements above the threshold are plotted
 plotDifCorDetail <- function(difCor, pheno.col=1, difCorThreshold=0){
-  ordering <- names(sort(abs(difCor[[1]][,pheno.col]),decreasing=T))
-  plot(c(1,length(ordering)),c(-1,1),xlab="Other phenotypes",ylab="Correlation",main=paste("Correlation probe ",colnames(difCor)[pheno.col]," at marker",attr(difCor,"marker"),sep=" "),type='n')
-  points(difCor[[2]][ordering,pheno.col],pch=20,col='red')
-  points(difCor[[3]][names(sort(abs(difCor[[1]][,pheno.col]),decreasing=T)),pheno.col],pch=20,col='green')
-  points(abs(difCor[[1]][names(sort(abs(difCor[[1]][,pheno.col]),decreasing=T)),pheno.col]),pch=20,col='blue',type='l',lwd=4)
+  sorted <- sort(abs(difCor[[1]][,pheno.col]),decreasing=T)
+  sorted <- sorted[which(sorted > difCorThreshold)]
+  ordering <- names(sorted)
+  plot(c(1,length(ordering)),c(0,1),xlab="Other phenotypes",ylab="Correlation",main=paste("Correlation probe ",pheno.col," at marker",attr(difCor,"marker"),sep=" "),type='n')
+  points(difCor[[2]][ordering,pheno.col]^2,pch=20,col='red',type='s')
+  points(difCor[[3]][ordering,pheno.col]^2,pch=20,col='green',type='s')
+  points(abs(difCor[[1]][ordering,pheno.col]),pch=20,col='blue',type='l',lwd=4)
   legend("topright",c("Genotype 1","Genotype 2","Absolute difference"),pch=20,col=c("red","green","blue"))
   invisible(ordering)
 }

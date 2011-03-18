@@ -36,6 +36,7 @@ batcheffectcorrect <- function(cross, batchlist, minimumvariance = 0.75){
   pheno <- pull.pheno(highvariancephenotypes(cross,minimumvariance))
   s <- proc.time()
   cormatrix <- NULL
+  cat("",file="tmpbatch.out")
   for(y in 1:ncol(pheno)){
     if(y %% 1000 == 0){
       e <- proc.time()
