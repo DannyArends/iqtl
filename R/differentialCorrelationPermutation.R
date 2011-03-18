@@ -54,7 +54,7 @@ significanceThresholds <- function(difCntPerm){
   invisible(values)
 }
 
-significanceThresholds(){
+significanceThresholds2 <- function(){
   scores <- NULL
   for(x in 1:length(perms)){
     scores <- rbind(scores,apply(perms[[x]],2,max))
