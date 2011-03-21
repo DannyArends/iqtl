@@ -40,7 +40,7 @@ read.diffCorPermutation <- function(directory="permutations"){
   invisible(difCntPerm)
 }
 
-significanceThresholds <- function(difCntPerm){
+significance.eQCL <- function(difCntPerm){
   maximums <- lapply(difCntPerm,function(x){apply(x,2,max)})
   sorted <- sort(unlist(maximums))
   l <- length(sorted)
@@ -55,12 +55,18 @@ significanceThresholds <- function(difCntPerm){
   invisible(values)
 }
 
-significanceThresholds2 <- function(){
-  scores <- NULL
-  for(x in 1:length(perms)){
-    scores <- rbind(scores,apply(perms[[x]],2,max))
+significance.eQCLHotSpot <- function(difCntPerm,significant=212){
+  maximums <- lapply(perms,function(x){max(apply(x,1,function(x){sum(x > significant)}))})
+  sorted <- sort(unlist(maximums))
+  l <- length(sorted)
+  values <- NULL
+  valnames <- NULL
+  for(x in c(.95,.99,.999)){
+    values <- c(values,sorted[l*x])
+    valnames <- c(valnames,paste((1-x)*100,"%"))
+    cat((1-x)*100,"%\t",sorted[l*x],"\n")
   }
-  sorted <- apply(scores,2,sort)
-  mean(sorted[9,])
+  names(values) <- valnames
+  invisible(values)
 }
 

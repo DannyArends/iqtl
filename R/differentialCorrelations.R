@@ -32,6 +32,24 @@ summaryDifCnt <- function(difCntMatrix){
   }
 }
 
+#Internal function to correct for differences in mean effect
+marker.correct <- function(cross, marker, verbose=FALSE){
+  genotypes <- pull.geno(cross)
+  phenotypes <- pull.pheno(cross)
+  phenotypes <- matrix(as.numeric(unlist(phenotypes)),nrow(phenotypes),ncol(phenotypes))
+  m1 <- which(genotypes[,marker]==1)
+  m2 <- which(genotypes[,marker]==2)
+  oamean <- apply(phenotypes,2,mean,na.rm=T)
+  m1mean <- apply(phenotypes[m1,],2,mean,na.rm=T)
+  m2mean <- apply(phenotypes[m2,],2,mean,na.rm=T)
+  result <- matrix(0,nrow(phenotypes),ncol(phenotypes))
+  for(x in m1){ result[x,] <- (oamean-m1mean) }
+  for(x in m2){ result[x,] <- (oamean-m2mean) }
+  cross$pheno <- as.data.frame(phenotypes + result)
+  colnames(cross$pheno) <- phenames(cross)
+  cross
+}
+
 #Typical analysis routine
 #- Load data and remove the NA values from the matrix
 #- Detected batch effect and add estimated effect to correct (Could be skipped)
@@ -166,6 +184,7 @@ scaledownPhenotypes <- function(cross,minimumvariance = 0.1,verbose=FALSE){
   cross
 }
 
+#Get the names of the probes that are significant
 eQCL.significant <- function(difCntMatrix, significance=212){
   names(which(apply(difCntMatrix,2,function(x){max(x)>significance})))
 }
