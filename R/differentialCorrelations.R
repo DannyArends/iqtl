@@ -166,6 +166,10 @@ scaledownPhenotypes <- function(cross,minimumvariance = 0.1,verbose=FALSE){
   cross
 }
 
+eQCL.significant <- function(difCntMatrix, significance=212){
+  names(which(apply(difCntMatrix,2,function(x){max(x)>significance})))
+}
+
 annotate.group <- function(group,annotation){
   annotation[which(annotation[,1] %in% group),2]
 }

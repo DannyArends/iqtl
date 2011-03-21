@@ -41,7 +41,8 @@ read.diffCorPermutation <- function(directory="permutations"){
 }
 
 significanceThresholds <- function(difCntPerm){
-  sorted <- sort(unlist(difCntPerm))
+  maximums <- lapply(difCntPerm,function(x){apply(x,2,max)})
+  sorted <- sort(unlist(maximums))
   l <- length(sorted)
   values <- NULL
   valnames <- NULL

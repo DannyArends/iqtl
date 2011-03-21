@@ -21,9 +21,9 @@ plotDifCor <- function(difCor, difCorThreshold=0.5, significant = 0, ...){
   ccorclass1 <- difCor[[2]][difCorrelated,difCorrelated]
   ccorclass2 <- difCor[[3]][difCorrelated,difCorrelated]
   if(nrow(ccorclass1) >= 2){
-    ordering <- hclust(dist(ccorclass1))$order
-    ccorclass1 <- ccorclass1[ordering,ordering]
-    ccorclass2 <- ccorclass2[ordering,ordering]
+    ordering <- hclust(dist(ccorclass1))
+    ccorclass1 <- ccorclass1[ordering$order,ordering$order]
+    ccorclass2 <- ccorclass2[ordering$order,ordering$order]
     upper <- t(upper.tri(ccorclass1))*ccorclass1
     lower <- t(lower.tri(ccorclass2))*ccorclass2
     op <- par(mar=c(8,8,4,2)+0.1)
@@ -99,7 +99,7 @@ plotExpressionAtMarker <- function(cross, marker, pheno.col,...){
 }
 
 #Plot all the profiles of traits that show differential correlation at a certain marker
-plotDifCorAtMarker <- function(cross, difCntMatrix, significant=5, lodthreshold=5, marker="YBR008C_211"){
+plotDifCorAtMarker <- function(cross, difCntMatrix, significant=212, lodthreshold=4, marker="YBR008C_211"){
   signdifcor <- names(which(difCntMatrix[marker,] > significant))
   cat("- Starting QTL scan of",length(signdifcor),"\n")
   cross <- calc.genoprob(cross)
@@ -112,6 +112,13 @@ plotDifCorAtMarker <- function(cross, difCntMatrix, significant=5, lodthreshold=
     }
   }
   invisible(res)
+}
+
+#plot comparison of genomewide significant eQTL and eQCL
+plotComparison(cross, difCntMatrix, scanoneMatrix, significant=212, lodthreshold=4){
+  summaryQCL <- lodscorestoscanone(cross,apply(difCntMatrix,1,function(x){sum(x > s1)}))
+  summaryQTL <- lodscorestoscanone(cross,apply(scanoneMatrix[,3:ncol(scanoneMatrix)],1,function(x){sum(x > s2)}))
+  plot(summaryQTL,summaryQCL, col=c("black","red"), ylab="# above threshold", main="Genomewide summary of eQTL/eQCL")
 }
 
 #Plot the expression specified by pheno.col but splits it based on the genotype at marker
