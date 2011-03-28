@@ -115,7 +115,7 @@ plotDifCorAtMarker <- function(cross, difCntMatrix, significant=212, lodthreshol
 }
 
 #plot comparison of genomewide significant eQTL and eQCL
-plotComparison(cross, difCntMatrix, scanoneMatrix, significant=212, lodthreshold=4){
+plotComparison <- function(cross, difCntMatrix, scanoneMatrix, significant=212, lodthreshold=4){
   summaryQCL <- lodscorestoscanone(cross,apply(difCntMatrix,1,function(x){sum(x > s1)}))
   summaryQTL <- lodscorestoscanone(cross,apply(scanoneMatrix[,3:ncol(scanoneMatrix)],1,function(x){sum(x > s2)}))
   plot(summaryQTL,summaryQCL, col=c("black","red"), ylab="# above threshold", main="Genomewide summary of eQTL/eQCL")
