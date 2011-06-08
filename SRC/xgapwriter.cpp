@@ -60,48 +60,46 @@ struct refMatrix{
   int** colpointers;
 };
 
-void writeMatrixHeader(ofstream myfile, matrixHeader h){
-  myfile.write((char*) &h.namelength,  sizeof(int));
-  myfile.write(         h.name,        sizeof(char) * h.namelength);
-  myfile.write((char*) &h.type,        sizeof(DataType));
-  myfile.write((char*) &h.columns,     sizeof(int));
-  myfile.write((char*) &h.rows,        sizeof(int));
+void writeMatrixHeader(ofstream* myfile, matrixHeader h){
+  (*myfile).write((char*) &h.namelength,  sizeof(int));
+  (*myfile).write(         h.name,        sizeof(char) * h.namelength);
+  (*myfile).write((char*) &h.type,        sizeof(DataType));
+  (*myfile).write((char*) &h.columns,     sizeof(int));
+  (*myfile).write((char*) &h.rows,        sizeof(int));
 }
 
-void writeNumericalMatrixData(ofstream myfile, matrixHeader h, void* data){
-  if(h.type == INTMATRIX){
-    intMatrix* matrix = (intMatrix*)data;
+void writeintMatrixData(ofstream* myfile, matrixHeader h, intMatrix matrix){
+  for(int r;r<h.rows;r++){
+    (*myfile).write((char*) &matrix.data[r], h.columns* sizeof(int));
   }
-  if(h.type == DOUBLEMATRIX){
-    doubleMatrix* matrix = ((doubleMatrix*)data);
+}
+
+void writedoubleMatrixData(ofstream* myfile, matrixHeader h, doubleMatrix matrix){
+  for(int r;r<h.rows;r++){
+    (*myfile).write((char*) &matrix.data[r], h.columns* sizeof(double));
   }
+}
+
+void writefixedCharMatrixData(ofstream* myfile, matrixHeader h, fixedcharMatrix matrix){
+  (*myfile).write((char*) &matrix.length, sizeof(int));
   for(int r;r<h.rows;r++){
     for(int c;c<h.columns;c++){  
-        myfile.write((char*) &(*matrix).data[r][c], sizeof(matrix[r][c]));
-      }
+      (*myfile).write((char*) &matrix.data[r][c], matrix.length * sizeof(char));
     }
   }
 }
 
-void writeCharMatrixData(ofstream myfile, matrixHeader h, void* data){
-  if(h.type == FIXEDCHARMATRIX){
-    fixedcharMatrix* matrix = (fixedcharMatrix*)data;
-    myfile.write((char*) &(*matrix).length, sizeof(int));
-  }
-  if(h.type == VARCHARMATRIX){
-    varcharMatrix* matrix = ((varcharMatrix*)data;
-    for(int indx=0;indx < ;indx++){
-      myfile.write((char*) &(*matrix).lengths, h.rows*h.cols* sizeof(int));
-  }
+void writevarCharMatrixData(ofstream* myfile, matrixHeader h, varcharMatrix matrix){
+  (*myfile).write((char*) &matrix.lengths, h.rows*h.columns* sizeof(int));
   for(int r;r<h.rows;r++){
     for(int c;c<h.columns;c++){  
-        myfile.write((char*) &(*matrix).data[r][c], sizeof(matrix[r][c]));
-      }
+      (*myfile).write((char*) &matrix.data[r][c], matrix.lengths[r+c*h.rows]*sizeof(char));
     }
   }
 }
 
-void writeReferenceMatrixData(ofstream myfile, matrixHeader h, void* data){
+
+void writeReferenceMatrixData(ofstream* myfile, matrixHeader h, void* data){
 
 }
 
@@ -115,15 +113,21 @@ bool writeFile(const char* filename, int namelength, int nmatrices, matrixHeader
     myfile.write((char*) &namelength,  sizeof(int));
     myfile.write(         filename,    sizeof(char) *namelength);
     for(int m=0;m<nmatrices;m++){
-      writeMatrixHeader(myfile,headers[m]);
-      if(headers[m].type == INTMATRIX || headers[m].type == DOUBLEMATRIX){
-        writeNumericalMatrixData(myfile,headers[m],data[m]);
+     // writeMatrixHeader(myfile,headers[m]);
+      if(headers[m].type == INTMATRIX){ 
+        writeintMatrixData(&myfile,headers[m],(*(intMatrix*)data[m]));
       }
-      if(headers[m].type == FIXEDCHARMATRIX|| headers[m].type == VARCHARMATRIX){
-        writeCharMatrixData(myfile,headers[m],data[m]);
+      if(headers[m].type == DOUBLEMATRIX){
+        writedoubleMatrixData(&myfile,headers[m],(*(doubleMatrix*)data[m]));
+      }
+      if(headers[m].type == FIXEDCHARMATRIX){
+        writefixedCharMatrixData(&myfile,headers[m],(*(fixedcharMatrix*)data[m]));
+      }
+      if(headers[m].type == VARCHARMATRIX){
+        writevarCharMatrixData(&myfile,headers[m],(*(varcharMatrix*)data[m]));
       }
       if(headers[m].type == MATRIXREFERENCE){
-        writeReferenceMatrixData(myfile,headers[m],data[m]);
+        writeReferenceMatrixData(&myfile,headers[m],data[m]);
       }
     }
     myfile.write((char*)&footprint, sizeof(uint)*2);
