@@ -42,7 +42,7 @@ multipleregression <- function(designmatrix,y,weight=rep(1,nrow(designmatrix)),n
 
 modellikelihood <- function(designmatrix,y,weight=rep(1,nrow(designmatrix)),verbose=FALSE){
   if(nrow(designmatrix) != length(weight)){
-    stop("Not all samples have a weight, nrow(designmatrix) != length(weight) (Values:",length(weight)," != ",length(y),")")
+    stop("Not all samples have a weight, nrow(designmatrix) != length(weight) (Values:",nrow(designmatrix)," != ",length(weight),")")
   }
   if(nrow(designmatrix) != length(y)){
     stop("Not all samples have a output, nrow(designmatrix) != length(y) (Values:",nrow(designmatrix)," != ",length(y),")")
