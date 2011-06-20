@@ -11,7 +11,7 @@
  *
  **/
  
-#include "xgapparser.h"
+#include "xgapwriter.h"
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
@@ -101,6 +101,58 @@ void writevarCharMatrixData(ofstream* myfile, matrixHeader h, varcharMatrix matr
 
 void writeReferenceMatrixData(ofstream* myfile, matrixHeader h, void* data){
 
+}
+
+
+void reorg_data(int rows, int cols, int type,int* lengths, void* in, int*** integers, double*** doubles, char*** text) {
+//reorganisation of integers into a matrix
+  int i;
+  if(type == INTMATRIX){ 
+    *integers = (int **)R_alloc(cols, sizeof(int*));
+    (*integers)[0] = (int*)in;
+    for (i=1; i< cols; i++)
+      (*integers)[i] = (*integers)[i-1] + rows;
+  }
+  if(type == DOUBLEMATRIX){ 
+    *doubles = (double **)R_alloc(cols, sizeof(double*));
+    (*doubles)[0] = (double*)in;
+    for (i=1; i< cols; i++)
+      (*doubles)[i] = (*doubles)[i-1] + rows;
+  }
+  if(type == FIXEDCHARMATRIX){ 
+    *text = (char **)R_alloc(cols, (*lengths) * sizeof(char*));
+    (*text)[0] = (char*)in;
+    for (i=1; i< cols; i++)
+      (*text)[i] = (*text)[i-1] + rows;
+  }
+}
+
+void r_writebinaryfile(char** filename, int* namelength, int* nrows, int* ncols, int* type,int** lengths, void** data){
+  Rprintf("INFO: Starting C-part of the writebinaryfile\n");
+  int** intdata;
+  double** doubledata;
+  char** chardata;
+  reorg_data((*nrows),(*ncols),(*type),(*lengths),(*data),&intdata,&doubledata,&chardata);
+  for(int c=0;c<5;c++){
+    for(int r=0;r<5;r++){
+      if((*type) == INTMATRIX) Rprintf("integer[%d,%d] = %d\n",r,c,intdata[r][c]);
+      if((*type) == DOUBLEMATRIX) Rprintf("double[%d,%d] = %f\n",r,c,doubledata[r][c]);
+      if((*type) == FIXEDCHARMATRIX) Rprintf("char[%d,%d] = %s\n",r,c,chardata[r][c]);
+    }
+  }
+  ofstream myfile;
+  myfile.open(filename[0], std::ios::out | std::ios::binary |std::ios::ate );
+  if(myfile.is_open()){
+    myfile.write((char*) &footprint,   sizeof(uint)*2);
+    myfile.write((char*) &version,     sizeof(uint)*3);
+    myfile.write((char*)  namelength,  sizeof(int));
+    myfile.write(         filename[0], sizeof(char) * (*namelength));
+    myfile.write((char*) &footprint,   sizeof(uint)*2);
+    myfile.close();
+  }else{
+    Rprintf("Error opening file\n");
+  }
+  Rprintf("INFO: Done in c\n");
 }
 
 bool writeFile(const char* filename, int namelength, int nmatrices, matrixHeader* headers, void** data){

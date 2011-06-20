@@ -46,7 +46,6 @@ void lodscorebyem_R(int* nvariables,int* nsamples, double* x, double* w, double*
   freematrix((void**)Xt,(*nvariables));
   freevector((void*)XtWY);
   if((*verbose)) Rprintf("lodscore: %f\n",(*out));
-
 }
 
 double likelihoodbyem(uint nvariables,uint nsamples, dmatrix x, dvector w, dvector y,int verbose){

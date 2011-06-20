@@ -129,7 +129,7 @@ differentialCorrelation <- function(cross, marker, difCorThreshold=0.5, method="
   stopCluster(cpu_cluster)
   
   difCor <- vector("list",4)
-  difCor[[1]] <- (sign(results[[1]]) * results[[1]]^2) -  (sign(results[[2]]) * results[[2]]^2)
+  difCor[[1]] <- 0.5*((sign(results[[1]]) * results[[1]]^2) -  (sign(results[[2]]) * results[[2]]^2))
   difCor[[2]] <- results[[1]]
   difCor[[3]] <- results[[2]]
   difCor[[4]] <- countDifCorThreshold(difCor,difCorThreshold)

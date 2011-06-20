@@ -3,7 +3,7 @@
 # differentialCorrelationPlots.R
 #
 # copyright (c) 2010 Danny Arends and Bruno Tesson
-# last modified feb, 2011
+# last modified Jun, 2011
 # first written nov, 2010
 # 
 # Plotting routines for differentialCorrelation Analysis
@@ -45,6 +45,26 @@ plotDifCor <- function(difCor, difCorThreshold=0.5, significant = 0, ...){
     ordering
   }else{
     warning("No phenotype shows differential correlation with more than: ",significant," other phenotypes at difCorThreshold: ",difCorThreshold,"\n")
+  }
+}
+
+#Heatmap the output of a difCor object (almost the same as above)
+imageDifCor <- function(difcor, peekheight=5){
+  selection <- which(difcor[[4]] > peekheight)
+  if(length(selection) > 0){
+    g1 <- difcor[[2]][selection,selection]
+    g2 <- difcor[[3]][selection,selection]
+    ordering <- difcor[[1]][selection,selection]
+    clustering <- hclust(dist(ordering))
+
+    upper <- upper.tri(g1)*sign(g1)*(g1[clustering$order,clustering$order]^2)
+    lower <- lower.tri(g2)*sign(g2)*(g2[clustering$order,clustering$order]^2)
+    colorz <- c("red","white","blue")
+    heatmap(t(upper+lower),col=colorz,breaks=c(-1,-0.25,0.25,1),Colv=NA,Rowv=NA,scale="none",main=paste("Correlation at: ",attr(difCor,"marker")))
+    clustering
+  }else{
+    plot(1:10)
+    return(NULL)
   }
 }
 
