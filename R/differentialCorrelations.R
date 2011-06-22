@@ -113,20 +113,25 @@ correlationmatrix <- function(x,expressions,method="pearson"){
 # [[3]] Correlation matrix individuals with genotype 2
 # [[4]] A vector of counted scores for each phenotype above the difCorThreshold
 #Note: Also saves the object to: output/difCor<marker>.Rdata
-differentialCorrelation <- function(cross, marker, difCorThreshold=0.5, method="pearson", directory="output", saveRdata=FALSE){
+differentialCorrelation <- function(cross, marker, difCorThreshold=0.25, method="pearson", directory="output", saveRdata=FALSE,snow=TRUE){
   require(snow)
   expressions <- matrix(unlist(pull.pheno(cross)),dim(pull.pheno(cross))[1],dim(pull.pheno(cross))[2])
   colnames(expressions) <- colnames(pull.pheno(cross))
   genotypes <- pull.geno(cross)
   markerName <- markernames(cross)[marker]
   
+  
   work <- vector("list",2)
   work[[1]] <- which(genotypes[,marker]==1)
   work[[2]] <- which(genotypes[,marker]==2)
   
-  cpu_cluster <- makeCluster(c("localhost","localhost"))
-  results <- parLapply(cpu_cluster,work,correlationmatrix,expressions=expressions,method=method)
-  stopCluster(cpu_cluster)
+  if(snow){
+    cpu_cluster <- makeCluster(c("localhost","localhost"))
+    results <- parLapply(cpu_cluster,work,correlationmatrix,expressions=expressions,method=method)
+    stopCluster(cpu_cluster)
+  }else{
+    results <- lapply(work,correlationmatrix,expressions=expressions,method=method)
+  }
   
   difCor <- vector("list",4)
   difCor[[1]] <- 0.5*((sign(results[[1]]) * results[[1]]^2) -  (sign(results[[2]]) * results[[2]]^2))
@@ -152,7 +157,7 @@ differentialCorrelation <- function(cross, marker, difCorThreshold=0.5, method="
 
 #Extract a list of traits which show differential correlation
 #Returns a list of traits which show differential correlation with more then the user specified significant # of genes
-difCorTargets <- function(difCor, difCorThreshold=0.5, significant = 0, verbose=TRUE){
+difCorTargets <- function(difCor, difCorThreshold=0.25, significant = 0, verbose=TRUE){
   aboveThreshold <- countDifCorThreshold(difCor, difCorThreshold)
   difCorrelated <- which(aboveThreshold > significant)
   cat("Traits showing difCor: ",length(names(difCorrelated)),"\n")
@@ -198,10 +203,10 @@ annotate.group <- function(group,annotation){
 #Note: Does all the markers one by one (optimized to use 2 cores)
 #Note: The difCor object in memory is very large
 #Note: Based on the amount of traits and markers this could take a LONG time
-diffCorAnalysis <- function(cross, minimumvariance=0.01, difCorThreshold=0.4, significant = 5, marker.col=NULL, method="pearson", directory="output", doplot=FALSE, writefile=FALSE, saveRdata=FALSE, verbose=TRUE){
+diffCorAnalysis <- function(cross, difCorThreshold=0.25, significant = 5, marker.col=NULL, method="pearson", directory="output", doplot=FALSE, writefile=FALSE, saveRdata=FALSE, snow=TRUE, verbose=TRUE){
   s <- proc.time()
   if(doplot && !file.exists(directory)) dir.create(directory)
-  cross <- scaledownPhenotypes(cross, minimumvariance,verbose)
+  #cross <- scaledownPhenotypes(cross, minimumvariance,verbose)
   if(verbose) cat("Analysis of ",ncol(cross$pheno)," traits at ",sum(nmar(cross))," markers\n")
   if(!is.null(marker.col)){
     totmarkers <- marker.col
@@ -212,7 +217,16 @@ diffCorAnalysis <- function(cross, minimumvariance=0.01, difCorThreshold=0.4, si
   
   for(marker in totmarkers){
     sl <- proc.time()
-    results <- differentialCorrelation(cross, marker, difCorThreshold, method,directory,saveRdata)
+    if(snow){
+      p_usage <- gc()[2,3]
+      n_usage <- gc()[2,3]
+      while(n_usage < p_usage){
+        p_usage = n_usage
+        n_usage <- gc()[2,3]
+        if(verbose) cat("GCloop ",n_usage," ",p_usage,"\n")
+      }
+    }
+    results <- differentialCorrelation(cross, marker, difCorThreshold, method,directory,saveRdata,snow)
     if(doplot){
       png(paste(directory,"/",marker,"_",markernames(cross)[marker],".jpg",sep=""))
         plotDifCor(results, difCorThreshold, significant)
@@ -222,10 +236,9 @@ diffCorAnalysis <- function(cross, minimumvariance=0.01, difCorThreshold=0.4, si
     difCountMatrix <- rbind(difCountMatrix,results[[4]])
     
     results <- NULL
-    gc()
     el <- proc.time()
     if(verbose){
-      cat("Marker ",marker,"/ [",min(totmarkers),"..",max(totmarkers),"]took: ",as.numeric(el[3]-sl[3]),"Seconds.\n")
+      cat("Marker ",marker,"/ [",min(totmarkers),"..",max(totmarkers),"] took: ",as.numeric(el[3]-sl[3]),", so far:",as.numeric(el[3]-s[3]),"Seconds.\n")
     }
   }
   cat("Analysis took: ",as.numeric(el[3]-s[3]),"Seconds\n")

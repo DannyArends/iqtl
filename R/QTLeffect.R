@@ -75,7 +75,11 @@ correctQTLeffect <- function(cross, pheno.col=NULL, n.clusters=3, batchsize=30, 
     }
     res <- c(res,r)
     e <- proc.time()
-    cat(batchsize,"phenotypes took:",as.numeric(e[3]-s[3]),"Seconds\n")
+    if(batchsize <= length(pheno.col)){
+      cat(batchsize,"phenotypes took:",as.numeric(e[3]-s[3]),"Seconds\n")
+    }else{
+      cat(length(totpheno),"phenotypes took:",as.numeric(e[3]-s[3]),"Seconds\n")
+    }
   }
   invisible(matrix(unlist(res),length(res[[1]]),length(res),byrow=F))
 }
