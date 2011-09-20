@@ -48,3 +48,14 @@ mqmsupportint <- function(result,marker){
   }
   list(result[min,],result[max,])
 }
+
+gcLoop <- function(verbose=FALSE){
+	before <- gc()[2,3]
+	bf <- before
+	after <- gc()[2,3]
+	while(before!=after){
+		before <- after
+		after <- gc()[2,3]
+	}
+	if(verbose) cat("Cleaned up memory from:",bf,"to:",after,"\n")
+}
