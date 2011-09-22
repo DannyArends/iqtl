@@ -49,6 +49,29 @@ mqmsupportint <- function(result,marker){
   list(result[min,],result[max,])
 }
 
+#Retrieves the number of lines in a file
+#Uses a buffer for reading so we don't explode out of memory
+numLines <- function(filename, batchsize=2000, verbose=TRUE){
+  if(missing(filename)) stop("Please supply a filename")
+  file.in <- file(filename, 'rt')
+  line <- readLines(file.in, n=1)
+  s <- proc.time()
+  cnt <- 1
+  batch <- 0
+  while (length(line)) {
+    line<- readLines(file.in, n=1)
+    cnt <- cnt +1
+    if(cnt %% batchsize == 0){
+      e <- proc.time()
+      batch <- batch+1
+      if(verbose) cat("Done with batch ",batch,"=",cnt,"lines",e[3]-s[3], "seconds\n")
+    }
+  }
+  close(file.in)
+  if(verbose) cat("# of lines: ",cnt,"\n")
+  cnt
+}
+
 gcLoop <- function(verbose=FALSE){
 	before <- gc()[2,3]
 	bf <- before
