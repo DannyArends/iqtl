@@ -30,5 +30,5 @@ createRrepos <- function(to="E:/eclipse/Production/3Dto2DApplet/websites/homepag
   write_PACKAGES()
 }
 
-createRrepos()
+#createRrepos()
 #install.packages(contriburl="http://www.dannyarends.nl/Rpackages/")

@@ -19,6 +19,8 @@ deploy.java <- function(multiresult=NULL,cross=NULL,location="d:/"){
   if(!file.exists(location)){
     location <- "~"
     cat("- Location unavailable changing to homedir\n")
+  }else{
+    cat("- Location available\n")
   }
   setwd(location)
   if(!file.exists("viewer")){
