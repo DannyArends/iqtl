@@ -11,12 +11,12 @@
 #
 
 
-deploy.svg <- function(multiresult=NULL,cross=NULL,location="d:/",FireFox="C:/Program Files/Mozilla Firefox/firefox.exe"){
+deploy.svg <- function(multiresult,cross,location,FireFox="C:/Program Files/Mozilla Firefox/firefox.exe"){
   #Copy of the 'static' scripts/svg/html + Generation of the datafile
-  if(is.null(multiresult)) stop("Please supply QTL scanning results from scanall")
+  if(missing(multiresult)) stop("Please supply QTL scanning results from scanall")
   iqtldatadir <- paste(installed.packages()[which(rownames(installed.packages())=="iqtl"),"LibPath"],"/iqtl/data",sep="")
-  if(!file.exists(location)){
-    location <- "~"
+  if(missing(location)){
+    location <- tempdir()
     cat("- Location unavailable changing to homedir\n")
   }
   setwd(location)

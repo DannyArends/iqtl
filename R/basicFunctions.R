@@ -44,11 +44,11 @@ RnVN <- function(num,times){
 }
 
 RnM <- function(num,col,row){
-	replicate(col,rbind(RnV(num,row)))
+	replicate(col,RnV(num,row))
 }
 
 RnMN <- function(num,col,row){
-	replicate(col,rbind(RnVN(num,row)))
+	replicate(col,RnVN(num,row))
 }
 
 myNames <- function(prefix,num){

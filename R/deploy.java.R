@@ -11,14 +11,14 @@
 #
 
 
-deploy.java <- function(multiresult=NULL,cross=NULL,location="d:/"){
+deploy.java <- function(multiresult,cross,location){
   #Copy of the 'static' scripts/svg/html + Generation of the datafile
-  if(is.null(multiresult)) stop("Please supply QTL scanning results from scanall")
-  if(is.null(cross)) stop("No Crossobject")
+  if(missing(multiresult)) stop("Please supply QTL scanning results from scanall")
+  if(missing(cross)) stop("No Crossobject")
   iqtldatadir <- paste(installed.packages()[which(rownames(installed.packages())=="iqtl"),"LibPath"],"/iqtl/data",sep="")
-  if(!file.exists(location)){
-    location <- "~"
-    cat("- Location unavailable changing to homedir\n")
+  if(missing(location)){
+    location <- tempdir()
+    cat("- Location unavailable changing to tempdir\n")
   }else{
     cat("- Location available\n")
   }
