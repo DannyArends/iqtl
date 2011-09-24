@@ -11,7 +11,7 @@
 #
 
 
-deploy.svg <- function(multiresult,cross,location,FireFox="C:/Program Files/Mozilla Firefox/firefox.exe"){
+deploy.svg <- function(multiresult,cross,location,webbrowser="C:/Program Files/Mozilla Firefox/firefox.exe"){
   #Copy of the 'static' scripts/svg/html + Generation of the datafile
   if(missing(multiresult)) stop("Please supply QTL scanning results from scanall")
   iqtldatadir <- paste(installed.packages()[which(rownames(installed.packages())=="iqtl"),"LibPath"],"/iqtl/data",sep="")
@@ -52,13 +52,13 @@ deploy.svg <- function(multiresult,cross,location,FireFox="C:/Program Files/Mozi
   }
   datafile.svg(multiresult,cross)
   cat("- data.js generated from multiresult.\n")
-  if(!is.null(FireFox) && file.exists(FireFox)){
-    system(paste("\"",FireFox,"\" file://",location,"/index.html",sep="",collapse=""),wait = FALSE)
-    cat("# Starting FireFox\n",sep="")
+  if(!is.null(webbrowser) && file.exists(webbrowser)){
+    system(paste("\"",webbrowser,"\" file://",location,"/index.html",sep="",collapse=""),wait = FALSE)
+    cat("# Starting web browser\n",sep="")
   }else{
     cat("#\n",sep="")
-    cat("# Please open ",location,"/index.html using Mozilla FireFox.\n",sep="")
-    cat("# Any webbrowser capable of handling SVG 1.1 can be used.\n",sep="")
+    cat("# Please open ",location,"/index.html using a web browser.\n",sep="")
+    cat("# Any web browser capable of handling SVG 1.1 can be used.\n",sep="")
     cat("#\n",sep="")
   }
   setwd(R.home())
