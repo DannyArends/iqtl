@@ -1,5 +1,6 @@
 *~
 *.o
 *.dll
+*.lib
 src-i386
 src-x64

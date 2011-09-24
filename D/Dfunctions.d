@@ -14,18 +14,9 @@ import std.c.windows.windows;
 import core.sys.windows.dll;
 
 import rlib;
+import raux;
 
 enum BUFFERSIZE {BUFFER_16KB = 16_384,BUFFER_2MB = 2_097_152, BUFFER_4MB = 4_194_304,BUFFER_16MB = 16_777_216, BUFFER_64MB = 67_108_864, BUFFER_256MB = 268_435_456}
-
-//Helper function to go from ubyte[] to string
-string intToString(int[] bits){
-  char[] r;
-  foreach(int b;bits){
-    r ~= cast(char)(b);
-  }
-  //r ~= '\0';
-  return to!string(r);
-}
 
 extern(C){
   export void Test(int* length,int* values){
@@ -36,20 +27,26 @@ extern(C){
     writeln("Test: ",Dvalues);
   }
   
+  export void CharTest(int* r_length, int* r_sizes, char** r_values){
+	  string values[] = getStringArrayFromR(r_length, r_sizes, r_values);
+    writeln("Test: ",values);
+  }
+    
  /*
   * Prints out a description of a tab separated file (any size).
   *
   * @param filename to load
   * @return Number of buffers needed to read in the entire file
   */
-  export void loadLineFromFile(int* r_filename, int* r_lines, int* r_header, int* r_sep, int* r_unquote, int* r_l_filename, int* r_l_lines, int* output){
-    string filename = intToString(r_filename[0..(*r_l_filename)]);
+  export void loadLineFromFile(char** r_filenames, int* r_lines, int* r_header, char** r_sep, int* r_unquote, int* r_l_filename, int* r_s_filename, int* r_l_lines, int* output){
+    string[] filenames = getStringArrayFromR(r_l_filename, r_s_filename, r_filenames);
+    string filename = filenames[0];
     writefln("Filename %s", filename);
     int[] lines = r_lines[0..(*r_l_lines)];
     writefln("Lines %d", lines);
     bool header = (*r_header)==1;
     writefln("Header %s", header);
-    char sep = cast(char)r_sep[0];
+    char sep = r_sep[0][0];
     writefln("Sep '%s'", sep);
     bool unquote = (*r_unquote)==1;
     writefln("unquote %s", unquote);
