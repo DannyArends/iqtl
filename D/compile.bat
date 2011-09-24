@@ -1,0 +1,1 @@
+dmd -ofDfunctions.dll -L/IMPLIB Dfunctions.d DLLmain.d libload.d rlib.d Dfunctions.def
