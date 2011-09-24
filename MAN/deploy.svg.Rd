@@ -5,14 +5,14 @@
 	Basic example of adding up two integers in C
 }
 \usage{
-	deploy.svg(multiresult,cross=NULL,location="d:/",FireFox="C:/Program Files/Mozilla Firefox/firefox.exe")
+	deploy.svg(multiresult, cross, location, webbrowser="C:/Program Files/Mozilla Firefox/firefox.exe")
 }
 
 \arguments{
   \item{multiresult}{ An object of class \code{mqmmulti} holding qtl results. See \code{\link[qtl]{mqmscanall}} for details. }
   \item{cross}{ An object of class \code{cross}. See \code{\link[qtl]{read.cross}} for details, by R/qtl }
-  \item{location}{ location to store the output files }
-  \item{FireFox}{ Location of FireFox WebBrowser }
+  \item{location}{ Location to store the output files, if missing defaults to \code{\link[base]{tempdir}} }
+  \item{webbrowser}{ Location of a web browser }
 }
 \details{
   Provided upon request

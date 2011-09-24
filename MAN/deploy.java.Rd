@@ -5,13 +5,13 @@
 	Basic example of adding up two integers in C
 }
 \usage{
-	deploy.java(multiresult=NULL,cross=NULL,location="d:/")
+	deploy.java(multiresult, cross, location)
 }
 
 \arguments{
   \item{multiresult}{ An object of class \code{mqmmulti} holding qtl results. See \code{\link[qtl]{mqmscanall}} for details. }
   \item{cross}{ An object of class \code{cross}. See \code{\link[qtl]{read.cross}} for details, by R/qtl }
-  \item{location}{ location to store the output files }
+  \item{location}{ Location to store the output files, if missing defaults to \code{\link[base]{tempdir}} }
 }
 \details{
   Provided upon request

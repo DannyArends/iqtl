@@ -17,8 +17,8 @@ random.genotypes <- function(individuals, markers, n.geno=2, normal=TRUE){
 	}else{
 		aa <- RnM(n.geno,individuals,markers)
 	}
-	rownames(aa) <- Names("marker",markers)
-	colnames(aa) <- Names("ind",individuals)
+	rownames(aa) <- Names("Marker",markers)
+	colnames(aa) <- Names("Individual",individuals)
 	aa
 }
 
