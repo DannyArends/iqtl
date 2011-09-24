@@ -178,7 +178,7 @@ version (Windows) {
   //set_seed ~= seed_in
   //get_seed ~= seed_out
   
-  static this(){
+  void LoadR(){
     HXModule lib = load_library("R");
     load_function(dnorm)(lib,"Rf_dnorm4");
     load_function(qf)(lib,"Rf_qf");

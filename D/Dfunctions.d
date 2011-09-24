@@ -4,6 +4,7 @@ import std.array;
 import std.string;
 import std.conv;
 import std.file;
+import std.range;
 import std.regex;
 import std.datetime;
 import core.time;
@@ -38,18 +39,19 @@ extern(C){
   * @param filename to load
   * @return Number of buffers needed to read in the entire file
   */
-  export void loadLineFromFile(char** r_filenames, int* r_lines, int* r_header, char** r_sep, int* r_unquote, int* r_l_filename, int* r_s_filename, int* r_l_lines, int* output){
+  export void loadLineFromFile(char** r_filenames, int* r_lines, int* r_header, char** r_sep, int* r_unquote, int* r_l_filename, int* r_s_filename, int* r_l_lines, char** output,int* r_verbose){
+    bool verbose = (*r_verbose)==1;
     string[] filenames = getStringArrayFromR(r_l_filename, r_s_filename, r_filenames);
     string filename = filenames[0];
-    writefln("Filename %s", filename);
+    if(verbose) writefln("Filename %s", filename);
     int[] lines = r_lines[0..(*r_l_lines)];
-    writefln("Lines %d", lines);
+    if(verbose) writefln("Lines %d", lines);
     bool header = (*r_header)==1;
-    writefln("Header %s", header);
+    if(verbose) writefln("Header %s", header);
     char sep = r_sep[0][0];
-    writefln("Sep '%s'", sep);
+    if(verbose) writefln("Sep '%s'", sep);
     bool unquote = (*r_unquote)==1;
-    writefln("unquote %s", unquote);
+    if(verbose) writefln("unquote %s", unquote);
     uint buffersize = BUFFERSIZE.BUFFER_16KB;
     
     if(!exists(filename) || !isfile(filename)){
@@ -57,34 +59,32 @@ extern(C){
       return;
     }
     uint filesize = cast(uint)getSize(filename);
-    long linecount=0;
+    int linecount=0;
     ubyte[] inputbuffer = new ubyte[buffersize];
-    int[] headerline;
+    string currentline;
     int headersize =0;
     auto f = new File(filename,"rb");
     auto t0 = Clock.currTime();
     long buffercount = 0;
     long tabscount = 0;
+    int id=0;
     while(f.rawRead(inputbuffer)){
       foreach(int i,byte b ; inputbuffer){
-        if(header && linecount ==0){
-          headerline ~= b;
-          headersize++;
-        }
-        if(linecount >3){
-          writefln("Header: %s",intToString(headerline));
-           //
-           output = cast(int*)R_alloc(4,int.sizeof);
-           output[0] = 100;
-           output[1] = 200;
-           output[2] = 300;
-          return;
-        }
+        currentline ~= to!char(b);
         switch(cast(char)b){
           case '\n':
+            if(searchArray!int(lines,linecount)){
+              if(verbose) writefln("Adding: %s",currentline);
+              output[id] = cast(char*)currentline;
+              id++;
+            }
+            currentline="";
             linecount++;
             break;
           case '\t':
+            if(header && linecount ==0){
+              headersize++;
+            }
             tabscount++;
             break;
           default: break;
@@ -95,6 +95,6 @@ extern(C){
     }
     auto t1 = Clock.currTime();
     f.close();
-    writefln("Filesize %d: %d buffers %d lines, %d tabs in %d", filesize, buffercount, linecount, tabscount, (t1-t0));
+    if(verbose) writefln("Filesize %d: %d buffers %d lines, %d tabs in %d", filesize, buffercount, linecount, tabscount, (t1-t0));
   }
 }

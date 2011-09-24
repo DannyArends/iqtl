@@ -18,7 +18,7 @@ StringArrayToD <- function(toSend = c("Hallo Wereld!","R->D->R")){
   }
 }
 
-getLine <- function(filename = "exp_ann.txt", linenumbers = c(10,100,100000), header=TRUE, sep='\t', quoted=TRUE){
+getLine <- function(filename = "exp_ann.txt", linenrs = c(1,2,10,15), header=TRUE, sep='\t', quoted=TRUE, verbose=FALSE){
   file <- "Dfunctions.dll"
   dfunct <- "loadLineFromFile"
   if(!is.loaded(dfunct)) {
@@ -26,24 +26,25 @@ getLine <- function(filename = "exp_ann.txt", linenumbers = c(10,100,100000), he
     cat(" -Loaded", file, "\n")
   }
   if(is.loaded(dfunct)){
-    output <- 0
+    output <- rep("",length(linenrs))
     OUT <- .C("loadLineFromFile",
       as.character(filename),
-      as.integer(linenumbers),
+      as.integer(linenrs),
       as.integer(header),
       as.character(sep),
       as.integer(quoted),
       as.integer(length(filename)),
       as.integer(nchar(filename)),
-      as.integer(length(linenumbers)),
-      as.integer(output))
-    OUT
+      as.integer(length(linenrs)),
+      as.character(output),
+      as.integer(verbose))
+    OUT[[9]]
   }else{
     stop("Function",dfunct,"not in",file)
   }
 }
 
 #StringArrayToD()
-#testdata <- getLine()
+#testdata <- getLine("libload.d")
 #testdata
 #q("no")

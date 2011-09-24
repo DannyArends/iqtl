@@ -8,12 +8,15 @@ import core.sys.windows.dll;
 
 __gshared HINSTANCE g_hInst;
 
+import rlib;
+
 extern (Windows){
   BOOL DllMain(HINSTANCE hInstance, ULONG ulReason, LPVOID pvReserved){
     switch (ulReason){
     case DLL_PROCESS_ATTACH:
       g_hInst = hInstance;
       dll_process_attach( hInstance, true );
+      LoadR();
       break;
 
     case DLL_PROCESS_DETACH:
