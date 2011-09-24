@@ -1,10 +1,12 @@
-#library(R.lang)
-#dyn.load("Dfunctions.dll")
+library(R.lang)
+dyn.load("Dfunctions.dll")
 
 #setwd("E:/GBIC/Arabidopsis_tiling")
 #toSend <- 1:100
 
-#.C("Test",as.integer(length(toSend)),as.integer(toSend))
+toSend <- "Hallo Wereld!"
+
+.C("CharTest",as.integer(length(toSend)), as.integer(nchar(toSend)),as.character(toSend))
 
 getLine <- function(filename = "exp_ann.txt", linenumber = c(10,100,100000), header=TRUE, sep='\t', quoted=TRUE){
   file <- "Dfunctions.dll"
