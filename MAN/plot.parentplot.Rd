@@ -23,7 +23,7 @@
 }
 \examples{
 	#Create a population at H/W equilibrium
-	population <- create.population(100,500)
+	population <- create.population(100,300)
 	
 	#Breed randomly a generation (parents)
 	population <- breed.random(population,50)

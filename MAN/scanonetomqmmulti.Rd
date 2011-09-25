@@ -9,8 +9,9 @@
 }
 
 \arguments{
-  \item{cross}{ An object of class \code{cross}. See \code{\link[qtl]{read.cross}} for details, by R/qtl }
-  \item{scanone}{ Results of a scanone scan on multiple phenotypes }
+  \item{cross}{ An object of class \code{cross}. See
+                \code{\link[qtl]{read.cross}} for details. }
+  \item{scanone}{ Results of a \code{\link[qtl]{scanone}} scan on multiple phenotypes }
 }
 \details{
   Provided upon request

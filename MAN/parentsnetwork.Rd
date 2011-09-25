@@ -29,7 +29,7 @@ parents.network(res, file = "test", cutoff = 3)
 }
 \examples{
 	#Create a population at H/W equilibrium
-	population <- create.population(300,500)
+	population <- create.population(50,100)
 	
 	#Breed randomly a generation (parents)
 	population <- breed.random(population,50)

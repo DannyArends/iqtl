@@ -36,7 +36,7 @@
 }
 \examples{
 	#Create a population at H/W equilibrium
-	population <- create.population(300,150)
+	population <- create.population(100,150)
 	
 	#Breed assorted (selection between marker:100 and 110) a generation (parents)
 	population <- breed.assorted(population,50,100,110,plot=FALSE)
