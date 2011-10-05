@@ -1,0 +1,15 @@
+TODOLIST iQTL package:
+
+Short Term
+----------
+
+* Fix the R CMD check warnings
+* Add more tests
+
+Medium Term
+-----------
+
+* R CMD install compilation of D code
+
+Long Term
+---------
