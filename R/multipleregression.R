@@ -18,6 +18,13 @@
 #}
 
 multipleregression <- function(designmatrix,y,weight=rep(1,nrow(designmatrix)),nullmodellayout=rep(1,ncol(designmatrix)),verbose=FALSE){
+  no_y <- which(is.na(y))
+  if(length(no_y)>0){
+    if(verbose) cat("Dropping individuals (",paste(which(is.na(y))),")with missing response values\n")
+    y <- y[-no_y]
+    weight <- weight[-no_y]
+    designmatrix <- as.matrix(designmatrix[-no_y,],dim(designmatrix)[0],dim(designmatrix)[1])
+  }
   if(nrow(designmatrix) != length(weight)){
     stop("Not all samples have a weight, nrow(designmatrix) != length(weight) (Values:",length(weight)," != ",length(y),")")
   }
@@ -41,6 +48,13 @@ multipleregression <- function(designmatrix,y,weight=rep(1,nrow(designmatrix)),n
 }
 
 modellikelihood <- function(designmatrix,y,weight=rep(1,nrow(designmatrix)),verbose=FALSE){
+  no_y <- which(is.na(y))
+  if(length(no_y)>0){
+    if(verbose) cat("Dropping individuals (",paste(which(is.na(y))),")with missing response values\n")
+    y <- y[-no_y]
+    weight <- weight[-no_y]
+    designmatrix <- as.matrix(designmatrix[-no_y,],dim(designmatrix)[0],dim(designmatrix)[1])
+  }
   if(nrow(designmatrix) != length(weight)){
     stop("Not all samples have a weight, nrow(designmatrix) != length(weight) (Values:",nrow(designmatrix)," != ",length(weight),")")
   }

@@ -29,7 +29,7 @@ kinship.network(result, name="network")
 }
 \examples{
 	#Create a population at H/W equilibrium
-	population <- create.population(300,500)
+	population <- create.population(50,100)
 	
 	#Breed randomly a generation (parents)
 	population <- breed.random(population,50)

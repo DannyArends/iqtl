@@ -43,9 +43,14 @@ backwardeliminate(cross,pheno.col=1,type=0,cofactors,alpha=0.01,verbose=FALSE)
 }
 \examples{
 	library(iqtl)
+  #Model a single traits
   data(hyper)
   hyper <- fill.geno(hyper)
   backwardeliminate(hyper,cofactors=c(3,6,9,12,17,23,45,47,78,120))
+  #Model multiple traits at once
+  data(multitrait)
+  multi <- fill.geno(multitrait)
+  backwardeliminate(multi,17:24,cofactors=c(3,6,9,12,17,23,45,47,50,63,66))
 }
 
 \keyword{methods}

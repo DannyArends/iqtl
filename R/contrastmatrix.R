@@ -45,7 +45,9 @@ contrastlisttomatrices <- function(contrastlist,m,cofactors = NULL,verbose=FALSE
   list(designmatrix,nullmatrixlayout)
 }
 
-contrastlisttodesignmatrix <- function(contrastlist,cofactors = NULL,verbose=FALSE){
+contrastlisttodesignmatrix <- function(contrastlist, cofactors,verbose=FALSE){
+  if(missing(contrastlist)) stop("No contrastlist, please create one using crosstocontrastlist")
+  if(missing(cofactors)) stop("No cofactors, please supply cofactors")
   designmatrix <- NULL
   if(!is.null(cofactors)){
     for(x in cofactors){
