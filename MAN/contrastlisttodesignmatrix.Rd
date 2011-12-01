@@ -5,7 +5,7 @@
 	Create a designmatrix from a contrastlist
 }
 \usage{
-	contrastlisttodesignmatrix(contrastlist, cofactors = NULL, verbose=FALSE)
+	contrastlisttodesignmatrix(contrastlist, cofactors, verbose=FALSE)
 }
 
 \arguments{
