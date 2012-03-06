@@ -10,25 +10,25 @@
 # 
 # Contains R functions: createRrepos
 ###
-createRrepos <- function(to="E:/eclipse/Production/3Dto2DApplet/websites/homepage/Rpackages"){
+createRrepos <- function(to="E:/github/3Dto2DApplet/websites/homepage/R"){
   library(tools)
   setwd(to)
-  if(!file.exists("GoogleFinancial_0.1.0.tar")) system("setpath r && R CMD build e:/github/Google-Financial")
-  if(!file.exists("GoogleFinancial_0.1.0.zip")) system("setpath r && R CMD build e:/github/Google-Financial --binary")
+  if(!file.exists("GoogleFinancial_0.1.0.tar")) system("setpath r && R CMD build e:/github/Rpackages/Google-Financial")
+  if(!file.exists("GoogleFinancial_0.1.0.zip")) system("setpath r && R CMD INSTALL --build e:/github/Rpackages/Google-Financial")
   
-  if(!file.exists("iqtl_0.1.tar")) system("setpath r && R CMD build e:/iqtl")
-  if(!file.exists("iqtl_0.1.zip")) system("setpath r && R CMD build e:/iqtl --binary")
+  if(!file.exists("iqtl_0.1.tar")) system("setpath r && R CMD build e:/github/Rpackages/iqtl")
+  if(!file.exists("iqtl_0.1.zip")) system("setpath r && R CMD INSTALL --build e:/github/Rpackages/iqtl")
   
-  if(!file.exists("pheno2geno_0.4.4.tar")) system("setpath r && R CMD build e:/github/phenotypes2genotypes")
-  if(!file.exists("pheno2geno_0.4.4.zip")) system("setpath r && R CMD build e:/github/phenotypes2genotypes --binary")
+  if(!file.exists("pheno2geno_0.4.4.tar")) system("setpath r && R CMD build e:/github/Rpackages/phenotypes2genotypes")
+  if(!file.exists("pheno2geno_0.4.4.zip")) system("setpath r && R CMD INSTALL --build e:/github/Rpackages/phenotypes2genotypes")
   
-  if(!file.exists("MetaNetwork_1.0-0.tar")) system("setpath r && R CMD build e:/MetaNetwork")
-  if(!file.exists("MetaNetwork_1.0-0.zip")) system("setpath r && R CMD build e:/MetaNetwork --binary")
+  if(!file.exists("MetaNetwork_1.0-0.tar")) system("setpath r && R CMD build e:/github/Rpackages/MetaNetwork")
+  if(!file.exists("MetaNetwork_1.0-0.zip")) system("setpath r && R CMD INSTALL --build e:/github/Rpackages/MetaNetwork")
   
-  if(!file.exists("qtl_1.22-2.tar")) system("setpath r && R CMD build e:/github/rqtl-mqm")
-  if(!file.exists("qtl_1.22-2.zip")) system("setpath r && R CMD build e:/github/rqtl-mqm --binary")
+  if(!file.exists("qtl_1.22-2.tar")) system("setpath r && R CMD build e:/github/Rpackages/rqtl-mqm")
+  if(!file.exists("qtl_1.22-2.zip")) system("setpath r && R CMD INSTALL --build e:/github/Rpackages/rqtl-mqm")
   write_PACKAGES()
 }
 
-#createRrepos()
-#install.packages(contriburl="http://www.dannyarends.nl/Rpackages/")
+createRrepos()
+install.packages(contriburl="http://www.dannyarends.nl/R/")
