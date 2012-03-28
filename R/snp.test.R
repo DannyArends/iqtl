@@ -14,29 +14,15 @@ test.single.snp <- function(genotype, genotypes){
 
 snp.test <- function(genotypes, toAnalyse=1:nrow(genotypes), region = 50, update.time=10, saveres = TRUE, verbose = TRUE){
   halfregion <- region/2
-  starts <- NULL
   st  <- proc.time()
   if(saveres){
     cat("",file="snpout.txt")
     fp <- file("snpout.txt","w")
   }
   for(x in toAnalyse){
-    startloc <- (x-halfregion)
-    if(startloc < 1){
-      left <- abs(startloc)
-      startloc <- 1
-    }else{
-      startloc <- startloc+1
-      left <- 0
-    }
-    endloc <- (x+halfregion+left)
-    if(endloc > nrow(genotypes)){
-      startloc <- startloc - (endloc - nrow(genotypes))
-      endloc <- nrow(genotypes)
-    }
-    lodscores <- test.single.snp(as.numeric(genotypes[x,]),genotypes[startloc:endloc,])
+    location <- getLocs(x, halfregion, nrow(genotypes))
+    lodscores <- test.single.snp(as.numeric(genotypes[x,]),genotypes[location[1]:location[2],])
     if(saveres) cat(x,"\t",paste(round(lodscores,1),collapse="\t"),"\n",sep="",file=fp)
-    starts <- c(starts,startloc)
     if(verbose && x %% update.time == 0){
       cat("Analysis of",paste("(",x-update.time,"..",x,")",sep=""),"in:",(proc.time()-st)[3],"seconds\n")
       st  <- proc.time()
@@ -68,7 +54,7 @@ get.above.raw <- function(result){
   apply(apply(result,2,as.numeric),1,sum,na.rm=TRUE)
 }
 
-plot.snp <- function(scores, selected, map_data, chr){
+plot.overview <- function(scores, selected, map_data, chr){
   colordata <- map_data[selected,1]
   if(!missing(chr)){
     idx <- which(map_data[selected,1]==chr)
@@ -95,7 +81,8 @@ get.genotypes <- function(genotypes, selected, map_data, chr){
   if(!missing(chr)){
     idx <- which(map_data[selected,1]==chr)
     plotdata <- plotdata[idx,]
-  }  
+  }
+  attr(plotdata,"chr") <- chr
   invisible(plotdata)
 }
 
@@ -126,7 +113,7 @@ get.pcorrelation <- function(genotypes, toAnalyse=1:nrow(genotypes), region=100,
   }
   for(x in toAnalyse){
     locations <- getLocs(x, round(region/2,0),nrow(genotypes))
-    cat(x,nrow(genotypes),region, locations,"\n")
+    #cat(x,nrow(genotypes),region, locations,"\n")
     if(verbose && x %% update.time == 0){
       cat("Analysis of",paste("(",x-update.time,"..",x,")",sep=""),"in:",(proc.time()-st)[3],"seconds\n")
       st  <- proc.time()
@@ -137,10 +124,11 @@ get.pcorrelation <- function(genotypes, toAnalyse=1:nrow(genotypes), region=100,
   if(saveres) close(fp)
   mm <- read.table("snpcorout.txt",sep="\t",row.names=1)
   attr(mm,"region") = region
+  attr(mm,"chr") = attr(genotypes,"chr")
   mm
 }
 
-plot_test <- function(genotypes, pcors, myrange){
+plot.snps.plot <- function(genotypes, pcors, myrange = c(0,100000)){
   if(missing(myrange)){
     subselection <- 1:nrow(genotypes)
   }else{
@@ -148,8 +136,11 @@ plot_test <- function(genotypes, pcors, myrange){
   }
   pcors <- pcors[subselection,]
   bprange <- c(min(genotypes[subselection,2]),max(genotypes[subselection,2]))
-  plot(bprange,bprange,t='n')
+  cat(bprange,"\n")
   region <- attr(pcors,"region")
+  chr <- attr(pcors,"chr")
+  
+  plot(bprange,bprange,main=paste("SNP Correlation Chr ",chr,sep=""),sub=paste("Using a region of ",region," snps",sep=""),t='n')
   halfregion <- region/2
   heat11 <- rgb(seq(0,1,0.1),seq(1,0,-0.1),seq(1,0,-0.1),seq(0,1,0.1))
   colorz <- apply((round(10*abs(pcors),0)+1),2,function(x){heat11[as.numeric(x)]})
@@ -160,24 +151,41 @@ plot_test <- function(genotypes, pcors, myrange){
   }
 }
 
+plot.snps <- function(genotypes, selected, map_data, chr = 1, region=100){
+  my_chr <- get.genotypes(genotypes, selected, map_data, chr)
+
+  cat("Selected",nrow(my_chr),"for plotting\n")
+  pcors   <- get.pcorrelation(my_chr, region=region)
+
+  png(paste("Chr",chr,"_top25k.jpg",sep=""),width = 1024, height = 1024)
+  plot.snps.plot(my_chr,pcors)
+  dev.off()
+}
+
+memory.limit(3000)
 setwd("E:/GBIC/LFN")
 load("genotypes.Rdata")
 load("snp.test.Rdata")
 map_data <- read.table("map_lfn_005.txt",sep=",",row.names=1,header=TRUE)
 #result <- snp.test(genotypes, region=50, update.time=100)
 
-scores   <- get.above(result, 100, 5)
-selected <- which(!is.na(scores))
+scores   <- get.above.raw(result)
+names(scores) <- paste("m",1:nrow(genotypes),sep="")
+top25k <- names(sort(scores,decreasing=TRUE)[1:25000])
+selected <- which(names(scores) %in% top25k)
+cat("Selected",length(selected),"from",length(scores),"\n")
 
-#scores <- get.above(result, 3, 0)
-#selected <- which(map_data[,1]==1)
-
-plot.snp(scores, selected, map_data)
-
-my_chr1 <- get.genotypes(genotypes, selected, map_data, 1)
-pcors   <- get.pcorrelation(my_chr1, region=1500)
-
-jpeg("chr1_new2mb.jpg")
-plot_test(my_chr1,pcors,c(1,2000000))
+png(paste("snp_overview.jpg",sep=""),width = 800, height = 600)
+plot.overview(scores, selected, map_data)
 dev.off()
+
+plot.snps(genotypes, selected, map_data, 1,1000)
+plot.snps(genotypes, selected, map_data, 2,1000)
+plot.snps(genotypes, selected, map_data, 3,1000)
+plot.snps(genotypes, selected, map_data, 4,1000)
+plot.snps(genotypes, selected, map_data, 5,1000)
+
+#genes = apply(is.na(map_data[,4:5]),1,sum) + 1
+#points(map_data[which(map_data[,3]>=1),2],-1000*genes,pch=20,cex=0.05,col=genes)
+#dev.off()
 
