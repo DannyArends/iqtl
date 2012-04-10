@@ -81,8 +81,8 @@ get.genotypes <- function(genotypes, selected, map_data, chr){
   if(!missing(chr)){
     idx <- which(map_data[selected,1]==chr)
     plotdata <- plotdata[idx,]
+    attr(plotdata,"chr") <- chr
   }
-  attr(plotdata,"chr") <- chr
   invisible(plotdata)
 }
 
@@ -179,11 +179,52 @@ png(paste("snp_overview.jpg",sep=""),width = 800, height = 600)
 plot.overview(scores, selected, map_data)
 dev.off()
 
-plot.snps(genotypes, selected, map_data, 1,1000)
-plot.snps(genotypes, selected, map_data, 2,1000)
-plot.snps(genotypes, selected, map_data, 3,1000)
-plot.snps(genotypes, selected, map_data, 4,1000)
-plot.snps(genotypes, selected, map_data, 5,1000)
+#plot.snps(genotypes, selected, map_data, 1,1000)
+#plot.snps(genotypes, selected, map_data, 2,1000)
+#plot.snps(genotypes, selected, map_data, 3,1000)
+#plot.snps(genotypes, selected, map_data, 4,1000)
+#plot.snps(genotypes, selected, map_data, 5,1000)
+
+my_chr <- get.genotypes(genotypes, selected, map_data)
+FT <- read.table("FT.txt")
+
+res1 <- test.single.snp(FT[,1],my_chr[,3:ncol(my_chr)])
+res2 <- test.single.snp(FT[,2],my_chr[,3:ncol(my_chr)])
+res3 <- test.single.snp(FT[,3],my_chr[,3:ncol(my_chr)])
+res4 <- test.single.snp(FT[,4],my_chr[,3:ncol(my_chr)])
+FTmapping <- rbind(res1,res2,res3,res4)
+rownames(FTmapping) <- c("FT_r1","FT_r2","FT_r3","FT_mean")
+
+png("FT_r1.jpg",width = 1024, height = 600)
+  plot(x=map_data[selected,3],y=res1,col=map_data[selected,1],pch=20,t="o",main="QTLprofile of FT_r1")
+dev.off()
+
+png("FT_r2.jpg",width = 1024, height = 600)
+  plot(x=map_data[selected,3],y=res2,col=map_data[selected,1],pch=20,t="o",main="QTLprofile of FT_r2")
+dev.off()
+
+png("FT_r3.jpg",width = 1024, height = 600)
+  plot(x=map_data[selected,3],y=res3,col=map_data[selected,1],pch=20,t="o",main="QTLprofile of FT_r3")
+dev.off()
+
+png("FT_mean.jpg",width = 1024, height = 600)
+  plot(x=map_data[selected,3],y=res4,col=map_data[selected,1],pch=20,t="o",main="QTLprofile of FT_mean")
+dev.off()
+
+RJ <- read.table("RJ.txt",sep="\t")
+RJ <- RJ[rownames(FT),]
+
+cat("",file="seed_qtls.txt")
+fp <- file("seed_qtls.txt","w")
+for(x in seq(1,ncol(RJ),2)){
+  phenotype  <- apply(RJ[,x:(x+1)],1,mean,na.rm=T)
+  qtl_result <- test.single.snp(phenotype, my_chr[,3:ncol(my_chr)])
+  cat(substring(colnames(RJ)[x], 0, nchar(colnames(RJ)[x])-2),"\t",paste(round(qtl_result,3),collapse="\t"),"\n",sep="",file=fp)
+  #png(paste("plotRJ",x,".jpg",sep=""),width = 1024, height = 600)
+  plot(x=map_data[selected,3],y=qtl_result,col=map_data[selected,1],pch=20,t="o",main=paste("QTLprofile of mean (",paste(colnames(RJ)[x:(x+1)],collapse=", "),")"))
+  #dev.off()
+}
+close(fp)
 
 #genes = apply(is.na(map_data[,4:5]),1,sum) + 1
 #points(map_data[which(map_data[,3]>=1),2],-1000*genes,pch=20,cex=0.05,col=genes)
