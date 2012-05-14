@@ -1,4 +1,13 @@
 \name{iqtl-internal}
+
+%zzz.R
+\alias{has_d}
+\alias{has_qtlHD}
+\alias{get_IqtlHDEnv}
+
+%iqtlhd.utils.R
+\alias{connected}
+
 \alias{contrastqtlmapping.internal}
 \alias{donothing}
 \alias{reciproce}
