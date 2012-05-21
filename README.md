@@ -1,5 +1,5 @@
 The iqtl package
-=================
+----------------
 iqtl package is aimed at adding functionality to R/qtl package in R and provide a bridge between certain opensource software initiatives and R
 
 Dependencies
@@ -7,6 +7,14 @@ Dependencies
 
 Installation
 ------------
+Prepare your environment by following these two steps:
+
+- Download and Install the R environment
+
+Then install into R by using (from a terminal / commanline):
+
+    $ git clone git://github.com/DannyArends/iqtl.git  # Download the repository
+    $ R CMD INSTALL iqtl                               # Install the package
 
 TODO
 ----
