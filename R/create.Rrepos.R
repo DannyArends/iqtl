@@ -10,7 +10,7 @@
 # 
 # Contains R functions: createRrepos
 ###
-createRrepos <- function(to="E:/github/3Dto2DApplet/websites/homepage/R"){
+createRrepos <- function(to="./"){
   library(tools)
   setwd(to)
   if(!file.exists("GoogleFinancial_0.1.0.tar")) system("setpath r && R CMD build e:/github/Rpackages/Google-Financial")
@@ -30,5 +30,5 @@ createRrepos <- function(to="E:/github/3Dto2DApplet/websites/homepage/R"){
   write_PACKAGES()
 }
 
-createRrepos()
-install.packages(contriburl="http://www.dannyarends.nl/R/")
+#createRrepos()
+#install.packages(contriburl="http://www.dannyarends.nl/R/")
