@@ -7,9 +7,9 @@
  **********************************************************************/
 module libs.libload;
 
-import std.loader;
 import std.stdio;
 import std.conv;
+import loader;
 
 /* Gets a function void* from a HXModule and functionname */
 protected void* getFunctionThroughVoid(HXModule shared_library, string functionname){
