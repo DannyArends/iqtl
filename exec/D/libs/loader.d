@@ -1,4 +1,4 @@
-module ext.load.loader;
+module libs.loader;
 
 import std.conv;
 private import std.string, std.c.string, std.c.stdlib, std.c.stdio;
