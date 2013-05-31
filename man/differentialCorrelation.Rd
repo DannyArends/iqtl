@@ -5,7 +5,7 @@
 	Calculate differential correlation by spolitting phenotypes into two groups specified by a genetic marker
 }
 \usage{
-differentialCorrelation(cross, marker, difCorThreshold=0.5, method="pearson", directory="output", saveRdata=FALSE)
+differentialCorrelation(cross, marker, difCorThreshold=0.25, method="pearson", directory="output", saveRdata=FALSE, snow = TRUE)
 }
 
 \arguments{
@@ -16,6 +16,7 @@ differentialCorrelation(cross, marker, difCorThreshold=0.5, method="pearson", di
   \item{method}{ Method of calculating correlation }
   \item{directory}{ Directory in which to save the output }
   \item{saveRdata}{ Save the correlation matrices as Rdata object to the directory }
+  \item{snow}{ Use of multiple cpus using SNOW }
 }
 \details{
 TODO

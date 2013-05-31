@@ -5,13 +5,13 @@
 	Create a designmatrix from a contrastlist
 }
 \usage{
-	contrastlisttodesignmatrix(contrastlist, cofactors = NULL, verbose=FALSE)
+	contrastlisttodesignmatrix(contrastlist, cofactors, verbose=FALSE)
 }
 
 \arguments{
-	\item{contrastlist}{ List with for each element the marker's contrastmatrix }
+  \item{contrastlist}{ List with for each element the marker's contrastmatrix }
   \item{cofactors}{ Cofactors to consider creation of the design matrix }
-  \item{verbose}{ Verbose output }
+  \item{verbose}{ Be verbose }
 }
 \author{ 
 	Danny Arends \email{Danny.Arends@gmail.com}

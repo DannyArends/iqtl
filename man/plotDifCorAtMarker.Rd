@@ -5,7 +5,7 @@
   Plot all the profiles of traits that show differential correlation at a certain marker
 }
 \usage{
-plotDifCorAtMarker(cross, difCntMatrix, significant=5, lodthreshold=5, marker="YBR008C_211")
+plotDifCorAtMarker(cross, difCntMatrix, significant=212, lodthreshold=4, marker="YBR008C_211")
 }
 
 \arguments{

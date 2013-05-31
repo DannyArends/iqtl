@@ -5,12 +5,11 @@
 	Calculate differential correlation (and counts) across the genome
 }
 \usage{
-diffCorAnalysis(cross, minimumvariance=0.01, difCorThreshold=0.4, significant = 5, method="pearson", directory="output", doplot=FALSE, writefile=FALSE, saveRdata=FALSE, verbose=TRUE)
+diffCorAnalysis(cross, difCorThreshold=0.25, significant = 5, marker.col = NULL, method="pearson", directory="output", doplot=FALSE, writefile=FALSE, saveRdata=FALSE, snow=TRUE, verbose=TRUE)
 }
 
 \arguments{
   \item{cross}{ An object of class \code{cross}. See \code{\link[qtl]{read.cross}} for details. }
-  \item{minimumvariance}{  Traits with less variance then minimumvariance are removed }
   \item{difCorThreshold}{ Changes in correlation >= difCorThreshold are counted in the difCntMatrix }
   \item{significant}{ Only plot probes which show differential correlation with more then significant other probes }
   \item{method}{ Method of calculating correlation }
@@ -18,6 +17,7 @@ diffCorAnalysis(cross, minimumvariance=0.01, difCorThreshold=0.4, significant = 
   \item{doplot}{ Create heatmaps per marker showing differentail correlation across the genotypes }
   \item{writefile}{ Write the differential count matrix file to disk }
   \item{saveRdata}{ Save the correlation matrices as Rdata object to the directory }
+  \item{snow}{ Use of multiple cpus using SNOW }
   \item{verbose}{ Be verbose }
 }
 \details{
