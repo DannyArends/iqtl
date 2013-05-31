@@ -18,8 +18,6 @@
 #include <fstream>
 #include <limits> 
 #include <cfloat>
-#define LITTLE_ENDIAN 0
-#define BIG_ENDIAN    1
 
 int endian(void){
   //Checks endian setting of the machine

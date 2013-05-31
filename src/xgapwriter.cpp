@@ -18,9 +18,6 @@
 #include <fstream>
 #include <limits> 
 #include <cfloat>
-#define LITTLE_ENDIAN 0
-#define BIG_ENDIAN    1
-
 
 enum DataType{ EMPTY = 0, INTMATRIX = 1, DOUBLEMATRIX = 2, FIXEDCHARMATRIX = 3, VARCHARMATRIX = 4, MATRIXREFERENCE = 5};
 uint     footprint[2] = { 0, 5 };
