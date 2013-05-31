@@ -1,4 +1,13 @@
 \name{iqtl-internal}
+
+%zzz.R
+\alias{has_d}
+\alias{has_qtlHD}
+\alias{get_IqtlHDEnv}
+
+%iqtlhd.utils.R
+\alias{connected}
+
 \alias{contrastqtlmapping.internal}
 \alias{donothing}
 \alias{reciproce}
@@ -72,6 +81,37 @@
 \alias{testdata}
 \alias{testgnuplot}
 \alias{traitspeaked}
+
+
+\alias{StringArrayToD}
+\alias{compareTraits}
+\alias{compareTraits.test}
+\alias{correctQTLeffect}
+\alias{correcttrait}
+\alias{createRrepos}
+\alias{endlessloop}
+\alias{gcLoop}
+\alias{geneMergeGO}
+\alias{getLine}
+\alias{getMarkerAnnotation}
+\alias{getNCBIfiles}
+\alias{hasSpecies}
+\alias{highcpu}
+\alias{individualcorrection}
+\alias{loop}
+\alias{markereffect}
+\alias{markereffects}
+\alias{mem}
+\alias{nocpu}
+\alias{numLines}
+\alias{parseFTPdir}
+\alias{read.fasta}
+\alias{read.genome}
+\alias{searchNCBIgenome}
+\alias{test.NCBIgenome}
+\alias{test.binary}
+\alias{threads}
+\alias{write.cross.binary}
 
 \title{Internal iqtl functions}
 
