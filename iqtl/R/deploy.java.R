@@ -10,7 +10,6 @@
 #
 #
 
-
 deploy.java <- function(multiresult,cross,location){
   #Copy of the 'static' scripts/svg/html + Generation of the datafile
   if(missing(multiresult)) stop("Please supply QTL scanning results from scanall")
@@ -78,7 +77,7 @@ datafile.java <- function(multiresult=NULL,cross=NULL){
   cat("minQTL=",ceiling(min(unlist(lapply(multiresult,FUN=getThird)))),"\n\n", file = mfile,sep="")  
   cat("maxQTL=",ceiling(max(unlist(lapply(multiresult,FUN=getThird)))),"\n\n", file = mfile,sep="")
   for(x in 1:length(multiresult)){
-    cat("qtldata.",x-1,"=",strsplit(colnames(multiresult[[x]])[3]," ")[[1]][2],",", paste(round(multiresult[[x]][,3],dig=2),collapse=","),"\n", file = mfile,sep="")
+    cat("qtldata.",x-1,"=",strsplit(colnames(multiresult[[x]])[3]," ")[[1]][2],",", paste(round(multiresult[[x]][,3],digits=2),collapse=","),"\n", file = mfile,sep="")
   }
   cat("\n", file = mfile)     
   for(x in 1:nrow(multiresult[[1]])){

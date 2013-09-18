@@ -10,11 +10,11 @@
 #
 #
 
-
 deploy.svg <- function(multiresult,cross,location,webbrowser="C:/Program Files/Mozilla Firefox/firefox.exe"){
   #Copy of the 'static' scripts/svg/html + Generation of the datafile
   if(missing(multiresult)) stop("Please supply QTL scanning results from scanall")
-  iqtldatadir <- paste(installed.packages()[which(rownames(installed.packages())=="iqtl"),"LibPath"],"/iqtl/data",sep="")
+  pID <- which(rownames(installed.packages())=="iqtl")
+  iqtldatadir <- paste(installed.packages()[pID,"LibPath"],"/iqtl/data",sep="")
   if(missing(location)){
     location <- tempdir()
     cat("- Location unavailable changing to homedir\n")
@@ -69,9 +69,9 @@ datafile.svg <- function(multiresult=NULL,cross=NULL){
   if(is.null(multiresult)) stop("Please supply QTL scanning results from scanall")
   mfile <- file("data.js", "w")
   cat("//\n//\n// data.js\n//\n// copyright (c) 2010, Danny Arends\n// last modified mrt, 2010\n// first written mrt, 2010\n//\n// Generated Datafile for QTLviewer\n// Please do NOT edit...\n//\n//\n", file = mfile,sep="")
-  cat("var qtldata=[];\nvar mapdata=[];\nvar chrL=[];\n", file = mfile,sep="")
-  cat("var markers=",nrow(multiresult[[1]]),";\n", file = mfile,sep="")
-  cat("var chromosomes=",length(unique(multiresult[[1]][,1])),";\n", file = mfile,sep="")
+  cat("var qtldata=[];\nvar mapdata=[];\nvar chrL=[];\n", file = mfile, sep="")
+  cat("var markers=", nrow(multiresult[[1]]),";\n", file = mfile,sep="")
+  cat("var chromosomes=", length(unique(multiresult[[1]][,1])),";\n", file = mfile,sep="")
   l <- NULL
   slv <- 0
   for(x in unique(multiresult[[1]][,1])){
@@ -82,16 +82,24 @@ datafile.svg <- function(multiresult=NULL,cross=NULL){
   cat("var traits=",length(multiresult),";\n", file = mfile,sep="")
   cat("var maxQTL=",max(unlist(lapply(multiresult,FUN=getThird))),";\n\n", file = mfile,sep="")
   for(x in 1:length(multiresult)){
-    cat("qtldata[",(x-1),"] = [\"",strsplit(colnames(multiresult[[x]])[3]," ")[[1]][2],"\",", paste(round(multiresult[[x]][,3],dig=2),collapse=","),"];\n", file = mfile,sep="")
+    traitname <- strsplit(colnames(multiresult[[x]])[3]," ")[[1]][2]
+    values <- paste(round(multiresult[[x]][,3],digits=2),collapse=",")
+    cat("qtldata[",(x-1),"] = [\"", traitname,"\",", values,"];\n", file = mfile,sep="")
   }
   cat("\n", file = mfile)     
   for(x in 1:nrow(multiresult[[1]])){
-    cat("mapdata[",(x-1),"] = [\"",rownames(multiresult[[1]])[x],"\",",multiresult[[1]][x,1],",",multiresult[[1]][x,2],"];\n", file = mfile,sep="")
+    mname <- rownames(multiresult[[1]])[x]
+    mchr  <- multiresult[[1]][x,1]
+    mloc  <- multiresult[[1]][x,2]
+    cat("mapdata[",(x-1),"] = [\"",mname,"\",",mchr,",", mloc,"];\n", file = mfile,sep="")
   }
   if(!is.null(cross) && !is.null(cross$locations)){
     cat("\nvar locdata=[];\n", file = mfile,sep="")
     for(x in 1:length(cross$locations)){
-      cat("locdata[",(x-1),"] = [\"",rownames(cross$locations[[x]])[1],"\",",cross$locations[[x]][1,1],",",cross$locations[[x]][1,2],"];\n", file = mfile,sep="")
+      tname <- rownames(cross$locations[[x]])[1]
+      tchr <- cross$locations[[x]][1,1]
+      tloc <- cross$locations[[x]][1,2]
+      cat("locdata[",(x-1),"] = [\"", tname,"\",", tchr,",", tloc,"];\n", file = mfile,sep="")
     }
   }else{
     cat("\nvar locdata=null;\n", file = mfile,sep="")
@@ -100,10 +108,11 @@ datafile.svg <- function(multiresult=NULL,cross=NULL){
     cat("\nvar modeldata=[];\n", file = mfile,sep="")  
     for(x in 1:length(multiresult)){
       if(!is.null(attr(multiresult[[x]],"mqmmodel"))){
-        cof <- as.numeric(rownames(multiresult[[1]])%in%attr(multiresult[[x]],"mqmmodel")[[2]])
+        cof <- as.numeric(rownames(multiresult[[1]]) %in% attr(multiresult[[x]],"mqmmodel")[[2]])
         cat("modeldata[",(x-1),"] = [",paste(cof,collapse=","),"];\n", file = mfile,sep="")
       }else{
-        cat("modeldata[",(x-1),"] = [",paste(rep(0,nrow(multiresult[[1]])),collapse=","),"];\n", file = mfile,sep="")
+        nocof <- paste(rep(0,nrow(multiresult[[1]])),collapse=",")
+        cat("modeldata[",(x-1),"] = [", nocof,"];\n", file = mfile,sep="")
       }
     }
   }else{
