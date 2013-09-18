@@ -11,3 +11,4 @@ connected <- function(){
   cat("qtlHD:",output,"\n")
   invisible(output)
 }
+
