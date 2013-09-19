@@ -17,7 +17,6 @@
  
 #include "datastructures.h"
 #include <assert.h>
-#include <cstdio>
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
@@ -34,7 +33,7 @@ void *mycalloc(uint num, uint size) {
 bvector newbvector(uint dim) {
   bvector v = (bvector)mycalloc(dim,sizeof(bool));
   if (v==NULL) {
-    cout << "Not enough memory for new vector of dimension" << (dim+1) << endl;
+    Rprintf("Not enough memory for new vector of dimension %d\n", (dim+1));
   }
   for(uint x=0;x<dim;x++){
     v[x]=true;
@@ -45,7 +44,7 @@ bvector newbvector(uint dim) {
 ldvector newldvector(uint dim) {
   ldvector v = (ldvector)mycalloc(dim,sizeof(long double));
   if (v==NULL) {
-    cout << "Not enough memory for new vector of dimension" << (dim+1) << endl;
+    Rprintf("Not enough memory for new vector of dimension %d\n", (dim+1));
   }
   return v;
 }
@@ -53,7 +52,7 @@ ldvector newldvector(uint dim) {
 dvector newdvector(uint dim) {
   dvector v = (dvector)mycalloc(dim,sizeof(double));
   if (v==NULL) {
-    cout << "Not enough memory for new vector of dimension" << (dim+1) << endl;
+    Rprintf("Not enough memory for new vector of dimension %d\n", (dim+1));
   }
   return v;
 }
@@ -61,14 +60,14 @@ dvector newdvector(uint dim) {
 ivector newivector(uint dim) {
   ivector v = (ivector)mycalloc(dim,sizeof(int));
   if (v==NULL) {
-    cout << "Not enough memory for new vector of dimension" << (dim+1) << endl;
+    Rprintf("Not enough memory for new vector of dimension %d\n", (dim+1));
   }
   return v;
 }
 cvector newcvector(uint dim) {
   cvector v = (cvector)mycalloc(dim,sizeof(char));
   if (v==NULL) {
-    cout << "Not enough memory for new vector of dimension" << (dim+1) << endl;
+    Rprintf("Not enough memory for new vector of dimension %d\n", (dim+1));
   }
   return v;
 }

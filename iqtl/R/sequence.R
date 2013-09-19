@@ -27,7 +27,7 @@ read.genome <- function(directory="genome_sequence"){
   genome <- vector("list",length(files))
   cnt <- 1
   for(x in files){
-    genome[[cnt]] <- read_fasta(directory,x)
+    genome[[cnt]] <- read.fasta(directory,x)
     attr(genome[[cnt]],"name") <- x
     cnt <- cnt + 1
   }

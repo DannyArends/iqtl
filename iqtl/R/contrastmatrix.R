@@ -9,7 +9,7 @@
 # Basic scripts for supporting contrast QTL mapping using multiple regression
 #
 
-crosstocontrastlist <- function(cross,type=0,verbose=FALSE){
+crosstocontrastlist <- function(cross, type = 0, verbose = FALSE){
   geno <- pull.geno(cross)
   if(any(is.na(geno))){
     if(verbose) cat("Missing values detected setting up fake values to capture it\n")
@@ -24,15 +24,18 @@ crosstocontrastlist <- function(cross,type=0,verbose=FALSE){
   res
 }
 
+getThird <- function(x){ return(x[,3]) }
+
 scaledowncontrast <- function(contrastlistitem){
-  res <- as.matrix(contrastlistitem[,apply(FUN=function(x) {length(unique(x))},contrastlistitem,MA=2)!=1])
-  res
+  return( as.matrix(contrastlistitem[,apply(contrastlistitem, MARGIN = 2, FUN=function(x){ 
+  	length(unique(x)) }) != 1] ) 
+  )
 }
 
 contrastlisttomatrices <- function(contrastlist,m,cofactors = NULL,verbose=FALSE){
   designmatrix <- contrastlist[[m]]
   if(verbose) cat("Contrast matrix for marker",m,"\n")
-  nullmatrixlayout <- rep(1,ncol(contrastlist[[m]]))
+  nullmatrixlayout <- rep(1, ncol(contrastlist[[m]]))
   if(!is.null(cofactors)){
     for(x in cofactors){
       #COM: Should be inrange function (or correlated)
@@ -79,7 +82,7 @@ markercontrasts <- function(genotypes,m=1,verbose=FALSE){
         contrastmatrix[m,x] <- -1
       }
     }
-    columnnames <- c(columnnames,paste(base,":",contrast,sep=""))    
+    columnnames <- c(columnnames,paste(base, ":",contrast,sep=""))    
   }
   colnames(contrastmatrix) <- columnnames
   contrastmatrix
@@ -94,7 +97,7 @@ genomecontrasts <- function(genotypes,m=1,verbose=FALSE){
   }
   values <- sort(unique(genomecontrasts))
   contrastmatrix <- matrix(0,length(marker),ncontrasts)
-  if(verbose) cat("Marker",m,"leads to: ",ncontrasts,"Contrasts\n")
+  if(verbose) cat("Marker", m, "leads to: ", ncontrasts, "Contrasts\n")
   columnnames <- NULL
   for(x in 1:ncontrasts){
     base <- values[x]

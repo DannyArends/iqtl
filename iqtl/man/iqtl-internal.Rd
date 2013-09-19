@@ -12,6 +12,7 @@
 \alias{get.pcorrelation}
 \alias{getAlleleFreq}
 \alias{getLocs}
+\alias{getThird}
 \alias{getpeaksMATRIX}
 \alias{map.fast}
 \alias{map.qtl}
@@ -32,6 +33,7 @@
 \alias{test.single.snp}
 \alias{test.snp}
 \alias{toMixScore}
+\alias{test.plot.transgression}
 
 %zzz.R
 \alias{has_d}
