@@ -5,7 +5,7 @@
 	Graphical representation highlighting possible parents of individuals
 }
 \usage{
-	plot.parentimage(x, start = 1, num = (ncol(x)-start), cutoffsib = 3, cutoffpar = 5,\dots)
+	plot(x, start = 1, num = (ncol(x)-start), cutoffsib = 3, cutoffpar = 5,\dots)
 }
 
 \arguments{

@@ -132,18 +132,14 @@ get.pcorrelation <- function(genotypes, toAnalyse=1:nrow(genotypes), region=100,
   mm
 }
 
-plot.snpplot <- function(x, ...){
-  args <- list(...)
-  genotypes <- args$genotypes
-  pcors     <- args$pcors
-  myrange   <- args$range
+plot.snpplot <- function(x, pcors, myrange, ...){
   if(missing(myrange)){
-    subselection <- 1:nrow(genotypes)
+    subselection <- 1:nrow(x)
   }else{
-    subselection <- which(genotypes[,2] < myrange[2] & genotypes[,2] > myrange[1])
+    subselection <- which(x[,2] < myrange[2] & x[,2] > myrange[1])
   }
   pcors <- pcors[subselection,]
-  bprange <- c(min(genotypes[subselection,2]),max(genotypes[subselection,2]))
+  bprange <- c(min(x[subselection,2]),max(x[subselection,2]))
   cat(bprange,"\n")
   region <- attr(pcors,"region")
   chr <- attr(pcors,"chr")
@@ -154,24 +150,19 @@ plot.snpplot <- function(x, ...){
   colorz <- apply((round(10*abs(pcors),0)+1),2,function(x){heat11[as.numeric(x)]})
   cat(dim(colorz),"\n")
   for(x in subselection){
-    locations <- getLocs(x, halfregion, nrow(genotypes))
-    points(rep(genotypes[x,2],region),genotypes[locations[1]:locations[2],2],pch=20,col=colorz[x,],cex=0.1)
+    locations <- getLocs(x, halfregion, nrow(x))
+    points(rep(x[x,2],region),x[locations[1]:locations[2],2],pch=20,col=colorz[x,],cex=0.1)
   }
 }
 
-plot.snps <- function(x, ...){
-  args <- list(...)
-  genotypes <- args$genotypes
-  selected <- args$selected
-  chr <- arg$chr
-  region <- args$region
-  
-  genoFMT <- get.genotypes(genotypes, selected, args$map, chr)
+plot.snps <- function(x, map, selected, chr, region, ...){
+  args <- list(...)  
+  genoFMT <- get.genotypes(x, selected, map, chr)
 
   cat("Selected",nrow(my_chr),"for plotting\n")
   pcors   <- get.pcorrelation(genoFMT, region=region)
 
-  png(paste("Chr", chr,"_top25k.jpg",sep=""),width = 1024, height = 1024)
+  png(paste("Chr", chr, "_top25k.jpg", sep=""),width = 1024, height = 1024)
   plot.snpplot(genoFMT, pcors)
   dev.off()
 }

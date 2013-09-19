@@ -10,7 +10,7 @@
 #
 ######################################################################
 
-plot.histkinship <- function(x,ind1,...){
+plot.histkinship <- function(x, ind1, ...){
 	result1 <- x[[1]]
 	result2 <- x[[2]]
 	op <- par(mfrow = c(2,1))

@@ -5,7 +5,7 @@
 	Graphical representation highlighting deviations from expected genotypefreq after randommating
 }
 \usage{
-	plot.genotypes(x, \dots)
+	plot(x, \dots)
 }
 
 \arguments{

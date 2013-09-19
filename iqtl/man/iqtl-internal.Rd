@@ -21,7 +21,7 @@
 \alias{permute.qtl}
 \alias{plot.overview}
 \alias{plot.snps}
-\alias{plot.snps.plot}
+\alias{plot.snpplot}
 \alias{plot.transgression}
 \alias{qtl.scan}
 \alias{removeInf}
