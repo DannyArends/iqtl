@@ -57,20 +57,21 @@ get.above.raw <- function(result){
   apply(apply(result,2,as.numeric),1,sum,na.rm=TRUE)
 }
 
-plot.overview <- function(scores, selected, map_data, chr){
-  colordata <- map_data[selected,1]
-  if(!missing(chr)){
-    idx <- which(map_data[selected,1]==chr)
+plot.overview <- function(x, ...){
+  args <- list(...)
+  colordata <- args$map[args$selected, 1]
+  if(!missing(args$chr)){
+    idx <- which(args$map[args$selected, 1] == args$chr)
     colordata <- colordata[idx]
   }
-  plot(get.chr(scores, selected, map_data, chr)[,2:3],pch=20,t='h',lwd=0.01,col=colordata)
+  plot(get.chr(x, args$selected, args$map, args$chr)[, 2:3], pch=20, t='h', lwd=0.01, col=colordata)
 }
 
-get.chr <- function(scores, selected, map_data, chr){
-  plotdata <- cbind(chr=map_data[selected,1], loc=map_data[selected,3], score=scores[selected])
-  rownames(plotdata) <- rownames(map_data[selected,])
+get.chr <- function(scores, selected, map, chr){
+  plotdata <- cbind(chr=map[selected, 1], loc=map[selected, 3], score=scores[selected])
+  rownames(plotdata) <- rownames(map[selected,])
   if(!missing(chr)){
-    idx <- which(map_data[selected,1]==chr)
+    idx <- which(map[selected, 1] == chr)
     plotdata <- plotdata[idx,]
   }
   invisible(plotdata)
@@ -131,7 +132,11 @@ get.pcorrelation <- function(genotypes, toAnalyse=1:nrow(genotypes), region=100,
   mm
 }
 
-plot.snps.plot <- function(genotypes, pcors, myrange = c(0,100000)){
+plot.snpplot <- function(x, ...){
+  args <- list(...)
+  genotypes <- args$genotypes
+  pcors     <- args$pcors
+  myrange   <- args$range
   if(missing(myrange)){
     subselection <- 1:nrow(genotypes)
   }else{
@@ -154,14 +159,20 @@ plot.snps.plot <- function(genotypes, pcors, myrange = c(0,100000)){
   }
 }
 
-plot.snps <- function(genotypes, selected, map_data, chr = 1, region=100){
-  my_chr <- get.genotypes(genotypes, selected, map_data, chr)
+plot.snps <- function(x, ...){
+  args <- list(...)
+  genotypes <- args$genotypes
+  selected <- args$selected
+  chr <- arg$chr
+  region <- args$region
+  
+  genoFMT <- get.genotypes(genotypes, selected, args$map, chr)
 
   cat("Selected",nrow(my_chr),"for plotting\n")
-  pcors   <- get.pcorrelation(my_chr, region=region)
+  pcors   <- get.pcorrelation(genoFMT, region=region)
 
-  png(paste("Chr",chr,"_top25k.jpg",sep=""),width = 1024, height = 1024)
-  plot.snps.plot(my_chr,pcors)
+  png(paste("Chr", chr,"_top25k.jpg",sep=""),width = 1024, height = 1024)
+  plot.snpplot(genoFMT, pcors)
   dev.off()
 }
 
