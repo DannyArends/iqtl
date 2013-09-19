@@ -120,7 +120,6 @@
 
 \alias{StringArrayToD}
 \alias{compareTraits}
-\alias{compareTraits.test}
 \alias{correctQTLeffect}
 \alias{correcttrait}
 \alias{createRrepos}

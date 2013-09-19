@@ -159,10 +159,10 @@ plot.snps <- function(x, map, selected, chr, region, ...){
   args <- list(...)  
   genoFMT <- get.genotypes(x, selected, map, chr)
 
-  cat("Selected",nrow(my_chr),"for plotting\n")
+  cat("Selected", nrow(chr), "for plotting\n")
   pcors   <- get.pcorrelation(genoFMT, region=region)
 
-  png(paste("Chr", chr, "_top25k.jpg", sep=""),width = 1024, height = 1024)
+  png(paste("Chr", chr, "_top25k.jpg", sep=""), width = 1024, height = 1024)
   plot.snpplot(genoFMT, pcors)
   dev.off()
 }

@@ -5,7 +5,7 @@
 	Graphical representation highlighting possible parents of individuals 
 }
 \usage{
-	plot.parentplot(x, start = 1, num = (ncol(x)-start),\dots)
+	\method{plot}{parentplot}(x, start = 1, num = (ncol(x)-start),\dots)
 }
 
 \arguments{

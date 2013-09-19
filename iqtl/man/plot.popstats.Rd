@@ -5,7 +5,7 @@
 	Graphical representation of basic population statistics
 }
 \usage{
-	plot.popstats(x, smooth=F, num=10, smoothF=median, plots = c(T,T,T,F),\dots)
+	\method{plot}{popstats}(x, smooth=F, num=10, smoothF=median, plots = c(T,T,T,F),\dots)
 }
 
 \arguments{

@@ -32,25 +32,3 @@ compareTraits <- function(cross1, cross2, FUN = cor, verbose=TRUE){
   }
   correlationData
 }
-
-compareTraits.test <- function(){
-  setwd("E:/GBIC/Frank/IOP")
-  LCMSknown <- read.table("KnownLCMS.txt",sep="\t",header=F,row.names=1)
-  GENEknown <- read.table("KnownGENE.txt",sep="\t",header=F,row.names=1)
-  library(qtl)
-  load("CrossLCMS.Rdata")
-  crosslcms <- cross
-  #crosslcms$pheno <- crosslcms$pheno[, which(colnames(crosslcms$pheno) %in% rownames(LCMSknown)) ]
-  #crosslcms
-  load("CrossGene.Rdata")
-  crossgene <- cross
-  crossgene$pheno <- crossgene$pheno[, which(colnames(crossgene$pheno) %in% rownames(GENEknown)) ]
-  crossgene
-  data <- compareTraits(crossgene,crosslcms)
-  cnt = 1
-  for(x in colnames(pull.pheno(crossgene))){
-    cat(x,names(data[[cnt]]),"\n",file="10Highestout.txt",append=T)
-    cat(x,data[[cnt]],"\n",file="10Highestout.txt",append=T)
-    cnt <- cnt+1
-  }
-}
