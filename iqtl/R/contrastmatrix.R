@@ -68,19 +68,15 @@ markercontrasts <- function(genotypes,m=1,verbose=FALSE){
   }
   values <- sort(unique(marker))
   contrastmatrix <- matrix(0,length(marker),ncontrasts)
-  if(verbose) cat("Marker",m,"leads to: ",ncontrasts,"Contrasts\n")
+  if(verbose) cat("Marker", m, ":", ncontrasts, "contrasts\n")
   columnnames <- NULL
   for(x in 1:ncontrasts){
     base <- values[x]
     contrast <- values[x+1]
     for(m in 1:length(marker)){
       contrastmatrix[m,x] <- 0
-      if(marker[m]==base){
-        contrastmatrix[m,x] <- 1
-      }
-      if(marker[m]==contrast){
-        contrastmatrix[m,x] <- -1
-      }
+      if(marker[m]==base){ contrastmatrix[m,x] <- 1 }
+      if(marker[m]==contrast){ contrastmatrix[m,x] <- -1 }
     }
     columnnames <- c(columnnames,paste(base, ":",contrast,sep=""))    
   }
@@ -92,24 +88,18 @@ genomecontrasts <- function(genotypes,m=1,verbose=FALSE){
   genomecontrasts <- unique(sort(as.numeric(genotypes)))
   ncontrasts <- length(unique(genomecontrasts))-1
   marker <- genotypes[,m]
-  if(any(genomecontrasts==666)){
-    ncontrasts <- ncontrasts-1
-  }
+  if(any(genomecontrasts==666)){ ncontrasts <- ncontrasts-1 }
   values <- sort(unique(genomecontrasts))
   contrastmatrix <- matrix(0,length(marker),ncontrasts)
-  if(verbose) cat("Marker", m, "leads to: ", ncontrasts, "Contrasts\n")
+  if(verbose) cat("Marker", m, ":", ncontrasts, "contrasts\n")
   columnnames <- NULL
   for(x in 1:ncontrasts){
     base <- values[x]
     contrast <- values[x+1]
     for(m in 1:length(marker)){
       contrastmatrix[m,x] <- 0
-      if(marker[m]==base){
-        contrastmatrix[m,x] <- 1
-      }
-      if(marker[m]==contrast){
-        contrastmatrix[m,x] <- -1
-      }
+      if(marker[m]==base){ contrastmatrix[m,x] <- 1 }
+      if(marker[m]==contrast){ contrastmatrix[m,x] <- -1 }
     }
     columnnames <- c(columnnames,paste(base,":",contrast,sep=""))
   }

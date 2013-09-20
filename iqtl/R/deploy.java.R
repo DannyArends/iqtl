@@ -1,5 +1,4 @@
 #
-#
 # deploy.java.R
 #
 # copyright (c) 2010, Danny Arends
@@ -8,12 +7,11 @@
 # 
 # R functions to create JAVA datafile and JAVA QTLviewer
 #
-#
 
 deploy.java <- function(multiresult,cross,location){
   #Copy of the 'static' scripts/svg/html + Generation of the datafile
-  if(missing(multiresult)) stop("Please supply QTL scanning results from scanall")
-  if(missing(cross)) stop("No Crossobject")
+  if(missing(multiresult)) stop("Please supply QTL results from scanall")
+  if(missing(cross)) stop("No cross object, please provide a cross object")
   iqtldatadir <- paste(installed.packages()[which(rownames(installed.packages())=="iqtl"),"LibPath"],"/iqtl/data",sep="")
   if(missing(location)){
     location <- tempdir()
@@ -58,10 +56,9 @@ deploy.java <- function(multiresult,cross,location){
   setwd(R.home())
 }
 
-
-datafile.java <- function(multiresult=NULL,cross=NULL){
+datafile.java <- function(multiresult = NULL, cross = NULL){
   if(is.null(multiresult)) stop("No MQM results")
-  if(is.null(cross)) stop("No Crossobject")
+  if(is.null(cross)) stop("No cross object")
   mfile <- file("data.dat", "w")
   cat("individuals=",nind(cross),"\n", file = mfile,sep="")
   cat("markers=",nrow(multiresult[[1]]),"\n", file = mfile,sep="")

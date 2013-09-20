@@ -48,18 +48,14 @@ endlessloop <- function(type){
 loop <- function(cnt){
   #Just run like any other lame ass job
   id <- round(runif(1)*100)
-  cat("Loop ",cnt," Reporting Sir\n")
+  cat("Loop ", cnt," reporting\n")
   if(id==42){
     string <- "42\n ... The meaning of Life, The universe and Everything ...\n"
-    for(x in 1:nchar(string)){
-      cat(substr(string, 1, x),"\n")
-    }
+    for(x in 1:nchar(string)){ cat(substr(string, 1, x),"\n") }
   }
 }
 
-nocpu <- function(time){
-  Sys.sleep(time)
-}
+nocpu <- function(time){ Sys.sleep(time) }
 
 highcpu <- function(list){
   gctorture(on = TRUE)

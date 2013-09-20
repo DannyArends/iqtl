@@ -3,15 +3,13 @@
 # (c) 2010 Danny Arends
 
 markereffect <- function(markergenotype,trait){
-  class1 <- mean(trait[which(markergenotype==1)],na.rm=T)
-  class2 <- mean(trait[which(markergenotype==2)],na.rm=T)
-  oamean <- mean(trait,na.rm=T)
-  return( c( class1-oamean, class2-oamean ) )
+  class1 <- mean(trait[which(markergenotype==1)], na.rm=T)
+  class2 <- mean(trait[which(markergenotype==2)], na.rm=T)
+  oamean <- mean(trait, na.rm=T)
+  return(c(class1-oamean, class2-oamean))
 }
 
-markereffects <- function(genotypes,trait){
-  apply(genotypes,2,markereffect,trait=trait)
-}
+markereffects <- function(genotypes,trait){ apply(genotypes, 2, markereffect, trait=trait) }
 
 individualcorrection <- function(trait, genotypes, verbose=FALSE){
   otrait <- trait
@@ -26,16 +24,18 @@ individualcorrection <- function(trait, genotypes, verbose=FALSE){
     indeffects <- indeffects + eff[genotypes[,n],n]
     trait <- otrait-indeffects
     tryCatch(
-      pprofile <- apply(genotypes,2,function(x){as.numeric(anova(lm(trait ~ x,na.action=na.exclude))[[5]][1])})
+      pprofile <- apply(genotypes,2,function(x){
+      	as.numeric(anova(lm(trait ~ x,na.action=na.exclude))[[5]][1])
+      })
       ,error = function(x){cat(x[[1]],"\n");return(indeffects)}
     )
     maxqtl<- maxqtl - 1
   }
   if(verbose){
     if(maxqtl <= 0){
-      cat("Removed 5 QTL")
+      cat("Removed 5 QTLs")
     }else{
-      cat("Removed ",5-maxqtl,"QTL ")
+      cat("Removed ", 5-maxqtl, "QTLs")
     }
   }
   indeffects
@@ -54,11 +54,8 @@ correcttrait <- function(cross, pheno.col=1, plotprofiles=TRUE, verbose=FALSE){
 
 #SNOW enabled function to reduce computational burden
 correctQTLeffect <- function(cross, pheno.col=NULL, n.clusters=3, batchsize=30, plotprofiles=FALSE, verbose=TRUE){
-  if(!is.null(pheno.col)){
-    totpheno <- pheno.col
-  }else{
-    totpheno <- 1:ncol(cross$pheno)
-  }
+  totpheno <- pheno.col
+  if(is.null(pheno.col)){ totpheno <- 1:ncol(cross$pheno) }
   cross <- calc.genoprob(fill.geno(cross))
   l <- as.list(totpheno)
   res <- NULL
@@ -76,9 +73,9 @@ correctQTLeffect <- function(cross, pheno.col=NULL, n.clusters=3, batchsize=30, 
     res <- c(res,r)
     e <- proc.time()
     if(batchsize <= length(pheno.col)){
-      cat(batchsize,"phenotypes took:",as.numeric(e[3]-s[3]),"Seconds\n")
+      cat(batchsize, "phenotypes took:", as.numeric(e[3]-s[3]), "secs\n")
     }else{
-      cat(length(totpheno),"phenotypes took:",as.numeric(e[3]-s[3]),"Seconds\n")
+      cat(length(totpheno), "phenotypes took:",as.numeric(e[3]-s[3]), "secs\n")
     }
   }
   invisible(matrix(unlist(res),length(res[[1]]),length(res),byrow=F))
