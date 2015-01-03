@@ -43,7 +43,7 @@
   data(multitraitQTLs)
   multiloc <- addloctocross(multitrait,locations)
   
-  deploy.svg(multitraitQTLs,cross=multiloc)
+  #deploy.svg(multitraitQTLs,cross=multiloc)
 }
 
 \keyword{iplot}
