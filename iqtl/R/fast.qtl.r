@@ -37,8 +37,7 @@ create.matrix <- function(models, what="qtl", phenonames, genonames, do.log=TRUE
 # Returns: $qtl, $eff, $env, $int
 map.qtl <- function(genotypes, phenotypes, conditions=NULL, n.core=2, verbose = TRUE){
   st  <- proc.time()
-  if("parallel" %in% rownames(installed.packages())){
-    require("parallel")
+  if(n.core > 1){
     cl <- makeCluster(n.core)
     models <- parApply(cl, genotypes, 2, "map.fast", phenotypes, conditions)
     stopCluster(cl)

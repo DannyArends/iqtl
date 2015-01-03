@@ -242,8 +242,8 @@ generateSIF <- function(inferenceprofiles,traits,genotypes,type="main",cutoff=2.
   nUnd <- 0
   pEdge <- 0
   nRea <- 0
-  cat(file=paste("network",type,".sif",sep=""),"",append=F)
-  cat(file=paste("nodes",type,".sif",sep=""),"",append=F)
+  cat(file=paste("network",type,".sif",sep=""), "", append=FALSE)
+  cat(file=paste("nodes",type,".sif",sep=""), "", append=FALSE)
   for(x in 1:length(inferenceprofiles)){
     traitids <- as.numeric(colnames(inferenceprofiles[[x]]))
     

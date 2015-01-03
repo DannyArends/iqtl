@@ -11,7 +11,6 @@
 ######################################################################
 
 assortedmating.init <- function(){
-	library(Rexamples)
 	workD="D:\\UMCG\\xgap_mating"	
 	fileGeno="genotypes_8_matrix.txt"
 	fileParents="Parents.csv"

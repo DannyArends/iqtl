@@ -42,10 +42,10 @@ deploy.java <- function(multiresult,cross,location){
   }
   datafile.java(multiresult,cross)
   cat("- data.dat generated from multiresult.\n")
-  testJAVA <- system(paste("java",sep="",collapse=""),wait = TRUE,intern=T)
-  if(substr(testJAVA[[1]],1,5)=="Usage"){
+  testJAVA <- system(paste("java -version",sep="",collapse=""))
+  if(testJAVA == 0){
     cat("# Java found.\n",sep="")
-    system(paste("java -jar QTLviewer.jar",sep="",collapse=""),wait = FALSE)
+    system(paste("java -jar QTLviewer.jar",sep="",collapse=""), wait = FALSE)
     cat("# Starting viewer\n",sep="")
   }else{
     cat("# Java NOT found. please install the Java Runtime Environment, and add it to your path\n",sep="")

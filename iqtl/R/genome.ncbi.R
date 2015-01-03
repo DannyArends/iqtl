@@ -1,6 +1,5 @@
 #Basic search NCBI function
 searchNCBIgenome <- function(species = "", verbose = TRUE){
-  require("RCurl")
   ftplocation <- "ftp://ftp.ncbi.nlm.nih.gov/genomes/"
   querystring <- paste(ftplocation,species,"/",sep="")
   if(verbose) cat(querystring,"\n",sep="")

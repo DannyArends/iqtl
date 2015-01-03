@@ -11,7 +11,6 @@
 # Contains R functions: createRrepos
 ###
 createRrepos <- function(to="./"){
-  library(tools)
   setwd(to)
   if(!file.exists("GoogleFinancial_0.1.0.tar")) system("setpath r && R CMD build e:/github/Rpackages/Google-Financial")
   if(!file.exists("GoogleFinancial_0.1.0.zip")) system("setpath r && R CMD INSTALL --build e:/github/Rpackages/Google-Financial")

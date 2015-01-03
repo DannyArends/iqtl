@@ -95,7 +95,7 @@ plotQTL <- function(bxdGeno, lods, trait = 1, use = c("cM","Mb")){
         })
         chr <<- chr +1
     })
-    unlist(lapply(lodlocs, function(x){round(max(x),d=1)}))
+    unlist(lapply(lodlocs, function(x){round(max(x), digits = 1)}))
 }
 
 createPLots <- function(){

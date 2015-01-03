@@ -17,8 +17,6 @@
 #####################################################################
 
 #unittest.scanRF <- function(){
-#	require(qtl)
-#	require(randomForest)
 #	data(listeria)
 #	data(hyper)	
 #	aaa <- scanRF(listeria)					#Listeria dataset Phenotype1
@@ -26,7 +24,6 @@
 #}
 
 mapRF <- function(data,model){
-	require(randomForest)
 	temp <- cbind(data$phenotype,t(data$genotypes))
 	colnames(temp)[1] <- "phenotype"
 	rf <- randomForest(phenotype ~ ., data=temp,importance=T,proximity=T)
@@ -37,9 +34,7 @@ mapRF <- function(data,model){
 
 
 scanRF <- function(cross=NULL, pheno.col=1,plot=FALSE , compare=FALSE, ...){
-	require(qtl)
-	require(randomForest)
-	cross <- qtl::fill.geno(cross)
+	cross <- fill.geno(cross)
 
 	#Handle phenotype from R/QTL
 	pheno <- NULL
@@ -49,7 +44,7 @@ scanRF <- function(cross=NULL, pheno.col=1,plot=FALSE , compare=FALSE, ...){
 		n.traits <- ncol(pheno)
 	}else{
 		if(qtl::nphe(cross) > pheno.col && pheno.col >0){
-			pheno <- qtl::pull.pheno(cross)[pheno.col]
+			pheno <- pull.pheno(cross)[pheno.col]
 			n.traits <- 1
 		}else{
 			stop("ERROR: Wrong phenotype..") 

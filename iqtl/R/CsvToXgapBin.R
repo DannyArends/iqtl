@@ -9,7 +9,6 @@
 #
 
 CsvToXgapBin <- function(name = "ExampleData", investigation = "ExampleInv", rowtype= "Metabolite", coltype= "Individual", valuetype="Decimal", file="metab.txt", verbose = TRUE){
-  require(RCurl)
   if(file.exists("CsvToBin.jar")){
     if(verbose) cat("WARNING: 'CsvToBin.jar' exists and will be re-downloaded\n")
     file.remove("CsvToBin.jar")

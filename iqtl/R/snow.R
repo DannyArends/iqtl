@@ -21,9 +21,6 @@ create.client <- function(clustersetup=NULL, host=NULL, rscript=NULL, snowlib=NU
   clustersetup  
 }
 
-#cluster(clients)
-
-
 create.cluster <- function(clustersetup=NULL,verbose=TRUE){
   if(!is.null(clustersetup)){
     if(verbose) cat("Starting new cluster\n")

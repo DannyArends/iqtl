@@ -10,8 +10,7 @@
 #
 ######################################################################
 
-getraw <- function(url,verbose=TRUE,logger=FALSE){
-	require(RCurl)
+getraw <- function(url,verbose=TRUE,logger=FALSE) {
 	ourcat(logger,"GR","INFO: Trying to read url:",url,"\n",verbose=verbose)
 	txt <- tolower(RCurl::getURL(url))
 	ourcat(logger,"GR","Retrieved Raw:",txt,"\n",verbose=verbose)
