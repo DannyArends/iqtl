@@ -1,8 +1,8 @@
 \name{deploy.java}
 \alias{deploy.java}
-\title{deploy.java - Basic example of adding up two integers in C }
+\title{deploy.java - Deploy the java QTL viewer }
 \description{
-	Basic example of adding up two integers in C
+	Deploy the java QTL viewer
 }
 \usage{
 	deploy.java(multiresult, cross, location)
@@ -42,7 +42,7 @@
   data(multitraitQTLs)
   multiloc <- addloctocross(multitrait,locations)
 
-  deploy.java(multitraitQTLs,cross=multiloc)
+  # deploy.java(multitraitQTLs,cross=multiloc)
 }
 
 \keyword{iplot}
