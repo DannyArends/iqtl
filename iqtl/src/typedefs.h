@@ -14,8 +14,6 @@
   extern "C"
   {
   #include <ctype.h>
-  #include <cstdio>
-  #include <cstdlib>
   #include <R.h>
   #include <getopt.h>
 

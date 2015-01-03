@@ -9,13 +9,6 @@
  **/
  
 #include "LUdecomposition.h"
-#include <cstdio>
-#include <iostream>
-#include <fstream>
-#include <limits> 
-#include <cfloat>
-#include <R.h>
-#include <Rmath.h>
 
 bool LUdecomposition(dmatrix m, int dim, ivector ndx, int *d) {
   int r, c, rowmax, i;

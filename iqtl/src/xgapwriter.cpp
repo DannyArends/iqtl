@@ -50,7 +50,7 @@ struct fixedcharMatrix{
 
 struct varcharMatrix{
   char*** data;
-  int lengths[];
+  int* lengths;
 };
 
 struct refMatrix{
