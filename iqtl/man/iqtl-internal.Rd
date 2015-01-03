@@ -147,6 +147,19 @@
 \alias{threads}
 \alias{write.cross.binary}
 
+
+
+\alias{createPLots}
+\alias{createPhenotypes}
+\alias{getLocsPerChr}
+\alias{getLodsPerChr}
+\alias{getPhenotype}
+\alias{modifyGenotypes}
+\alias{modifyPhenotypes}
+\alias{plotQTL}
+\alias{possibleBXDstrains}
+\alias{toCol}
+
 \title{Internal iqtl functions}
 
 \description{

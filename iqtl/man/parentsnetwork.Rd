@@ -37,8 +37,8 @@ parents.network(res, file = "test", cutoff = 3)
 	#Score kinship in our breeding example
 	result <- score.kinship(population$data,plot=FALSE)
 	
-	pList <- parents.network(result[[1]])
-	pList
+	#pList <- parents.network(result[[1]])
+	#pList
 }
 
 \keyword{methods}

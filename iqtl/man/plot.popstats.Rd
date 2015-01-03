@@ -40,13 +40,13 @@
 	population <- create.population(300,150)
 	
 	#Breed assorted (selection between marker:100 and 110) a generation (parents)
-	population <- breed.assorted(population,50,100,110,plot=FALSE)
+	#population <- breed.assorted(population,50,100,110,plot=FALSE)
 
 	#Analyze population using the assortedmating function
-	breedingresults <- assortedmating(population$data,population$parentlist[[2]],plot=FALSE,verbose=FALSE)
+	#breedingresults <- assortedmating(population$data,population$parentlist[[2]],plot=FALSE,verbose=FALSE)
 	
 	#To plot basic population statistics
-	plot.popstats(breedingresults,smooth=TRUE,num=10)
+	#plot.popstats(breedingresults,smooth=TRUE,num=10)
 }
 
 \keyword{hplot}

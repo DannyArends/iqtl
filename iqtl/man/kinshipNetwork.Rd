@@ -38,11 +38,11 @@ kinship.network(result, name="network")
 	result <- score.kinship(population$data,plot=FALSE)
 	
 	#Print parent 
-	pList <- parents.network(result[[1]])
-	pList
+	#pList <- parents.network(result[[1]])
+	#pList
 	
 	#Save a kinship network to a .sif file for use with cytoscape
-	kinship.network(result[[1]],"test_network")
+	#kinship.network(result[[1]],"test_network")
 }
 
 \keyword{methods}

@@ -38,5 +38,5 @@
 
 \examples{
 data(multitrait)
-res <- inferenetwork(pull.pheno(multitrait)[,1:5],pull.geno(multitrait))
+# res <- inferenetwork(pull.pheno(multitrait)[,1:5],pull.geno(multitrait))
 }
