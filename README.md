@@ -1,5 +1,7 @@
 The iqtl package
 ----------------
+[![Build Status](https://travis-ci.org/DannyArends/iqtl.svg)](https://travis-ci.org/DannyArends/iqtl)
+
 iqtl package is aimed at adding functionality to R/qtl package in R and provide a bridge between certain opensource software initiatives and R
 
 Dependencies
