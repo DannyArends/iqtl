@@ -5,7 +5,7 @@
 #   https://github.com/craigcitro/r-travis/wiki
 
 language: c
-sudo: false
+sudo: required
 
 before_install:
   - cd iqtl
